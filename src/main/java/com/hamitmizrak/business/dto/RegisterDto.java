@@ -1,8 +1,9 @@
 package com.hamitmizrak.business.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class RegisterDto {
+public class RegisterDto implements Serializable {
 
     // Register ID
     private Integer registerId;
@@ -11,19 +12,19 @@ public class RegisterDto {
     private Date systemCreatedDate;
 
     // Nickname
-    private String nickname;
+    private String registerNickname;
 
     // Name
-    private String name;
+    private String registerName;
 
     // Surname
-    private String surname;
+    private String registerSurname;
 
     // Email Address
-    private String emailAddress;
+    private String registerEmail;
 
     // Password
-    private String password;
+    private String registerPassword;
 
     // Roles
 
