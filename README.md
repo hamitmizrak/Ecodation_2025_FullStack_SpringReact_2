@@ -66,7 +66,7 @@ docker-compose version
 git init
 git add .
 git commit -m "spring boot init"
-git remote add origin URL
+git remote add origin https://github.com/hamitmizrak/Ecodation_2025_FullStack_SpringReact_2.git 
 git push -u origin master
 
 git clone https://github.com/hamitmizrak/Ecodation_2025_FullStack_SpringReact_2.git 
