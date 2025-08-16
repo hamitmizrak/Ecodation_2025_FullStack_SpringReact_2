@@ -1,12 +1,15 @@
 package com.hamitmizrak.business.dto;
 
+import com.hamitmizrak.audit.AuditingAwareBaseDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 // Lombok
@@ -17,14 +20,27 @@ import java.util.Date;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Log4j2
+@Builder
 
-public class RegisterDto implements Serializable {
+// @SneakyThrows
+// RoleDto(M) RegisterDto(N)
+
+// NOT: Validation işlemlerinde DTO tarafında yazalım.
+// NOT: Eğer kullanıcı boşluk bıraktıysa trim() metotudunu kullanın
+
+// REGISTER
+public class RegisterDto extends AuditingAwareBaseDto implements Serializable {
+
+    // Serileştirme
+    public static final Long serialVersionUID=1L;
 
     // Register ID
     private Integer registerId;
 
     // System Date
     private Date systemCreatedDate;
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // Nickname
@@ -63,8 +79,28 @@ public class RegisterDto implements Serializable {
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).*$", message = "{register.password.pattern.validation.constraints.NotNull.message}")
     private String registerPassword;
 
-    // Roles
+    // Page Authorization (O kişi o sayfaya yetkisi var mı
+    @Builder.Default
+    private Boolean pageAuthorization=false;
 
+    // Rolles (Enum)
+    private Collection<RoleDto> roles;
+
+    /////////////////////////////////////////////////////////////////////////////////
+    // USER DETAILS
+    // Kullanıcı üye olurken kilitli olsun ancak mail onayı ile aktifleştirilsin
+    public Boolean isAccountNonLocked;
+
+    // Kullanıcı hesabını pasif duruma getirme
+    public Boolean isAccountNonExpired;
+
+    // Kullanıcı Hesap Bilgi Süresi (Authorization)
+    public Boolean isCredentialsNonExpired;
+
+    // Kullanıcı Sistemde mi ?
+    public Boolean isEnabled;
+
+    /////////////////////////////////////////////////////////////////////////////////
     // Parametreli Constructor
     public RegisterDto(String registerNickname, String registerName, String registerSurname, String registerEmail, String registerPassword) {
         this.registerNickname = registerNickname;
@@ -73,7 +109,6 @@ public class RegisterDto implements Serializable {
         this.registerEmail = registerEmail;
         this.registerPassword = registerPassword;
     }
-
 
 } //end RegisterDto
 
