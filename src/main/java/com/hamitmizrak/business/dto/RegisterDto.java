@@ -4,9 +4,19 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
+
+// Lombok
+// @Data  // Getter + Setter + Equals + HashCode + toString
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 
 public class RegisterDto implements Serializable {
 
@@ -16,6 +26,7 @@ public class RegisterDto implements Serializable {
     // System Date
     private Date systemCreatedDate;
 
+    ////////////////////////////////////////////////////////////////////////////////////////////
     // Nickname
     @NotEmpty(message = "{register.nickname.validation.constraints.NotNull.message}")
     private String registerNickname;
@@ -27,7 +38,6 @@ public class RegisterDto implements Serializable {
     // Surname
     @NotEmpty(message = "{register.surname.validation.constraints.NotNull.message}")
     private String registerSurname;
-
 
     /*
     ^[A-Za-z0-9._%+-]+ → E-posta kullanıcı adı kısmında harf, rakam, nokta, alt çizgi vb. izin verir.
@@ -55,5 +65,15 @@ public class RegisterDto implements Serializable {
 
     // Roles
 
-}
+    // Parametreli Constructor
+    public RegisterDto(String registerNickname, String registerName, String registerSurname, String registerEmail, String registerPassword) {
+        this.registerNickname = registerNickname;
+        this.registerName = registerName;
+        this.registerSurname = registerSurname;
+        this.registerEmail = registerEmail;
+        this.registerPassword = registerPassword;
+    }
+
+
+} //end RegisterDto
 
