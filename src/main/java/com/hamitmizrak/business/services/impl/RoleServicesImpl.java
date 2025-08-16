@@ -3,6 +3,7 @@ package com.hamitmizrak.business.services.impl;
 import com.hamitmizrak.business.dto.RoleDto;
 import com.hamitmizrak.business.services.interfaces.IRoleServices;
 import com.hamitmizrak.data.entity.RoleEntity;
+import com.hamitmizrak.data.repository.IRoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,7 @@ import java.util.List;
 
 
 // LOMBOK
-@RequiredArgsConstructor // DI
+@RequiredArgsConstructor // Lombok: Dependency Injection
 @Log4j2
 
 // Service: Asıl İş yükünü yapandır
@@ -21,6 +22,23 @@ import java.util.List;
 public class RoleServicesImpl implements IRoleServices<RoleDto, RoleEntity> {
 
     // Field (Injection)
+    // 1.YOL (FIELD INJECTION)
+    /*
+    @Autowired
+    private IRoleRepository iRoleRepository;
+     */
+
+    // 2.YOL (CONSTRUCTOR INJECTION)
+    /*
+    private IRoleRepository iRoleRepository;
+    @Autowired
+    public RoleServicesImpl(IRoleRepository iRoleRepository) {
+        this.iRoleRepository = iRoleRepository;
+    }
+     */
+
+    // 3.YOL (LOMBOK CONSTRUCTOR INJECTION)
+    private final IRoleRepository iRoleRepository;
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Model Mapper
