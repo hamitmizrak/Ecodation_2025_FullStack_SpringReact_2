@@ -4,17 +4,19 @@ import com.hamitmizrak.business.dto.RoleDto;
 import com.hamitmizrak.business.services.interfaces.IRoleServices;
 import com.hamitmizrak.controller.api.interfaces.IRoleApi;
 import com.hamitmizrak.error.ApiResult;
-import com.hamitmizrak.utily.FrontEnd;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 // LOMBOK
 @RequiredArgsConstructor
+@Log4j2
 
 // API (REST)
 @RestController
@@ -39,7 +41,32 @@ public class RoleApiImpl implements IRoleApi<RoleDto> {
     @Override
     @PostMapping("/create")
     public ResponseEntity<?> objectApiCreate(@Valid @RequestBody RoleDto roleDto) {
-        return null;
+        RoleDto roleDtoCreate= (RoleDto) iRoleServices.objectServiceCreate(roleDto);
+
+        // eğer kaydetmezse null değer verirse
+        if(roleDtoCreate==null){
+            ApiResult apiResultCreateViaNull= ApiResult
+                    .builder()
+                    .status(404)
+                    .error("Role eklenmedi")
+                    .path("http://localhost:4444/role/api/v1.0.0/create")
+                    .createdDate(new Date(System.currentTimeMillis()))
+                    .build();
+            return ResponseEntity.status(404).body(apiResultCreateViaNull);
+        }else if(roleDtoCreate.getRoleId()==0){
+            ApiResult apiResultCreateViaIdZero= ApiResult
+                    .builder()
+                    .status(400)
+                    .error("Role Dto Kötü istek")
+                    .path("http://localhost:4444/role/api/v1.0.0/create")
+                    .createdDate(new Date(System.currentTimeMillis()))
+                    .build();
+            return ResponseEntity.status(400).body(apiResultCreateViaIdZero);
+        }
+
+        // Log
+        log.info("Role Dto Eklendi",roleDtoCreate);
+        return ResponseEntity.status(400).body(roleDtoCreate);
     }
 
 
@@ -48,7 +75,8 @@ public class RoleApiImpl implements IRoleApi<RoleDto> {
     @Override
     @GetMapping("/list")
     public ResponseEntity<List<RoleDto>> objectApiList() {
-        return null;
+        log.info("Role Dto Listelendi");
+        return ResponseEntity.ok(iRoleServices.objectServiceList());
     }
 
     // FIND BY ID (RoleDto)
@@ -58,7 +86,22 @@ public class RoleApiImpl implements IRoleApi<RoleDto> {
     @Override
     @GetMapping({"/find", "/find/id"})
     public ResponseEntity<?> objectApiFindById(@PathVariable(name = "id", required = false) Long id) {
-        return null;
+        RoleDto roleDtoFind= (RoleDto) iRoleServices.objectServiceFindById(id);
+
+        // eğer kaydetmezse null değer verirse
+        if(roleDtoFind==null){
+            ApiResult apiResultFindViaNull= ApiResult
+                    .builder()
+                    .status(404)
+                    .error("Role bulunamadı")
+                    .path("http://localhost:4444/role/api/v1.0.0/find")
+                    .createdDate(new Date(System.currentTimeMillis()))
+                    .build();
+            return ResponseEntity.status(404).body(apiResultFindViaNull);
+        }
+        // Log
+        log.info("Role Dto Bulundu",roleDtoFind);
+        return ResponseEntity.status(400).body(roleDtoFind);
     }
 
     // UPDATE (RoleDto)
@@ -66,7 +109,22 @@ public class RoleApiImpl implements IRoleApi<RoleDto> {
     @Override
     @PutMapping({"/update", "/update/id"})
     public ResponseEntity<?> objectApiUpdate(@PathVariable(name = "id", required = false) Long id, @Valid @RequestBody RoleDto roleDto) {
-        return null;
+        RoleDto roleDtoUpdate= (RoleDto) iRoleServices.objectServiceUpdate(id,roleDto);
+
+        // eğer kaydetmezse null değer verirse
+        if(roleDtoUpdate==null){
+            ApiResult apiResultUpdateViaNull= ApiResult
+                    .builder()
+                    .status(404)
+                    .error("Role Dto Güncellenmedi")
+                    .path("http://localhost:4444/role/api/v1.0.0/update")
+                    .createdDate(new Date(System.currentTimeMillis()))
+                    .build();
+            return ResponseEntity.status(404).body(apiResultUpdateViaNull);
+        }
+        // Log
+        log.info("Role Dto Güncellendi",roleDtoUpdate);
+        return ResponseEntity.status(400).body(roleDtoUpdate);
     }
 
     // DELETE
@@ -74,8 +132,22 @@ public class RoleApiImpl implements IRoleApi<RoleDto> {
     @Override
     @DeleteMapping({"/delete", "/delete/id"})
     public ResponseEntity<?> objectApiDelete(@PathVariable(name = "id", required = false) Long id) {
-        return null;
-    }
+        RoleDto roleDtoDelete= (RoleDto) iRoleServices.objectServiceDelete(id);
 
+        // eğer kaydetmezse null değer verirse
+        if(roleDtoDelete==null){
+            ApiResult apiResultUpdateViaNull= ApiResult
+                    .builder()
+                    .status(404)
+                    .error("Role Dto Silinmedi")
+                    .path("http://localhost:4444/role/api/v1.0.0/delete")
+                    .createdDate(new Date(System.currentTimeMillis()))
+                    .build();
+            return ResponseEntity.status(404).body(apiResultUpdateViaNull);
+        }
+        // Log
+        log.info("Role Dto Silindi",roleDtoDelete);
+        return ResponseEntity.status(400).body(roleDtoDelete);
+    }
 } // end RoleApiImpl
 
