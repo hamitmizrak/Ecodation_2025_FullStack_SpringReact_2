@@ -5,6 +5,8 @@ import com.hamitmizrak.business.dto.RoleDto;
 import com.hamitmizrak.business.services.interfaces.IRoleServices;
 import com.hamitmizrak.data.entity.RoleEntity;
 import com.hamitmizrak.data.repository.IRoleRepository;
+import com.hamitmizrak.exception.HamitMizrakException;
+import com.hamitmizrak.exception._404_NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -13,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 
 // LOMBOK
@@ -71,7 +75,7 @@ public class RoleServicesImpl implements IRoleServices<RoleDto, RoleEntity> {
         roleDto.setRoleId(roleEntityAfterSave.getRoleId());
         roleDto.setSystemCreatedDate(roleEntityAfterSave.getSystemCreatedDate());
         return roleDto;
-    }
+    } // end  roleDto create
 
     // LIST (RoleDto)
     @Override
@@ -88,26 +92,69 @@ public class RoleServicesImpl implements IRoleServices<RoleDto, RoleEntity> {
             roleDtoList.add(roleDto);
         }
         return roleDtoList;
-    }
+    } // end  roleDto list
 
     // FIND BY ID (RoleDto)
     @Override
     public RoleDto objectServiceFindById(Long id) {
-        return null;
-    }
+        // 1.YOL
+        /*
+        Optional<RoleEntity> optionalRoleEntity = iRoleRepository.findById(id);
+        // isPresent: Entity varsa
+        if(optionalRoleEntity.isPresent()){
+            return entityToDto(optionalRoleEntity.get());
+        }
+         */
+
+        // 2.YOL
+        Boolean isRoleFindById = iRoleRepository.findById(id).isPresent();
+        RoleEntity roleEntity=null;
+        if (isRoleFindById) {
+             roleEntity = iRoleRepository.findById(id).orElseThrow(
+                    //()-> { return new _404_NotFoundException(id+" nolu ID bulunamadı");}  //1.YOL
+                    () -> new _404_NotFoundException(id + " nolu ID bulunamadı") // 2.YOL
+            );
+        } else if (isRoleFindById == null) {
+            throw new HamitMizrakException("Role Dto id boş değer geldi");
+        }
+        return entityToDto(roleEntity);
+    } // end  roleDto find by id
 
     // UPDATE (RoleDto)
     @Transactional  //Create, Update, Delete
     @Override
     public RoleDto objectServiceUpdate(Long id, RoleDto roleDto) {
-        return null;
-    }
+        // Find
+        RoleDto roleDtoUpdateFind= objectServiceFindById(id);
+
+        // Update
+        RoleEntity roleEntityUpdate= dtoToEntity(roleDtoUpdateFind);
+        if(roleEntityUpdate!=null){
+            roleEntityUpdate.setRoleName(roleDto.getRoleName());
+            iRoleRepository.save(roleEntityUpdate);
+        }
+
+        // Kayıt sonrası Dto set
+        roleDto.setRoleId(roleEntityUpdate.getRoleId());
+        roleDto.setRoleName(roleEntityUpdate.getRoleName());
+        //return entityToDto(roleEntityUpdate); //1.YOL
+        return roleDto; //2.YOL
+    } // end  roleDto update
 
     // DELETE (RoleDto)
     @Transactional  // Create, Update, Delete
     @Override
     public RoleDto objectServiceDelete(Long id) {
-        return null;
-    }
+
+        // Delete
+        RoleEntity roleEntityDelete= dtoToEntity(objectServiceFindById(id));
+        if(roleEntityDelete!=null){
+            // iRoleRepository.delete(roleEntityDelete); //1.YOL (Object Delete)
+            iRoleRepository.deleteById(id);// 2.YOL (Object via by id)
+            return entityToDto(roleEntityDelete);
+        }else{
+            throw new HamitMizrakException(roleEntityDelete + " Silinemedi");
+        }
+    } // end  roleDto delete
 
 } // end RoleServicesImpl
