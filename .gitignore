@@ -1,9 +1,13 @@
-# Special files: untracked
+# Special files: untracked (Frontend)
 frontend
 #frontend/blog/node_modules
 #frontend/Single Page Application Template/1_Kurulumlar
 tutorials
 pictures
+
+# Special files: untracked (Backend)
+log
+database_memory_persist
 
 HELP.md
 target/
