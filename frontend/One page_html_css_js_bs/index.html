@@ -1,0 +1,1171 @@
+<!-- Html5 -->
+<!doctype html>
+
+<!-- this page is  language english -->
+<html lang="en">
+  <head>
+    <!-- title -->
+    <title>SPA(Single Page Application)</title>
+
+    <!-- Türkce karakter -->
+    <meta charset="UTF-8" />
+
+    <!-- favicon -->
+    <link rel="icon" href="../../pictures/main1.jpg" type="image/x-icon" />
+
+    <!-- other browser -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Responsive Design -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
+    <!-- Required meta tags -->
+    <meta name="author" content="Hamit Mızrak" />
+    <meta name="designer" content="Hamit Mızrak" />
+    <meta name="copyright" content="Hamit Mızrak" />
+    <meta name="owner" content="Hamit Mızrak" />
+    <meta name="description" content="Html5,css3,js,jquery,bootstrap,java,database " />
+    <meta name="keyword" content="Html5,css3,js,jquery,bootstrap,java,database " />
+    <meta name="title" content="Full Stack Developer" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="google" content="notranslate" />
+    <meta name="revised" content="Monday, 1st January 2024, 5:00 pm" />
+    <meta name="language" content="Turkish" />
+    <meta name="url" content="" />
+    <meta name="identifier-URL" content="" />
+    <meta name="coverage" content="Worldwide" />
+    <meta name="distribution" content="Global" />
+    <meta name="rating" content="General" />
+    <meta name="revisit-after" content="1 days" />
+    <meta name="google-site-verification" content="" />
+    <meta name="msvalidate.01" content="" />
+    <meta name="yandex-verification" content="" />
+    <meta name="alexaVerifyID" content="" />
+    <meta name="p:domain_verify" content="" />
+    <meta name="application-name" content="SPA(Single Page Application)" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="msapplication-TileImage" content="../../pictures/main1.jpg" />
+    <meta name="apple-mobile-web-app-title" content="SPA(Single Page Application)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- important dependencies -->
+    <!-- jquery -->
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Font Awesome (npm ile) -->
+    <link rel="stylesheet" href="./node_modules/@fortawesome/fontawesome-free/css/all.min.css" />
+
+    <!-- Google Font-->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@200;400&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="./node_modules/animate.css/animate.min.css" />
+
+    <!-- Bootstrap CDN CSS v5.2.1 -->
+    <!-- <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    /> -->
+
+    <!-- jquery  -->
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+
+    <!-- jQuery UI CSS -->
+    <link rel="stylesheet" href="./node_modules/jquery-ui/dist/themes/base/jquery-ui.css" />
+
+    <!-- jQuery UI JS -->
+    <script src="./node_modules/jquery-ui/dist/jquery-ui.min.js"></script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body data-bs-spy="scroll" data-bs-target="#navbar_second" data-bs-offset="100" tabindex="0">
+    <noscript>
+      <div class="alert alert-danger text-center">
+        <strong>Uyarı!</strong>
+        Sizin browserinız javascripti desteklemiyor Lütfen JavaScript'i çalıştıracak yeni güncel
+        browser deneyiniz.
+      </div>
+    </noscript>
+
+    <!-- backtotop -->
+    <span id="back_top_span"></span>
+
+    <!-- start code -->
+
+    <!-- for animation -->
+    <!-- 
+    wow 
+    animate__animated 
+
+    animate__fadeInDown 
+    animate__bounceIn
+    animate__fadeInUp
+    animate__zoomIn
+    animate__fadeInLeft
+    animate__fadeInRight
+    animate__fadeInUp
+    animate__fadeIn 
+    -->
+
+    <!-- NAVBAR FIRST -->
+    <!-- nav#navbar_first>div.container>div.row>div#navbar_first_left.col-8+#navbar_first_right.col-4.mx-auto -->
+    <nav
+      id="navbar_first"
+      class="navbar navbar-expand wow44 animate__animated animate__fadeInDown"
+      data-wow-delay="0.2s"
+    >
+      <div class="container">
+        <!-- container-fluid yerine container -->
+        <div class="d-flex justify-content-between w-100">
+          <!-- Sol taraf -->
+          <ul class="nav">
+            <li class="nav-item me-3">
+              <a
+                href="#"
+                class="nav-link text-white small"
+                data-bs-toggle="modal"
+                data-bs-target="#registerId"
+              >
+                <i class="fa-solid fa-address-card text-danger me-1"></i>
+                Register
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                href="#"
+                class="nav-link text-white small"
+                data-bs-toggle="modal"
+                data-bs-target="#loginId"
+              >
+                <i class="fa-solid fa-user-secret text-primary me-1"></i>
+                Login
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link text-white small">
+                <span><img class="flag" src="./images/flag/tr.png" /></span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link text-white small">
+                <span><img class="flag" src="./images/flag/en.png" /></span>
+              </a>
+            </li>
+
+            <!-- Admin Panel -->
+            <li class="nav-item">
+              <a id="adminLink" class="nav-link" href="admin/admin.html" style="display: none">
+                <i class="fa fa-user-shield"></i>
+                Admin Paneli
+              </a>
+            </li>
+
+            <!-- Admin Panel -->
+            <li class="nav-item">
+              <a id="logoutLink" class="nav-link" href="#" style="display: none">
+                <i class="fa fa-sign-out-alt"></i>
+                Çıkış
+              </a>
+            </li>
+          </ul>
+
+          <!-- Sağ taraf -->
+          <ul class="nav">
+            <li class="nav-item">
+              <a href="#" class="nav-link text-white"><i class="fa-brands fa-linkedin"></i></a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link text-white"><i class="fa-brands fa-github"></i></a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link text-white"><i class="fa-brands fa-facebook"></i></a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link text-white">
+                <i class="fa-brands fa-instagram text-warning"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- END NAVBAR FIRST -->
+
+    <!-- REGİSTER -->
+    <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+    <div
+      class="modal fade"
+      id="registerId"
+      tabindex="-1"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      role="dialog"
+      aria-labelledby="registerModalLabel"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md"
+        role="document"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="registerModalLabel">Kayıt Ol</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <!-- Modal Body -->
+          <div class="modal-body">
+            <form id="registerForm" novalidate>
+              <div class="mb-3">
+                <label for="fullname" class="form-label">Ad Soyad</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="fullname"
+                  placeholder="Adınızı ve soyadınızı girin"
+                />
+                <!-- Hata mesajı burada görünecek -->
+                <div class="invalid-feedback"></div>
+              </div>
+
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="ornek@mail.com" />
+                <div class="invalid-feedback"></div>
+              </div>
+
+              <div class="mb-3">
+                <label for="password" class="form-label">Şifre</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  placeholder="Şifrenizi girin"
+                />
+                <div class="invalid-feedback"></div>
+              </div>
+
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Şifre Tekrar</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirmPassword"
+                  placeholder="Şifrenizi tekrar girin"
+                />
+                <div class="invalid-feedback"></div>
+              </div>
+
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="terms" />
+                <label class="form-check-label" for="terms">
+                  Kullanım koşullarını kabul ediyorum
+                </label>
+                <div class="invalid-feedback"></div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+            <button type="submit" form="registerForm" class="btn btn-primary">Kayıt Ol</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGIN Trigger Modal -->
+    <div
+      class="modal fade"
+      id="loginId"
+      tabindex="-1"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      role="dialog"
+      aria-labelledby="loginModalLabel"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md"
+        role="document"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">Giriş Yap</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <!-- Modal Body -->
+          <!-- Modal Body -->
+          <div class="modal-body">
+            <form id="loginForm" novalidate>
+              <!-- Email -->
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="loginEmail"
+                  placeholder="ornek@mail.com"
+                  required
+                />
+                <div class="invalid-feedback"></div>
+              </div>
+
+              <!-- Şifre -->
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Şifre</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="loginPassword"
+                  placeholder="Şifrenizi girin"
+                  required
+                />
+                <div class="invalid-feedback"></div>
+              </div>
+
+              <!-- Beni Hatırla -->
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="rememberMe" />
+                <label class="form-check-label" for="rememberMe">Beni hatırla</label>
+              </div>
+            </form>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+            <button type="submit" form="loginForm" class="btn btn-primary">Giriş Yap</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- end navbar First -->
+
+    <!-- NAVBAR SECOND -->
+    <nav
+      id="navbar_second"
+      class="navbar navbar-expand-md navbar-dark wow44 animate__animated animate__fadeInDown"
+      data-wow-delay="0.4s"
+    >
+      <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand" href="/">
+          <img id="logo_id" src="images/flag/tr.png" alt="Logo" />
+        </a>
+
+        <!-- Hamburger Menü -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarMenu"
+          aria-controls="navbarMenu"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menü -->
+        <div class="collapse navbar-collapse" id="navbarMenu">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/">
+                <i class="fa-solid fa-house"></i>
+                Anasayfa
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#scroll_spy_works">
+                <i class="fa-solid fa-briefcase"></i>
+                Çalışmalar
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#scroll_spy_success_rate">
+                <i class="fa-solid fa-chart-column"></i>
+                Başarılar
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#scroll_spy_newspaper">
+                <i class="fa-solid fa-newspaper"></i>
+                Haberler
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#scroll_spy_about">
+                <i class="fa-solid fa-bullhorn"></i>
+                Hakkımızda
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#scroll_spy_blog"
+                id="dropdownId"
+                data-bs-toggle="dropdown"
+              >
+                <i class="fa-solid fa-blog"></i>
+                Blog
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#scroll_spy_blog">Yazılım</a>
+                <a class="dropdown-item" href="#scroll_spy_blog">Sağlık</a>
+                <a class="dropdown-item" href="#scroll_spy_blog">Yaşam</a>
+                <a class="dropdown-item" href="#scroll_spy_blog">Spor</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#maps">
+                <i class="fa-solid fa-map-location-dot"></i>
+                İletişim
+              </a>
+            </li>
+          </ul>
+
+          <!-- Sağ taraf: Dark Mode + Arama -->
+          <div class="nav-actions">
+            <!-- Dark Mode Butonu -->
+            <button id="dark_mode" class="dark-mode-btn">
+              <i class="fa-solid fa-moon"></i>
+            </button>
+
+            <!-- Arama kutusu -->
+            <form class="search-form">
+              <div class="search-container">
+                <input
+                  id="search_id"
+                  type="text"
+                  class="form-control"
+                  placeholder="Site içi ara..."
+                />
+                <button class="search-button" type="submit">Ara</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- END NAVBAR SECOND -->
+
+    <!-- 
+    wow 
+    animate__animated 
+    
+    animate__fadeInDown 
+    animate__bounceIn
+    animate__fadeInUp
+    animate__zoomIn
+    animate__fadeInLeft
+    animate__fadeInRight
+    animate__fadeInUp
+    animate__fadeIn
+
+     data-wow-delay="1s"
+    -->
+
+    <!-- start Header -->
+    <!-- header#header_id>div.jumbotron>div.container>div.row>div.p-5.text-center>h1.text-uppercase{Full Stack Developer Eğitimine Hoşgeldiniz}+h4.text-center{Frontend & Backend & DB & Devops}+a.btn.btn-primary{Linkedin}+a.btn.btn-danger{Youtube} -->
+    <!-- HEADER -->
+    <header id="header_id">
+      <div class="header-overlay img-glare"></div>
+      <!-- Karartma efekti -->
+      <div class="container h-100">
+        <div class="row h-100">
+          <div class="col-12 text-center my-auto">
+            <h1 class="display-3 text-uppercase shadow wow animate__zoomIn" data-wow-delay="0.6s">
+              Full Stack Developer Eğitimine Hoşgeldiniz
+            </h1>
+            <h4 class="wow animate__zoomIn" data-wow-delay="0.8s">
+              Frontend & Backend & DB & Devops
+            </h4>
+
+            <!-- Sosyal ve link butonları -->
+            <div class="header-links mt-4">
+              <a
+                href="https://www.linkedin.com"
+                target="_blank"
+                class="header-link wow animate__fadeInUp"
+                data-wow-delay="0.9s"
+              >
+                <i class="fa-brands fa-linkedin"></i>
+                <span></span>
+              </a>
+              <a
+                href="https://www.youtube.com"
+                target="_blank"
+                class="header-link wow animate__fadeInUp"
+                data-wow-delay="1s"
+              >
+                <i class="fa-brands fa-youtube"></i>
+                <span></span>
+              </a>
+              <a href="#blog" class="header-link wow animate__fadeInUp" data-wow-delay="1.1s">
+                <i class="fa-solid fa-blog"></i>
+                <span></span>
+              </a>
+              <a
+                href="https://github.com"
+                target="_blank"
+                class="header-link wow animate__fadeInUp"
+                data-wow-delay="1.2s"
+              >
+                <i class="fa-brands fa-github"></i>
+                <span></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- end Header -->
+
+    <!-- 
+    wow 
+    animate__animated 
+    
+    animate__fadeInDown 
+    animate__bounceIn
+    animate__fadeInUp
+    animate__zoomIn
+    animate__fadeInLeft
+    animate__fadeInRight
+    animate__fadeInUp
+    animate__fadeIn
+
+     data-wow-delay="1s"
+    -->
+
+    <!-- Social medya right-->
+    <!-- Sosyal Medya Sabit Bar -->
+    <div class="social-bar-fixed text-primary">
+      <a href="https://linkedin.com/" target="_blank" class="social-link linkedin" title="LinkedIn">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+      <a href="https://github.com/" target="_blank" class="social-link github" title="GitHub">
+        <i class="fab fa-github"></i>
+      </a>
+      <a
+        href="https://instagram.com/"
+        target="_blank"
+        class="social-link instagram"
+        title="Instagram"
+      >
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="mailto:info@aihexa.com" target="_blank" class="social-link mail" title="Mail">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </div>
+
+    <!-- start  Main -->
+    <main id="main_id">
+      <!-- Çalışmalar: Bootstrap özellikler -->
+      <section
+        id="scroll_spy_works"
+        class="wow animate__animated animate__zoomIn"
+        data-wow-delay="1.2s"
+      >
+        <div class="container">
+          <div class="row justify-content-center g-4">
+            <h3 class="customize_heading wow animate__animated animate__zoomIn" data-wow-delay="1s">
+              Çalışmalarımız
+            </h3>
+            <!-- 1.icon -->
+            <div
+              class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 text-center mt-4 mb-4 shadow-lg p-4"
+            >
+              <i class="fa-solid fa-cart-shopping fa-4x text-primary"></i>
+              <h4 class="text-warning text-uppercase fw-bolder mt-4 mb-2">E-Ticaret</h4>
+              <p class="line-clamp4 text-capitalize">
+                E-Ticaret Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum at, fugit
+                aliquam in similique quas, numquam odio et optio repudiandae quo dolore. Eos,
+                temporibus esse error atque animi ad unde! ti ratione magni eos beatae cumque ut
+                neque tenetur fugit iusto maiores. Labore, enim eaque!
+              </p>
+            </div>
+
+            <!-- 2.icon -->
+            <div
+              class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 text-center mt-4 mb-4 shadow-lg p-4"
+            >
+              <i class="fa-solid fa-barcode fa-4x text-danger"></i>
+              <h4 class="text-warning text-uppercase fw-bolder mt-4 mb-2">Yazılım</h4>
+              <p class="line-clamp4 text-capitalize">
+                E-Ticaret Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum at, fugit
+                aliquam in similique quas, numquam odio et optio repudiandae quo dolore. Eos,
+                temporibus esse error atque animi ad unde! ti ratione magni eos beatae cumque ut
+                neque tenetur fugit iusto maiores. Labore, enim eaque!
+              </p>
+            </div>
+
+            <!-- 3.icon -->
+            <div
+              class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 text-center mt-4 mb-4 shadow-lg p-4"
+            >
+              <i class="fa-solid fa-gears fa-4x text-success"></i>
+              <h4 class="text-warning text-uppercase fw-bolder mt-4 mb-2">Danışmanlık</h4>
+              <p class="line-clamp4 text-capitalize">
+                E-Ticaret Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum at, fugit
+                aliquam in similique quas, numquam odio et optio repudiandae quo dolore. Eos,
+                temporibus esse error atque animi ad unde! ti ratione magni eos beatae cumque ut
+                neque tenetur fugit iusto maiores. Labore, enim eaque!
+              </p>
+            </div>
+
+            <!-- 4.icon -->
+            <div
+              class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3 text-center mt-4 mb-4 shadow-lg p-4"
+            >
+              <i class="fa-solid fa-earth-americas fa-4x text-secondary"></i>
+              <h4 class="text-warning text-uppercase fw-bolder mt-4 mb-2">Web tasarım</h4>
+              <p class="line-clamp4 text-capitalize">
+                E-Ticaret Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum at, fugit
+                aliquam in similique quas, numquam odio et optio repudiandae quo dolore. Eos,
+                temporibus esse error atque animi ad unde! ti ratione magni eos beatae cumque ut
+                neque tenetur fugit iusto maiores. Labore, enim eaque!
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Başarılar (success_rate) -->
+      <!-- start section Başarılar -->
+      <section
+        id="success_rate"
+        class="wow44 animate__animated animate__fadeIn"
+        data-wow-delay="0.3s"
+      >
+        <div class="container">
+          <div class="row">
+            <h3
+              id="scroll_spy_success_rate"
+              class="customize_heading wow animate__animated animate__zoomIn"
+              data-wow-delay="1s"
+            >
+              Başarılarımız
+            </h3>
+
+            <!-- 1 -->
+            <div class="col-md-4 col-lg-4 text-center">
+              <i class="fa-solid fa-check performance_icon text-warning fa-3x mb-3"></i>
+              <span class="counter text-white">250</span>
+              <p class="text-center">Çalışma Saati</p>
+            </div>
+            <!-- 2 -->
+            <div class="col-md-4 col-lg-4 text-center">
+              <i class="fa-solid fa-person-chalkboard performance_icon text-warning fa-3x mb-3"></i>
+              <span class="counter text-white">150</span>
+              <p class="text-center">Ekip Sayısı</p>
+            </div>
+            <!-- 3 -->
+            <div class="col-md-4 col-lg-4 text-center">
+              <i class="fa-brands fa-intercom performance_icon text-warning fa-3x mb-3"></i>
+              <span class="counter text-white">110</span>
+              <p class="text-center">Müşteri Sayısı</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Haberler  Start-->
+      <section
+        id="scroll_spy_newspaper"
+        class="wow animate__animated animate__fadeInLeft"
+        data-wow-delay="1.4s"
+      >
+        <div class="container">
+          <div class="row">
+            <h3 class="customize_heading wow animate__animated animate__zoomIn" data-wow-delay="1s">
+              Yeni Haberler
+            </h3>
+            <p class="display-6 text-center">En Son Haber</p>
+            <p class="line-clamp25">
+              Yeni Haberler Lorem ipsum dolor, sit amet consectetur adipisicing elit. Distinctio
+              similique beatae quis cupiditate voluptates, rerum explicabo! Distinctio amet, nobis,
+              vel eum fugit dolorem, incidunt sit id minus blanditiis odio doloribus. Iusto ex
+              reiciendis aliquam officiis officia voluptate optio harum, consectetur, sint eos quam
+              illum vel porro facilis! Ad quos veritatis eveniet. Quis odio ex amet animi nesciunt
+              quod nam itaque! Quae dolore reiciendis consequatur animi, nam necessitatibus a
+              eveniet beatae sequi deleniti eligendi, ipsum tempore, veritatis blanditiis esse
+              deserunt. Magnam minima sequi ad impedit quae enim necessitatibus rerum magni numquam?
+              Iusto pariatur iste optio impedit voluptatum, nisi, eius maxime odit corporis ipsam,
+              nulla sunt nemo laboriosam autem? Magni iusto corrupti reiciendis explicabo, cum
+              itaque illo vitae nisi? Ut, quos explicabo? Ratione hic dicta consequuntur. Esse
+              doloremque quisquam omnis quis error praesentium ullam sunt, iste, sapiente voluptas
+              laboriosam iure optio eum repellat tenetur nulla ea eius? Placeat voluptatibus
+              delectus consequatur perspiciatis! Repellat velit illum natus ipsum minus, inventore
+              asperiores nulla doloremque enim voluptate odio quis sequi laborum? Debitis provident
+              similique perferendis asperiores voluptatum laudantium? Velit nisi delectus voluptatem
+              tenetur alias voluptates? Obcaecati odit ea placeat maxime. Facilis amet optio
+              possimus est deserunt incidunt voluptatem nobis fugit earum debitis quo ut cum,
+              reprehenderit praesentium neque temporibus delectus! Sunt praesentium distinctio vitae
+              nostrum. Dolores quisquam unde, laborum corrupti fuga expedita architecto optio eaque
+              harum quos quibusdam debitis aspernatur, excepturi, temporibus qui aliquam. Porro
+              natus asperiores officia adipisci iste eos provident culpa ab sed? Ab neque molestias
+              nisi id? Atque, iste nisi! Deserunt fugit eaque odio dicta laudantium natus animi sit
+              voluptatum dolor iure cumque aut consequuntur recusandae praesentium unde, nostrum
+              nisi eos! Ex? Fugiat ratione harum ea praesentium ipsa? Dolor voluptatum id amet
+              delectus! Deleniti atque ex necessitatibus illo accusantium voluptate beatae, eius
+              tempore, magnam consequatur, quos libero nostrum porro similique modi. Eveniet.
+              Aliquam, vel, pariatur quis minima, expedita officiis cumque neque tenetur placeat
+              autem unde dignissimos. Rem repellat in numquam quasi consequuntur fugiat ex sint
+              explicabo quas totam officiis, iure id commodi! Optio, quis incidunt provident modi
+              exercitationem perferendis numquam quia, libero cum quod consectetur voluptatibus, non
+              eligendi ipsa. Modi error perspiciatis adipisci obcaecati tempora. Sint illum
+              laudantium est in, velit aut. Rem molestiae tempore unde, iure officiis accusamus
+              alias voluptate vel! Eum debitis ea praesentium totam eius atque, molestias veritatis
+              vitae aut sequi, adipisci nam fuga? Dolore omnis earum esse nostrum? Deserunt modi
+              pariatur itaque doloribus magnam minus quod tempora architecto, odio velit laboriosam
+              possimus voluptates cupiditate expedita praesentium numquam sunt officia fuga, sed
+              dignissimos dolore porro. Modi ipsum totam a. Architecto iusto voluptatum modi non
+              recusandae praesentium, consequuntur cumque fugiat soluta deleniti? Molestiae beatae
+              officia, minima dolorum expedita magnam reprehenderit fugit, libero impedit qui ipsum
+              quod iusto amet! Provident, commodi. Ipsa expedita neque tempore reprehenderit,
+              laboriosam sapiente quod quis praesentium! Blanditiis, velit odit. Quidem voluptatem
+              error reprehenderit alias magni consequatur labore nostrum dolores omnis aut
+              praesentium vitae maiores, eos vel! Id fugit itaque veniam vel praesentium sint maxime
+              doloribus aspernatur in aperiam, voluptas consectetur delectus harum nisi repellendus
+              nihil totam quibusdam incidunt odio quasi vitae cupiditate voluptatibus explicabo
+              asperiores. Unde! Qui laborum nulla labore, officia sint maiores minus illo tempora
+              alias incidunt amet nihil dolorum vitae tenetur excepturi veniam ad! Animi et
+              doloremque error nulla explicabo harum dicta, fuga consequatur. Laudantium dolores
+              perspiciatis hic voluptatem vero nesciunt, reiciendis sequi accusamus nam ea, quod vel
+              dolor facilis officia non eum corporis suscipit minus cumque numquam. Id non quae
+              porro eos! In! Debitis fugit corporis minima reiciendis, sunt nobis deleniti officia
+              rerum, sit atque nemo laborum beatae asperiores minus illo quas. Laborum aspernatur
+              aut debitis est quae minima animi earum fugit incidunt!
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- Haberler  End-->
+
+      <!-- Hakkımızda  Start-->
+      <!-- Hakkımızda  Start-->
+      <section
+        id="scroll_spy_about"
+        class="wow animate__animated animate__fadeInRight"
+        data-wow-delay="1.6s"
+      >
+        <div class="about-overlay"></div>
+        <!-- Arka plan karartma efekti -->
+        <div class="container position-relative">
+          <div class="row align-items-center">
+            <h3 class="customize_heading wow animate__animated animate__zoomIn" data-wow-delay="1s">
+              Hakkımızda
+            </h3>
+
+            <!-- Sol: Görsel -->
+            <div class="col-12 col-lg-6 mb-4 text-center">
+              <img
+                id="about_picture"
+                src="images/about.jpg"
+                alt="Şirketimiz Hakkında"
+                loading="lazy"
+                class="img-glare"
+              />
+              <p class="mt-3 text-light small">Yenilikçi teknoloji çözümleri ile sektörde öncü</p>
+            </div>
+
+            <!-- Sağ: Yazı -->
+            <div class="col-12 col-lg-6">
+              <div class="about-text p-5">
+                <p>
+                  Kurumumuz; yazılım, teknoloji ve danışmanlık alanlarında uzman kadrosu ile
+                  yenilikçi projeler üretmektedir. Eğitimden danışmanlığa, yazılım geliştirmeden
+                  Ar-Ge projelerine kadar geniş bir yelpazede hizmet sunuyoruz.
+                </p>
+                <p>
+                  <strong>Misyonumuz:</strong>
+                  Dijital dönüşüm süreçlerinde kurumlara uçtan uca çözümler sağlayarak iş
+                  süreçlerini hızlandırmak, güvenli ve ölçeklenebilir yazılım projeleri geliştirmek.
+                </p>
+                <p>
+                  <strong>Vizyonumuz:</strong>
+                  Sürdürülebilir, yenilikçi ve teknoloji odaklı çözümler geliştirerek geleceğe katkı
+                  sağlamak. Müşteri odaklı yaklaşımımız ile, yazılım dünyasında sürekli yenilik
+                  peşindeyiz.
+                </p>
+                <ul>
+                  <li>Özel yazılım geliştirme ve entegrasyon çözümleri</li>
+                  <li>Kurumsal eğitim ve danışmanlık hizmetleri</li>
+                  <li>Ar-Ge odaklı teknoloji projeleri</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- About End-->
+
+      <!-- About End-->
+
+      <!-- Blog  Start-->
+      <!-- start section blog -->
+      <h3
+        id="scroll_spy_blog"
+        class="customize_heading wow animate__animated animate__zoomIn"
+        data-wow-delay="1s"
+      >
+        Blog
+      </h3>
+      <p class="display-6 text-center">Yeni Blog</p>
+      <section id="blog" class="wow fadeIn ">
+        <div class="container ">
+          <div class="row">
+            <!-- 1.blog -->
+            <div class="col-md-3 img-glare">
+              <div class="card">
+                <a href="#!"><img class="card-img-top" src="./images/main1.jpg" alt="Title" /></a>
+                <div class="card-body">
+                  <h4 class="card-title">Blog-1</h4>
+                  <p class="card-text line-clamp6">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil facere dicta
+                    quae, placeat ducimus aliquam, qui, expedita neque porro temporibus dignissimos
+                    quasi magnam aperiam ab libero iste. Non, tenetur temporibus. Animi libero,
+                    consectetur nam repellendus distinctio temporibus perferendis sed excepturi a
+                    exercitationem doloribus, quod laboriosam dolorem facere iste sequi.
+                    Consequatur, tenetur quasi? Magnam rerum itaque repudiandae voluptatem
+                    voluptate, sapiente ratione.
+                  </p>
+                  <span class="blog_date">01/06/2023</span>
+                </div>
+              </div>
+            </div>
+            <!-- 1.blog -->
+            <div class="col-md-3 img-glare">
+              <div class="card ">
+                <a href="#!"><img class="card-img-top" src="./images/main2.jpg" alt="Title" /></a>
+                <div class="card-body">
+                  <h4 class="card-title">Blog-2</h4>
+                  <p class="card-text line-clamp6">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil facere dicta
+                    quae, placeat ducimus aliquam, qui, expedita neque porro temporibus dignissimos
+                    quasi magnam aperiam ab libero iste. Non, tenetur temporibus. Animi libero,
+                    consectetur nam repellendus distinctio temporibus perferendis sed excepturi a
+                    exercitationem doloribus, quod laboriosam dolorem facere iste sequi.
+                    Consequatur, tenetur quasi? Magnam rerum itaque repudiandae voluptatem
+                    voluptate, sapiente ratione.
+                  </p>
+                  <span class="blog_date">01/06/2023</span>
+                </div>
+              </div>
+            </div>
+            <!-- 1.blog -->
+            <div class="col-md-3 img-glare">
+              <div class="card">
+                <a href="#!"><img class="card-img-top" src="./images/main3.jpg" alt="Title" /></a>
+                <div class="card-body">
+                  <h4 class="card-title">Blog-3</h4>
+                  <p class="card-text line-clamp6">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil facere dicta
+                    quae, placeat ducimus aliquam, qui, expedita neque porro temporibus dignissimos
+                    quasi magnam aperiam ab libero iste. Non, tenetur temporibus. Animi libero,
+                    consectetur nam repellendus distinctio temporibus perferendis sed excepturi a
+                    exercitationem doloribus, quod laboriosam dolorem facere iste sequi.
+                    Consequatur, tenetur quasi? Magnam rerum itaque repudiandae voluptatem
+                    voluptate, sapiente ratione.
+                  </p>
+                  <span class="blog_date">01/06/2023</span>
+                </div>
+              </div>
+            </div>
+            <!-- 1.blog -->
+            <div class="col-md-3 img-glare">
+              <div class="card">
+                <a href="#!"><img class="card-img-top" src="./images/main4.jpg" alt="Title" /></a>
+                <div class="card-body">
+                  <h4 class="card-title">Blog-4</h4>
+                  <p class="card-text line-clamp6">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil facere dicta
+                    quae, placeat ducimus aliquam, qui, expedita neque porro temporibus dignissimos
+                    quasi magnam aperiam ab libero iste. Non, tenetur temporibus. Animi libero,
+                    consectetur nam repellendus distinctio temporibus perferendis sed excepturi a
+                    exercitationem doloribus, quod laboriosam dolorem facere iste sequi.
+                    Consequatur, tenetur quasi? Magnam rerum itaque repudiandae voluptatem
+                    voluptate, sapiente ratione.
+                  </p>
+                  <span class="blog_date">01/06/2023</span>
+                </div>
+              </div>
+            </div>
+            <!-- 1.blog -->
+            <div class="col-md-3 img-glare">
+              <div class="card">
+                <a href="#!"><img class="card-img-top" src="./images/main5.jpg" alt="Title" /></a>
+                <div class="card-body">
+                  <h4 class="card-title">Blog-5</h4>
+                  <p class="card-text line-clamp6">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil facere dicta
+                    quae, placeat ducimus aliquam, qui, expedita neque porro temporibus dignissimos
+                    quasi magnam aperiam ab libero iste. Non, tenetur temporibus. Animi libero,
+                    consectetur nam repellendus distinctio temporibus perferendis sed excepturi a
+                    exercitationem doloribus, quod laboriosam dolorem facere iste sequi.
+                    Consequatur, tenetur quasi? Magnam rerum itaque repudiandae voluptatem
+                    voluptate, sapiente ratione.
+                  </p>
+                  <span class="blog_date">01/06/2023</span>
+                </div>
+              </div>
+            </div>
+            <!-- 1.blog -->
+            <div class="col-md-3 img-glare">
+              <div class="card">
+                <a href="#!"><img class="card-img-top" src="./images/main6.jpg" alt="Title" /></a>
+                <div class="card-body">
+                  <h4 class="card-title">Blog-6</h4>
+                  <p class="card-text line-clamp6">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil facere dicta
+                    quae, placeat ducimus aliquam, qui, expedita neque porro temporibus dignissimos
+                    quasi magnam aperiam ab libero iste. Non, tenetur temporibus. Animi libero,
+                    consectetur nam repellendus distinctio temporibus perferendis sed excepturi a
+                    exercitationem doloribus, quod laboriosam dolorem facere iste sequi.
+                    Consequatur, tenetur quasi? Magnam rerum itaque repudiandae voluptatem
+                    voluptate, sapiente ratione.
+                  </p>
+                  <span class="blog_date">01/06/2023</span>
+                </div>
+              </div>
+            </div>
+            <!-- 1.blog -->
+            <div class="col-md-3 img-glare">
+              <div class="card">
+                <a href="#!"><img class="card-img-top" src="./images/main1.jpg" alt="Title" /></a>
+                <div class="card-body">
+                  <h4 class="card-title">Blog-7</h4>
+                  <p class="card-text line-clamp6">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil facere dicta
+                    quae, placeat ducimus aliquam, qui, expedita neque porro temporibus dignissimos
+                    quasi magnam aperiam ab libero iste. Non, tenetur temporibus. Animi libero,
+                    consectetur nam repellendus distinctio temporibus perferendis sed excepturi a
+                    exercitationem doloribus, quod laboriosam dolorem facere iste sequi.
+                    Consequatur, tenetur quasi? Magnam rerum itaque repudiandae voluptatem
+                    voluptate, sapiente ratione.
+                  </p>
+                  <span class="blog_date">01/06/2023</span>
+                </div>
+              </div>
+            </div>
+            <!-- 1.blog -->
+            <div class="col-md-3 img-glare">
+              <div class="card">
+                <a href="#!"><img class="card-img-top" src="./images/main2.jpg" alt="Title" /></a>
+                <div class="card-body">
+                  <h4 class="card-title">Blog-8</h4>
+                  <p class="card-text line-clamp6">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nihil facere dicta
+                    quae, placeat ducimus aliquam, qui, expedita neque porro temporibus dignissimos
+                    quasi magnam aperiam ab libero iste. Non, tenetur temporibus. Animi libero,
+                    consectetur nam repellendus distinctio temporibus perferendis sed excepturi a
+                    exercitationem doloribus, quod laboriosam dolorem facere iste sequi.
+                    Consequatur, tenetur quasi? Magnam rerum itaque repudiandae voluptatem
+                    voluptate, sapiente ratione.
+                  </p>
+                  <span class="blog_date">01/06/2023</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- end section blog -->
+
+      <!-- İletişim  Start-->
+      <!-- start section maps -->
+      <section id="maps" class="wow fadeIn">
+        <h3
+          id="scroll_spy_blog"
+          class="customize_heading wow animate__animated animate__zoomIn"
+          data-wow-delay="1s"
+        >
+          Maps
+        </h3>
+        <!-- https://www.embedmap.net/ -->
+        <iframe
+          frameborder="0"
+          scrolling="no"
+          marginheight="0"
+          marginwidth="0"
+          id="gmap_canvas"
+          src="https://maps.google.com/maps?width=985&amp;height=551&amp;hl=en&amp;q=%20malatya+()&amp;t=&amp;z=12&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+        ></iframe>
+      </section>
+      <!-- end section contact -->
+    </main>
+
+    <!-- end  Main -->
+
+    <!-- start  Footer -->
+    <footer id="footer_id" class="pt-5">
+      <div class="footer-container container">
+        <div class="row">
+          <!-- 1. Sütun: Logo + Hakkında + Abone Ol -->
+
+          <div class="col-md-4 mb-4">
+            <h5 class="mt-3">Abone Ol</h5>
+            <img id="footer-logo" src="./images/coffee.jpg" alt="xyz.inc" class="mb-3" />
+            <p class="footer-company-text">Yenilikçi teknoloji çözümleri ile sektörde öncü</p>
+
+            <form class="subscribe-form">
+              <div class="input-group">
+                <input type="email" class="form-control" placeholder="E-mail adresiniz" required />
+                <button type="submit" class="btn btn-primary">Gönder</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- 2. Sütun: İletişim Formu -->
+          <div class="col-md-4 mb-4">
+            <h5>İletişim</h5>
+            <form id="contactForm" class="contact-form">
+              <div class="mb-2">
+                <input
+                  type="text"
+                  id="contactName"
+                  class="form-control"
+                  placeholder="Ad Soyad"
+                  required
+                />
+              </div>
+              <div class="mb-2">
+                <input
+                  type="email"
+                  id="contactEmail"
+                  class="form-control"
+                  placeholder="E-posta"
+                  required
+                />
+              </div>
+              <div class="mb-2">
+                <textarea
+                  id="contactMessage"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Mesajınız"
+                  required
+                ></textarea>
+              </div>
+              <button type="submit" class="btn btn-warning w-100">Gönder</button>
+            </form>
+          </div>
+
+          <!-- 3. Sütun: Linkler + Sosyal -->
+          <div class="col-md-4 mb-4">
+            <h5>Yararlı Linkler</h5>
+            <ul class="footer-link list-unstyled">
+              <li><a href="#scroll_spy_works">Çalışmalar</a></li>
+              <li><a href="#scroll_spy_success_rate">Başarılarımız</a></li>
+              <li><a href="#newspaper">Haberler</a></li>
+              <li><a href="#about">Hakkımızda</a></li>
+              <li><a href="#blog">Blog</a></li>
+              <li><a href="#maps">İletişim</a></li>
+            </ul>
+
+            <div class="social-icons mt-3">
+              <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+              <a href="#"><i class="fa-brands fa-github"></i></a>
+              <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alt Kısım -->
+      <div class="footer-bottom text-center py-3">
+        2023-
+        <span id="footer_year"></span>
+      </div>
+    </footer>
+
+    <!-- end  Footer -->
+
+    <!-- start  backtotop -->
+    <a id="back_top_id" href="#back_top_span"><i class="fa-regular fa-circle-up"></i></a>
+    <!-- end  backtotop -->
+
+    <!-- end code -->
+
+    <!-- for bootstrap script -->
+    <script src="./node_modules/@popperjs/core/dist/umd/popper.min.js"></script>
+
+    <!-- bootstrap script -->
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Animnasyon için script -->
+    <script src="./node_modules/wowjs/dist/wow.min.js"></script>
+
+    <!-- SweetAlert -->
+    <script src="./node_modules/sweetalert2/dist/sweetalert2.all.min.js"></script>
+
+    <!-- WOW init -->
+    <script>
+      new WOW({
+        boxClass: 'wow',
+        animateClass: 'animate__animated', // Animate.css v4 için zorunlu!
+        offset: 0,
+        mobile: true,
+        live: true,
+      }).init();
+    </script>
+    <!-- <script> new WOW(
+        {
+            boxClass: 'wow',      // default
+            animateClass: 'animated', // default
+            offset: 0,          // default
+            mobile: true,       // default
+            live: true        // default
+        }
+    ).init() </script> -->
+
+    <!-- Bootstrap CDN JavaScript Libraries -->
+    <!-- <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script> -->
+
+    <!-- for Bootstrap CDN JavaScript Libraries -->
+    <!-- <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"
+    ></script> -->
+
+    <!-- counterUp2 CDN (bundlersız kullanım için) -->
+    <script src="./node_modules/counterup2/dist/index.js"></script>
+
+    <!-- template.js (bundlersız, import yok) -->
+    <script src="./template.js"></script>
+  </body>
+</html>

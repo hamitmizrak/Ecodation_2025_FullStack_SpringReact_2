@@ -1,0 +1,198 @@
+:root {
+  --primary-color: #00c2cb;
+  --background-color: #1c1c1c;
+  --color: #fff;
+  --danger-color: #e74c3c;
+  --secondary-color: #3498db;
+  --accent-color: #8e44ad;
+  --button-radius: 8px;
+  --customise-font-family: 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 20px;
+}
+
+body {
+  font-family: var(--customise-font-family);
+  background: linear-gradient(to right, #564f4f, #1c1c1c);
+  color: var(--color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+form {
+  width: 100%;
+  max-width: 500px;
+  padding: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 194, 203, 0.15);
+  animation: fadeIn 0.5s ease-in-out;
+  background-color: #2a2a2a;
+  border-radius: 10px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+fieldset {
+  border: 2px solid var(--primary-color);
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 0 20px rgba(0, 194, 203, 0.3);
+}
+
+legend {
+  color: var(--primary-color);
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+fieldset p {
+  color: #ccc;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+input,
+select,
+textarea {
+  padding: 0.6rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #f0faff;
+  color: var(--background-color);
+  transition: 0.3s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--primary-color);
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  transform: scale(1.2);
+  margin-right: 0.4rem;
+}
+
+input[type='color'] {
+  padding: 0;
+  height: 40px;
+  width: 100px;
+}
+
+/* Buton stilleri */
+.form-button {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.form-button button {
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: var(--button-radius);
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#submit_id {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+}
+#submit_id:hover {
+  background-color: #00e6f0;
+}
+
+#reset_id {
+  background-color: var(--danger-color);
+  color: var(--color);
+}
+#reset_id:hover {
+  background-color: #ff6f61;
+}
+
+#blog_id {
+  background-color: var(--accent-color);
+  color: white;
+}
+#blog_id:hover {
+  background-color: #9b59b6;
+}
+
+#home_id {
+  background-color: var(--secondary-color);
+  color: white;
+}
+#home_id:hover {
+  background-color: #5dade2;
+}
+
+/* 1 Buton: Mobil (0 - 767px) */
+@media screen and (max-width: 767px) {
+  .form-button {
+    flex-direction: row;
+  }
+  .form-button button {
+    width: 100% !important;
+    font-size: 1rem;
+  }
+}
+
+/* 2 Buton: Tablet (768 - 991px) */
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .form-button button {
+    width: 48% !important;
+    font-size: 1rem;
+  }
+}
+
+/* 3 Buton: Küçük ekran (992 - 1199px) */
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+  .form-button button {
+    width: 30.66% !important;
+    font-size: 0.9rem;
+  }
+}
+
+/* 4 Buton: Geniş ekran (1200px ve üstü) */
+@media screen and (min-width: 1200px) {
+  .form-button button {
+    width: 22% !important;
+    font-size: 0.68rem;
+  }
+}

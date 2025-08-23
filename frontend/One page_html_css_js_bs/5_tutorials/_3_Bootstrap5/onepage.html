@@ -1,0 +1,356 @@
+<!-- bs5-$ ==> TAB -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Kurumsal Kayıt Formu - HTML5 ve CSS3" />
+    <meta name="author" content="Hamit Mızrak" />
+    <title>One Page</title>
+    <link rel="icon" href="../../pictures/main2.jpg" type="image/x-icon" />
+
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+
+    <!-- External Css -->
+    <link rel="stylesheet" href="style.css44" />
+  </head>
+
+  <body>
+    <!-- nav start -->
+    <!-- bs5-navbar-default ==> TAB  -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Logo</a>
+        <button
+          class="navbar-toggler d-lg-none"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapsibleNavId"
+          aria-controls="collapsibleNavId"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <ul class="collapse navbar-collapse" id="collapsibleNavId">
+          <ul class="navbar-nav me-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="#" aria-current="page">
+                Home
+                <span class="visually-hidden">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="dropdownId"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Dropdown
+              </a>
+              <div class="dropdown-menu" aria-labelledby="dropdownId">
+                <a class="dropdown-item" href="#">Action 1</a>
+                <a class="dropdown-item" href="#">Action 2</a>
+              </div>
+            </li>
+          </ul>
+          <form class="d-flex my-2 my-lg-0">
+            <input class="form-control me-sm-2" type="text" placeholder="Search" />
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+           <ul class="navbar-nav me-auto mt-2 mt-lg-0">
+          <li class="btn btn-outline-primary ms-2 btn-sm">
+            <a class="nav-link" href="#"  
+            data-bs-toggle="modal"
+           data-bs-target="#modalId">Login</a>
+          </li>
+        </ul>
+        </div>
+      </div>
+    </nav>
+
+ 
+   
+    <!-- nav en -->
+
+    <!-- header start -->
+    <header>
+      <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide-to="0"
+            class="active"
+            aria-current="true"
+            aria-label="Slide 1"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide-to="1"
+            aria-label="Slide 2"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleCaptions"
+            data-bs-slide-to="2"
+            aria-label="Slide 3"
+          ></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="../../pictures/header.jpg" class="d-block w-100" alt="..." />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>First slide label</h5>
+              <p>Some representative placeholder content for the first slide.</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="../../pictures/header.jpg" class="d-block w-100" alt="..." />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Second slide label</h5>
+              <p>Some representative placeholder content for the second slide.</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="../../pictures/header.jpg" class="d-block w-100" alt="..." />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Third slide label</h5>
+              <p>Some representative placeholder content for the third slide.</p>
+            </div>
+          </div>
+        </div>
+        <button
+          class="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselExampleCaptions"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Önceki</span>
+        </button>
+        <button
+          class="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselExampleCaptions"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Sonraki</span>
+        </button>
+      </div>
+    </header>
+    <!-- header start -->
+
+    <!-- main start -->
+    <main>
+      <h1 class="text-center mt-5 bg-dark text-white p-2 container">One Page</h1>
+
+      <div class="container bg-primary p-2">
+        <div class="row">
+          <div class="col-md-4 mb-1">
+            <div class="card">
+              <img class="card-img-top" src="../../pictures/main1.jpg" alt="Title" />
+              <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card">
+              <img class="card-img-top" src="../../pictures/main2.jpg" alt="Title" />
+              <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card">
+              <img class="card-img-top" src="../../pictures/main3.jpg" alt="Title" />
+              <div class="card-body">
+                <h4 class="card-title">Title</h4>
+                <p class="card-text">Text</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- main start -->
+
+
+    <!-- Modal Body -->
+    <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+    <div
+      class="modal fade"
+      id="modalId"
+      tabindex="-1"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      role="dialog"
+      aria-labelledby="modalTitleId"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md p-2"
+        role="document"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitleId">Login</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">Üye Girişi</div>
+          <form action="">
+            <div class="form-group">
+              <label for="email_id">Email(*)</label>
+              <input
+                type="email"
+                id="email_id"
+                name="email_name"
+                placeholder="Email adresiniz..."
+                required
+                autocomplete="email"
+                class="form-control"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="password_id">Şifre(*)</label>
+              <input
+                type="password"
+                id="password_id"
+                name="password_name"
+                required
+                placeholder="Şifre..."
+                minlength="8"
+                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$"
+                autocomplete="new-password"
+                class="form-control"
+              />
+            </div>
+            <button type="reset" class="btn btn-danger">Reset</button>
+            <button type="submit" class="btn btn-primary">Gönder</button>
+          </form>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+            <button type="button" class="btn btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button
+                    class="accordion-button"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
+                >
+                    Accordion Item #1
+                </button>
+            </h2>
+            <div
+                id="collapseOne"
+                class="accordion-collapse collapse show"
+                aria-labelledby="headingOne"
+                data-bs-parent="#accordionExample"
+            >
+                <div class="accordion-body">
+                    This is the first item's accordion body.
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div
+        class="alert alert-primary alert-dismissible fade show"
+        role="alert"
+    >
+        <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+        ></button>
+    
+        <strong>Holy guacamole!</strong> You should check in on some of
+        those fields below.
+    </div>
+
+
+    <span
+        class="badge bg-primary"
+        >3!</span
+    >
+
+    <button
+        class="btn btn-primary"
+        type="button"
+        disabled
+    >
+        <span
+            class="spinner-border spinner-border-lg"
+            role="status"
+            aria-hidden="true"
+        ></span>
+        Loading...
+    </button>
+    
+    
+    <br /><br /><br /><br /><br /><br /><br /><br />
+    
+
+    <!-- Optional: Place to the bottom of scripts -->
+    <script>
+      const myModal = new bootstrap.Modal(document.getElementById('modalId'), options);
+    </script>
+
+    <!-- footer start -->
+    <footer></footer>
+    <!-- footer start -->
+
+    <!-- Bootstrap JavaScript Libraries -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

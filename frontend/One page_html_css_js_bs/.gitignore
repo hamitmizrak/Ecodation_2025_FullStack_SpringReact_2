@@ -1,0 +1,5 @@
+# Special git untracked files
+1_Kurulumlar
+
+# Bu paket içindeki node_modules klasörünü yoksay
+node_modules

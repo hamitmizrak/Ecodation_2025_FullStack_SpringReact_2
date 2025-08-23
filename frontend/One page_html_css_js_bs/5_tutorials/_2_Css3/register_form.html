@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Kurumsal Kayıt Formu - HTML5 ve CSS3" />
+    <meta name="author" content="Hamit Mızrak" />
+    <title>Kayıt Ol (Register)</title>
+    <link rel="icon" href="../../pictures/main1.jpg" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <form action="/register/" method="post" id="register_form_id" autocomplete="on">
+      <fieldset>
+        <legend>Kayıt Formu</legend>
+        <p>
+          Bu form üzerinden üyelik oluşturabilirsiniz. Lütfen * işaretli alanları eksiksiz
+          doldurunuz.
+        </p>
+
+        <input type="hidden" name="form_version" value="v1.0.0" />
+        <input type="hidden" name="form_timestamp" value="<?= new Date().toISOString() ?>" />
+
+        <!-- ADI -->
+        <div class="form-group">
+          <label for="name_id">Ad(*)</label>
+          <input
+            type="text"
+            id="name_id"
+            name="name_name"
+            placeholder="Adınız..."
+            required
+            minlength="2"
+            maxlength="50"
+            autocomplete="given-name"
+          />
+        </div>
+
+        <!-- SOYADI -->
+        <div class="form-group">
+          <label for="surname_id">Soyad(*)</label>
+          <input
+            type="text"
+            id="surname_id"
+            name="surname_name"
+            placeholder="Soyadınız..."
+            required
+            minlength="2"
+            maxlength="50"
+            autocomplete="family-name"
+          />
+        </div>
+
+        <!-- EPOSTA -->
+        <div class="form-group">
+          <label for="email_id">Email(*)</label>
+          <input
+            type="email"
+            id="email_id"
+            name="email_name"
+            placeholder="Email adresiniz..."
+            required
+            autocomplete="email"
+          />
+        </div>
+
+        <!-- SOSYAL MEDYA / 2.MAIL -->
+        <div class="form-group">
+          <label for="social1_id">Sosyal Medya ya da 2. Mail</label>
+          <input
+            type="url"
+            id="social1_id"
+            name="social1_name"
+            placeholder="URL giriniz..."
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="form-group">
+          <label for="password_id">Şifre(*)</label>
+          <input
+            type="password"
+            id="password_id"
+            name="password_name"
+            required
+            placeholder="Şifre..."
+            minlength="8"
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$"
+            autocomplete="new-password"
+          />
+        </div>
+
+        <!-- RE-PASSWORD -->
+        <div class="form-group">
+          <label for="re_password_id">Şifre Tekrar(*)</label>
+          <input
+            type="password"
+            id="re_password_id"
+            name="re_password_name"
+            required
+            placeholder="Şifrenizi tekrar giriniz..."
+            minlength="8"
+            autocomplete="new-password"
+          />
+        </div>
+
+        <!-- TELEFON -->
+        <div class="form-group">
+          <label for="tel_id">Telefon(*)</label>
+          <input
+            type="tel"
+            id="tel_id"
+            name="tel_name"
+            required
+            placeholder="+90 532 123 45 67"
+            pattern="^\+90\s\d{3}\s\d{3}\s\d{2}\s\d{2}$"
+          />
+        </div>
+
+        <!-- ADRES -->
+        <div class="form-group">
+          <label for="address_id">Adres</label>
+          <textarea
+            id="address_id"
+            name="address_name"
+            rows="3"
+            maxlength="200"
+            placeholder="Adresinizi giriniz..."
+          ></textarea>
+        </div>
+
+        <!-- DOĞUM TARİHİ -->
+        <div class="form-group">
+          <label for="birthday_id">Doğum Tarihi</label>
+          <input type="date" id="birthday_id" name="birthday_name" max="2025-12-31" required />
+        </div>
+
+        <!-- ÖĞRENİM DURUMU -->
+        <div class="form-group">
+          <label>Öğrenim Durumu</label>
+          <label>
+            <input type="radio" name="education_name" value="lise" required />
+            Lise
+          </label>
+          <label>
+            <input type="radio" name="education_name" value="uni" />
+            Üniversite
+          </label>
+          <label>
+            <input type="radio" name="education_name" value="master" />
+            Yüksek Lisans
+          </label>
+          <label>
+            <input type="radio" name="education_name" value="phd" />
+            Doktora
+          </label>
+        </div>
+
+        <!-- CİNSİYET -->
+        <div class="form-group">
+          <label for="gender_id">Cinsiyet</label>
+          <select name="gender_name" id="gender_id" required>
+            <option value="">Seçiniz</option>
+            <option value="male">Erkek</option>
+            <option value="female">Kadın</option>
+            <option value="other">Diğer</option>
+          </select>
+        </div>
+
+        <!-- ŞEHİR -->
+        <div class="form-group">
+          <label for="city_id">Şehir</label>
+          <input
+            type="text"
+            id="city_id"
+            name="city_name"
+            placeholder="Örn: Ankara"
+            list="cityList"
+          />
+          <datalist id="cityList">
+            <option value="İstanbul" />
+            <option value="Ankara" />
+            <option value="İzmir" />
+            <option value="Bursa" />
+            <option value="Malatya" />
+          </datalist>
+        </div>
+
+        <!-- FOTOĞRAF -->
+        <div class="form-group">
+          <label for="foto_id">Fotoğraf</label>
+          <input type="file" id="foto_id" name="foto_name" accept="image/*" />
+        </div>
+
+        <!-- RENK -->
+        <div class="form-group">
+          <label for="color_id">Sizi Temsil Eden Renk</label>
+          <input type="color" id="color_id" name="color_name" value="#00c2cb" />
+        </div>
+
+        <!-- KOŞUL -->
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="terms_id" name="terms_name" required />
+            Şartları okudum ve kabul ediyorum
+          </label>
+        </div>
+
+        <!-- BUTONLAR -->
+        <div class="form-button">
+          <button type="reset" id="reset_id">Temizle</button>
+          <button type="submit" id="submit_id">Giriş Yap</button>
+          <button type="button" id="blog_id">Blog</button>
+          <button type="button" id="home_id">Anasayfa</button>
+        </div>
+      </fieldset>
+    </form>
+  </body>
+</html>

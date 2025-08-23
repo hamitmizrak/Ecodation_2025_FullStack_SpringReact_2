@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Kurumsal Kayıt Formu - HTML5 ve CSS3" />
+    <meta name="author" content="Hamit Mızrak" />
+    <title>Üye Girişi (Login)</title>
+    <link rel="icon" href="../../pictures/main1.jpg" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <form action="/register/" method="post" id="register_form_id" autocomplete="on">
+      <fieldset>
+        <legend>Giriş Formu</legend>
+        <p>
+          Bu form üzerinden üyelik oluşturabilirsiniz. Lütfen * işaretli alanları eksiksiz
+          doldurunuz.
+        </p>
+
+        <input type="hidden" name="form_version" value="v1.0.0" />
+        <input type="hidden" name="form_timestamp" value="<?= new Date().toISOString() ?>" />
+
+        <!-- EPOSTA -->
+        <div class="form-group">
+          <label for="email_id">Email(*)</label>
+          <input
+            type="email"
+            id="email_id"
+            name="email_name"
+            placeholder="Email adresiniz..."
+            required
+            autocomplete="email"
+          />
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="form-group">
+          <label for="password_id">Şifre(*)</label>
+          <input
+            type="password"
+            id="password_id"
+            name="password_name"
+            required
+            placeholder="Şifre..."
+            minlength="8"
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$"
+            autocomplete="new-password"
+          />
+        </div>
+
+        <!-- KOŞUL -->
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="terms_id" name="terms_name" required />
+            Şartları okudum ve kabul ediyorum
+          </label>
+        </div>
+
+        <!-- BUTONLAR -->
+        <div class="form-button">
+          <button type="reset" id="reset_id">Temizle</button>
+          <button type="submit" id="submit_id">Giriş Yap</button>
+          <button type="button" id="blog_id">Blog</button>
+          <button type="button" id="home_id">Anasayfa</button>
+        </div>
+      </fieldset>
+    </form>
+  </body>
+</html>

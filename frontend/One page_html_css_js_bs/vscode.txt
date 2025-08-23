@@ -1,0 +1,43 @@
+{
+  // Otomatik kaydetme
+  "files.autoSave": "onWindowChange",
+
+  // Prettier ile otomatik formatla
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // ESLint ile otomatik düzeltme (varsa)
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+
+  // Tab ve boşluk ayarları
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+
+  // Türkçe karakter hatalarını engelle
+  "files.encoding": "utf8",
+
+  // Dosya sonunda otomatik yeni satır
+  "files.insertFinalNewline": true,
+
+  // Otomatik import sırası (JS için)
+  "javascript.preferences.importModuleSpecifier": "relative",
+
+  // Satır uzunluğu
+  "editor.wordWrap": "on",
+  "editor.rulers": [100],
+
+  // Gereksiz dosyaları explorer'da gizle
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.parcel-cache": true
+  },
+
+  // Sadece bu projede Prettier ve ESLint çalışsın
+  "prettier.requireConfig": true,
+  "eslint.workingDirectories": ["./"]
+}
