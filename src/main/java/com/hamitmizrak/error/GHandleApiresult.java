@@ -88,7 +88,7 @@ public class GHandleApiresult {
                     .status(tryStatusCode)
                     .message(message)
                     .path(path)
-                    .errors((Map<String, String>) Map.of("data", data))
+                    .validationErrors(Map.of("data", data))
                     .createdDate(new Date(System.currentTimeMillis()))
                     .build();
             // return new ResponseEntity<>(addressDtoApiCreate,HttpStatus.CREATED);
@@ -105,7 +105,7 @@ public class GHandleApiresult {
                     .status(catchStatusCode)
                     .message(message)
                     .path(path)
-                    .errors((Map<String, String>) Map.of("data", data))
+                    .validationErrors(Map.of("data", data))
                     .createdDate(new Date(System.currentTimeMillis()))
                     .build();
             return ResponseEntity.status(catchStatusCode).body(apiResult);

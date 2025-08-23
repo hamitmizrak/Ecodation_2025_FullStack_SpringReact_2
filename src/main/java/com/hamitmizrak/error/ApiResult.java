@@ -17,31 +17,14 @@ import java.util.Map;
 // Jackson: Objeyi , Json'a çevirmek
 // @JsonInclude(JsonInclude.Include.NON_NULL): Eğer ApiResultta null değer varsa backent'te gönder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResult<T> {
+public class ApiResult {
 
     // sem pvc
-    /** HTTP status kodu (200, 201, 400, 404, 500, ...) */
     private int status;
-
-    /** İşlem başarılı mı? (status'e paralel, opsiyonel) */
-    private Boolean success;
-
-    /** Hata detayı (opsiyonel; success=false durumlarında doldurulabilir) */
     private String error;
-
-    /** İsteğe bağlı doğrulama hataları veya alan bazlı mesajlar */
-    private Map<String, String> errors;
-
-    /** Asıl faydalı yük (payload) — generic tip */
-    private T data;
-
-    /** İnsan tarafından okunur kısa mesaj (opsiyonel) */
     private String message;
-
-    /** İstek yolu veya mutlak URL (örn: /role/api/v1.0.0/update) */
     private String path;
-
-    /** Oluşturulma zamanı */
+    private Map<String,Object> validationErrors;
     private Date createdDate = new Date(System.currentTimeMillis());
 
     // Constructor Parametresiz

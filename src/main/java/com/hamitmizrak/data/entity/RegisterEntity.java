@@ -1,6 +1,5 @@
 package com.hamitmizrak.data.entity;
 
-
 import com.hamitmizrak.audit.AuditingAwareBaseEntity;
 import com.hamitmizrak.data.embeddable.EmbeddableUserDetails;
 import jakarta.persistence.*;

@@ -1,147 +1,134 @@
 package com.hamitmizrak.controller.api.impl;
 
 import com.hamitmizrak.business.dto.RoleDto;
-import com.hamitmizrak.business.services.interfaces.IRoleServices;
+import com.hamitmizrak.business.services.interfaces.IRoleService;
 import com.hamitmizrak.controller.api.interfaces.IRoleApi;
 import com.hamitmizrak.error.ApiResult;
-import com.hamitmizrak.error.ApiResultFactory;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 
-// LOMBOK
+// Lombok
 @RequiredArgsConstructor
 @Log4j2
 
 // API (REST)
 @RestController
 @RequestMapping("/role/api/v1.0.0")
-@CrossOrigin // CORS Hatası
-//@CrossOrigin(origins = FrontEnd.REACT_URL) // CORS Hatası
-//@CrossOrigin(origins = {FrontEnd.REACT_URL,FrontEnd.ANGULAR_URL}) // CORS Hatası
-//@CrossOrigin(origins ="localhost:3000") // CORS Hatası
-
+@CrossOrigin //CORS: Hatası
+//@CrossOrigin(origins = ProjectUrl.REACT_FRONTEND_PORT_URL)
+//@CrossOrigin(origins = "localhost:3000")
 public class RoleApiImpl implements IRoleApi<RoleDto> {
 
-    // Field (Injection)
-    //@Qualifier("roleServicesImpl")
-    private final IRoleServices iRoleServices;
+    // Injection
+    private final IRoleService iRoleService;
 
     // Error
     private ApiResult apiResult;
 
-    ///////////////////////////////////////////////////////////////////
-    // CREATE (RoleDto)
+
+    // CREATE Role(Api)
     // http://localhost:4444/role/api/v1.0.0/create
-    @Override
     @PostMapping("/create")
-    public ResponseEntity<?> objectApiCreate(@Valid @RequestBody RoleDto roleDto) {
-        RoleDto roleDtoCreate= (RoleDto) iRoleServices.objectServiceCreate(roleDto);
-
-        // eğer kaydetmezse null değer verirse
-        // CREATE
-        if (roleDtoCreate == null) {
-            return ResponseEntity.status(404).body(
-                    ApiResultFactory.notFound("Role eklenmedi", "http://localhost:4444/role/api/v1.0.0/create")
-            );
-        } else if (roleDtoCreate.getRoleId() == 0) {
-            return ResponseEntity.status(400).body(
-                    ApiResultFactory.badRequest("Role Dto Kötü istek", "http://localhost:4444/role/api/v1.0.0/create")
-            );
-        } else  {
-            // Log
-            log.info("Role Dto Eklendi",roleDtoCreate);
-            return ResponseEntity.ok(
-                    ApiResultFactory.success(roleDtoCreate, "http://localhost:4444/role/api/v1.0.0/create")
-            );
-        }
-    }
-
-
-    // LIST (RoleDto)
-    // http://localhost:4444/role/api/v1.0.0/list
     @Override
-    @GetMapping("/list")
-    public ResponseEntity<List<RoleDto>> objectApiList() {
-        log.info("Role Dto Listelendi");
-        return ResponseEntity.ok(iRoleServices.objectServiceList());
+    public ResponseEntity<?> objectApiCreate(@Valid @RequestBody RoleDto roleDtoData) {
+        RoleDto roleCreateApi=(RoleDto)iRoleService.objectServiceCreate(roleDtoData);
+
+        // Eğer kaydederken null değer gelirse
+        if(roleCreateApi==null){
+            ApiResult apiResultCreate=ApiResult.builder()
+                    .status(404)
+                    .error("Role Eklenmedi")
+                    .message("Role Dto bulunmadı")
+                    .path("localhost:4444/role/api/v1.0.0/create")
+                    .createdDate(new Date(System.currentTimeMillis()))
+                    .build();
+            return ResponseEntity.status(404).body(apiResultCreate);
+        }
+        else if(roleCreateApi.getRoleId()==0){
+            ApiResult apiResultCreate=ApiResult.builder()
+                    .status(400)
+                    .error("Role Eklenmedi")
+                    .message("Role Dto Bad Request")
+                    .path("localhost:4444/role/api/v1.0.0/create")
+                    .createdDate(new Date(System.currentTimeMillis()))
+                    .build();
+            return ResponseEntity.status(400).body(apiResultCreate);
+        }
+        log.info("Role Api eklendi");
+        return ResponseEntity.status(201).body(iRoleService.objectServiceCreate(roleDtoData));
     }
 
-    // FIND BY ID (RoleDto)
+    // LIST Role(Api)
+    // http://localhost:4444/role/api/v1.0.0/list
+    @GetMapping("/list")
+    @Override
+    public ResponseEntity<List<RoleDto>> objectApiList() {
+        log.info("Role Api Listelendi");
+        return ResponseEntity.ok(iRoleService.objectServiceList());
+    }
+
+    // FIND Role(Api)
     // http://localhost:4444/role/api/v1.0.0/find
     // http://localhost:4444/role/api/v1.0.0/find/0
     // http://localhost:4444/role/api/v1.0.0/find/1
     @Override
-    @GetMapping({"/find", "/find/{id}"})
-    public ResponseEntity<?> objectApiFindById(@PathVariable(name = "id", required = false) Long id) {
-        RoleDto roleDtoFind= (RoleDto) iRoleServices.objectServiceFindById(id);
-
-        // eğer kaydetmezse null değer verirse
-        if (roleDtoFind == null) {
-            return ResponseEntity.status(404).body(
-                    ApiResultFactory.notFound("Role bulunamadı", "http://localhost:4444/role/api/v1.0.0/find")
-            );
-        } else {
-            // Log
-            log.info("Role Dto Bulundu",roleDtoFind);
-            return ResponseEntity.ok(
-                    ApiResultFactory.success(roleDtoFind, "http://localhost:4444/role/api/v1.0.0/find")
-            );
-        }
+    @GetMapping({"/find","/find/{id}"})
+    public ResponseEntity<?> objectApiFindById(@PathVariable(name="id",required = false)  Long id) {
+       RoleDto roleFindApi=( RoleDto)iRoleService.objectServiceFindById(id);
+       if(roleFindApi==null){
+           // Eğer kaydederken null değer gelirse
+               ApiResult apiResultFind=ApiResult.builder()
+                       .status(404)
+                       .error("Role Bulunamadı")
+                       .message("Role Dto bulunmadı")
+                       .path("localhost:4444/role/api/v1.0.0/find")
+                       .createdDate(new Date(System.currentTimeMillis()))
+                       .build();
+               return ResponseEntity.status(404).body(apiResultFind);
+       }
+        log.info("Role Api bulundu");
+        return ResponseEntity.ok(iRoleService.objectServiceFindById(id));
     }
 
-    // UPDATE (RoleDto)
+    // UPDATE Role(Api)
     // http://localhost:4444/role/api/v1.0.0/update
     // http://localhost:4444/role/api/v1.0.0/update/0
     // http://localhost:4444/role/api/v1.0.0/update/1
     @Override
-    @PutMapping({"/update", "/update/{id}"})
-    public ResponseEntity<?> objectApiUpdate(@PathVariable(name = "id", required = false) Long id, @Valid @RequestBody RoleDto roleDto) {
-        RoleDto roleDtoUpdate= (RoleDto) iRoleServices.objectServiceUpdate(id,roleDto);
-
-        // eğer kaydetmezse null değer verirse
-        if(roleDtoUpdate==null){
-            ApiResult apiResultUpdateViaNull= ApiResult
-                    .builder()
+    @PutMapping({"/update","/update/{id}"})
+    public ResponseEntity<?> objectApiUpdate(@PathVariable(name="id",required = false) Long id, @Valid @RequestBody RoleDto roleDto) {
+        RoleDto roleUpdateApi=( RoleDto)iRoleService.objectServiceUpdate(id,roleDto);
+        if(roleUpdateApi==null){
+            // Eğer kaydederken null değer gelirse
+            ApiResult apiResultFind=ApiResult.builder()
                     .status(404)
-                    .error("Role Dto Güncellenmedi")
-                    .path("http://localhost:4444/role/api/v1.0.0/update")
+                    .error("Role Bulunamadı")
+                    .message("Role Dto bulunmadı")
+                    .path("localhost:4444/role/api/v1.0.0/update")
                     .createdDate(new Date(System.currentTimeMillis()))
                     .build();
-            return ResponseEntity.status(404).body(apiResultUpdateViaNull);
+            return ResponseEntity.status(404).body(apiResultFind);
         }
-        // Log
-        log.info("Role Dto Güncellendi",roleDtoUpdate);
-        return ResponseEntity.status(400).body(roleDtoUpdate);
+        log.info("Role Api Güncellendi");
+        return ResponseEntity.ok(iRoleService.objectServiceUpdate(id,roleDto));
     }
 
-    // DELETE
+    // DELETE Role(Api)
+    // http://localhost:4444/role/api/v1.0.0/delete
+    // http://localhost:4444/role/api/v1.0.0/delete/0
     // http://localhost:4444/role/api/v1.0.0/delete/1
     @Override
-    @DeleteMapping({"/delete", "/delete/{id}"})
-    public ResponseEntity<?> objectApiDelete(@PathVariable(name = "id", required = false) Long id) {
-        RoleDto roleDtoDelete= (RoleDto) iRoleServices.objectServiceDelete(id);
-
-        // eğer kaydetmezse null değer verirse
-        if(roleDtoDelete==null){
-            ApiResult apiResultUpdateViaNull= ApiResult
-                    .builder()
-                    .status(404)
-                    .error("Role Dto Silinmedi")
-                    .path("http://localhost:4444/role/api/v1.0.0/delete")
-                    .createdDate(new Date(System.currentTimeMillis()))
-                    .build();
-            return ResponseEntity.status(404).body(apiResultUpdateViaNull);
-        }
-        // Log
-        log.info("Role Dto Silindi",roleDtoDelete);
-        return ResponseEntity.status(400).body(roleDtoDelete);
+    @DeleteMapping({"/delete","/delete/{id}"})
+    public ResponseEntity<?> objectApiDelete(@PathVariable(name="id",required = false) Long id) {
+        RoleDto roleDto=(RoleDto)iRoleService.objectServiceDelete(id);
+        log.info("Role Api Silindi");
+        return ResponseEntity.ok(roleDto);
     }
-} // end RoleApiImpl
 
+}// end RoleApiImpl

@@ -5,6 +5,9 @@ import com.hamitmizrak.business.services.IModelMapperService;
 
 // D: Dto
 // E: Entity
-public interface IRoleServices<D, E> extends IModelMapperService<D, E>, ICrudService<D, E> {
+public interface IOrderService<D,E>
+        extends IModelMapperService<D,E>,
+        ICrudService<D,E> {
 
-} // end IRoleServices
+    // Special Address
+}

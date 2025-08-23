@@ -18,7 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Log4j2
 @Builder
-// @SneakyThrows
+//@SneakyThrows
 // RoleDto
 
 // ENTITY

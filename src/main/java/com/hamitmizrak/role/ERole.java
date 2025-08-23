@@ -1,4 +1,4 @@
-package com.hamitmizrak.roles;
+package com.hamitmizrak.role;
 
 // final verirsem;
 // 1-) Değişkende: sabit değer

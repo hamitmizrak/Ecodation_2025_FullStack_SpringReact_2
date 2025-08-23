@@ -14,7 +14,7 @@ import java.util.Optional;
 // PagingAndSortingRepository<RoleEntity,Long>
 
 @Repository
-public interface IRegisterRepository extends CrudRepository<RegisterEntity, Long> {
+public interface IRegisterRepository extends CrudRepository<RegisterEntity,Long> {
 
     // Delivered Query (database query
     // Database Role Name bulmak
@@ -23,7 +23,7 @@ public interface IRegisterRepository extends CrudRepository<RegisterEntity, Long
 
     // Query: Karmaşık sorgular için @Qery kullanıyoruz
     @Query("select reg from Registers reg join reg.roles rol where rol.roleName=:roleNameParam")
-    List<RegisterEntity> findAllByRegisterInJoinRolesRoleName(@Param("roleNameParam") String roleName);
+    List<RegisterEntity> findAllByRegisterInJoinRolesRoleName(@Param("roleNameParam") String roleName );
 
 
 } //end interface

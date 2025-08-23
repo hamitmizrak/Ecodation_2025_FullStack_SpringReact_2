@@ -90,8 +90,9 @@ public class CustomErrorHandleWebRequest implements ErrorController {
             }
 
             // apiResult Validation Set Yap
-            apiResult.setErrors(validationErrors);
+            apiResult.setValidationErrors(validationErrors);
         }
+
         return apiResult;
     } // handleErrorMethod
 
