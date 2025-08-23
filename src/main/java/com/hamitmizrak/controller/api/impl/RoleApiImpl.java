@@ -4,6 +4,7 @@ import com.hamitmizrak.business.dto.RoleDto;
 import com.hamitmizrak.business.services.interfaces.IRoleServices;
 import com.hamitmizrak.controller.api.interfaces.IRoleApi;
 import com.hamitmizrak.error.ApiResult;
+import com.hamitmizrak.error.ApiResultFactory;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -44,29 +45,22 @@ public class RoleApiImpl implements IRoleApi<RoleDto> {
         RoleDto roleDtoCreate= (RoleDto) iRoleServices.objectServiceCreate(roleDto);
 
         // eğer kaydetmezse null değer verirse
-        if(roleDtoCreate==null){
-            ApiResult apiResultCreateViaNull= ApiResult
-                    .builder()
-                    .status(404)
-                    .error("Role eklenmedi")
-                    .path("http://localhost:4444/role/api/v1.0.0/create")
-                    .createdDate(new Date(System.currentTimeMillis()))
-                    .build();
-            return ResponseEntity.status(404).body(apiResultCreateViaNull);
-        }else if(roleDtoCreate.getRoleId()==0){
-            ApiResult apiResultCreateViaIdZero= ApiResult
-                    .builder()
-                    .status(400)
-                    .error("Role Dto Kötü istek")
-                    .path("http://localhost:4444/role/api/v1.0.0/create")
-                    .createdDate(new Date(System.currentTimeMillis()))
-                    .build();
-            return ResponseEntity.status(400).body(apiResultCreateViaIdZero);
+        // CREATE
+        if (roleDtoCreate == null) {
+            return ResponseEntity.status(404).body(
+                    ApiResultFactory.notFound("Role eklenmedi", "http://localhost:4444/role/api/v1.0.0/create")
+            );
+        } else if (roleDtoCreate.getRoleId() == 0) {
+            return ResponseEntity.status(400).body(
+                    ApiResultFactory.badRequest("Role Dto Kötü istek", "http://localhost:4444/role/api/v1.0.0/create")
+            );
+        } else  {
+            // Log
+            log.info("Role Dto Eklendi",roleDtoCreate);
+            return ResponseEntity.ok(
+                    ApiResultFactory.success(roleDtoCreate, "http://localhost:4444/role/api/v1.0.0/create")
+            );
         }
-
-        // Log
-        log.info("Role Dto Eklendi",roleDtoCreate);
-        return ResponseEntity.status(400).body(roleDtoCreate);
     }
 
 
@@ -89,19 +83,17 @@ public class RoleApiImpl implements IRoleApi<RoleDto> {
         RoleDto roleDtoFind= (RoleDto) iRoleServices.objectServiceFindById(id);
 
         // eğer kaydetmezse null değer verirse
-        if(roleDtoFind==null){
-            ApiResult apiResultFindViaNull= ApiResult
-                    .builder()
-                    .status(404)
-                    .error("Role bulunamadı")
-                    .path("http://localhost:4444/role/api/v1.0.0/find")
-                    .createdDate(new Date(System.currentTimeMillis()))
-                    .build();
-            return ResponseEntity.status(404).body(apiResultFindViaNull);
+        if (roleDtoFind == null) {
+            return ResponseEntity.status(404).body(
+                    ApiResultFactory.notFound("Role bulunamadı", "http://localhost:4444/role/api/v1.0.0/find")
+            );
+        } else {
+            // Log
+            log.info("Role Dto Bulundu",roleDtoFind);
+            return ResponseEntity.ok(
+                    ApiResultFactory.success(roleDtoFind, "http://localhost:4444/role/api/v1.0.0/find")
+            );
         }
-        // Log
-        log.info("Role Dto Bulundu",roleDtoFind);
-        return ResponseEntity.status(400).body(roleDtoFind);
     }
 
     // UPDATE (RoleDto)

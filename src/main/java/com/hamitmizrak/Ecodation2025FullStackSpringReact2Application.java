@@ -5,6 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+
 import java.util.TimeZone;
 
 // Mongo aktif etmek ici
@@ -16,20 +18,20 @@ import java.util.TimeZone;
 // Asenkron açmak icin
 // @EnableAsync
 
-// SCAN
-//@EntityScan(basePackages = "com.hamitmizrak.techcareer_2025_backend_1.data.entity")//Entity bulamadığı zaman
-//@EnableJpaRepositories(basePackages = "com.hamitmizrak.techcareer_2025_backend_1.data.repository") //Repository bulamadığı zaman
-//@ComponentScan("com")
-
 // Spring Cache aktif etmek gerekiyor.
 // @EnableCaching
 
 // Auditing Aktif etmek
 // Dikkat: public class AuditingAwareBean içindeki method ismi:auditorAwareBeanMethod
-// @EnableJpaAuditing(auditorAwareRef = "auditingAwareBeanMethod")
+@EnableJpaAuditing(auditorAwareRef = "auditingAwareBeanMethod")
 
 // Spring Security: Şimdilik dahil etme, çünkü Bcrypted kullancağım ancak Spring security için gerekli kütüphaneleri dahil
 // Buradaki exclude ne zaman kapatmam gerekiyor ? cevap: Spring Security ile çalıştığımız zaman kapat
+
+// SCAN
+//@EntityScan(basePackages = "com.hamitmizrak.techcareer_2025_backend_1.data.entity")//Entity bulamadığı zaman
+//@EnableJpaRepositories(basePackages = "com.hamitmizrak.techcareer_2025_backend_1.data.repository") //Repository bulamadığı zaman
+//@ComponentScan("com")
 @SpringBootApplication(exclude = {
         // Spring Security Dahil etme
         //SecurityAutoConfiguration.class,

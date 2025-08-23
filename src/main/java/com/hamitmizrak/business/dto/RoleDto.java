@@ -34,7 +34,7 @@ public class RoleDto extends AuditingAwareBaseDto implements Serializable {
     // Validation
     @NotEmpty(message = "{role.name.validation.constraints.NotNull.message}")
     // Annotation kullanmalısın cunku database aynı role adında olmaması gerekiyor (unique)
-    @AnnotationUniqueRoleName
+    //@AnnotationUniqueRoleName
     @Builder.Default
     private String roleName= ERole.USER.toString();
 
