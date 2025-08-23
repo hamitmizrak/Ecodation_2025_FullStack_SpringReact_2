@@ -10,3 +10,7 @@ http://localhost:4444/register/api/v1.0.0/create/1
   "registerRePassword": "Hm123456@.",
   "phoneNumber": "+90 555 000 00 00"
 }
+--------------------------------------------------
+yukarıda işlemden sonra denememalatya4444@gmail.com mail gelecek
+tıkladığımda Account_non_lockerd  true olacak
+--------------------------------------------------

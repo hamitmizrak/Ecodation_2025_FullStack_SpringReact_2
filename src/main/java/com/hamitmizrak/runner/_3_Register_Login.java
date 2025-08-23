@@ -50,28 +50,29 @@ public class _3_Register_Login implements CommandLineRunner {
                 }
             });
 
-            for (long i = 1; i <=3 ; i++) {
-                // REGISTER
-                RegisterDto registerDto=new RegisterDto();
-                registerDto.setRegisterNickName("nickname"+i);
-                registerDto.setRegisterName("name"+i);
-                registerDto.setRegisterSurname("surname"+i);
-                StringBuilder stringBuilder=new StringBuilder();
-                stringBuilder.append("email").append("@gmail.com");
-                registerDto.setRegisterEmail(stringBuilder.toString());
-                registerDto.setRegisterPassword("Java12345@.");
+            if(false){
+                for (long i = 1; i <=3 ; i++) {
+                    // REGISTER
+                    RegisterDto registerDto=new RegisterDto();
+                    registerDto.setRegisterNickName("nickname"+i);
+                    registerDto.setRegisterName("name"+i);
+                    registerDto.setRegisterSurname("surname"+i);
+                    StringBuilder stringBuilder=new StringBuilder();
+                    stringBuilder.append("email").append("@gmail.com");
+                    registerDto.setRegisterEmail(stringBuilder.toString());
+                    registerDto.setRegisterPassword("Java12345@.");
 
-                // USER DETAILS
-                registerDto.setIsEnabled(true);
-                registerDto.setIsCredentialsNonExpired(true);
-                registerDto.setIsAccountNonExpired(true);
-                registerDto.setIsAccountNonLocked(true);
+                    // USER DETAILS
+                    registerDto.setIsEnabled(true);
+                    registerDto.setIsCredentialsNonExpired(true);
+                    registerDto.setIsAccountNonExpired(true);
+                    registerDto.setIsAccountNonLocked(true);
 
-                // KAYDET
-                iRegisterServices.objectServiceCreate(i,registerDto);
-                System.out.println("EKLENDI");
+                    // KAYDET
+                    iRegisterServices.objectServiceCreate(i,registerDto);
+                    System.out.println("EKLENDI");
+                }
             }
-
         }
     }
 
@@ -79,7 +80,7 @@ public class _3_Register_Login implements CommandLineRunner {
     public void run(String... args) throws Exception {
         //log.info("Command Line Runner Bean-2");
         System.out.println("Command Line Runner Bean-2");
-        //roleAndRegisterCreate();
+        roleAndRegisterCreate();
     }
 
 } //end BlogCommandLineRunner1
