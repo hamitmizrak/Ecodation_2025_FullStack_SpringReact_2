@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.4</version>  <!-- Spring Boot Version: 3.3.7 -->
+        <version>3.3.7</version>  <!-- Spring Boot Version: 3.3.7 -->
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -44,7 +44,7 @@
         </developer>
 
         <!--2.developer-->
-        <developer></developer>
+        <developer>Hamit Mızrak</developer>
     </developers>
 
     <!-- Versiyon Kontrol Sistemi Bilgisi (SCM) -->

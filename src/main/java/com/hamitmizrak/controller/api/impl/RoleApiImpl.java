@@ -30,7 +30,7 @@ import java.util.List;
 public class RoleApiImpl implements IRoleApi<RoleDto> {
 
     // Field (Injection)
-    @Qualifier("roleServicesImpl")
+    //@Qualifier("roleServicesImpl")
     private final IRoleServices iRoleServices;
 
     // Error
@@ -78,7 +78,7 @@ public class RoleApiImpl implements IRoleApi<RoleDto> {
     // http://localhost:4444/role/api/v1.0.0/find/0
     // http://localhost:4444/role/api/v1.0.0/find/1
     @Override
-    @GetMapping({"/find", "/find/id"})
+    @GetMapping({"/find", "/find/{id}"})
     public ResponseEntity<?> objectApiFindById(@PathVariable(name = "id", required = false) Long id) {
         RoleDto roleDtoFind= (RoleDto) iRoleServices.objectServiceFindById(id);
 
@@ -99,7 +99,7 @@ public class RoleApiImpl implements IRoleApi<RoleDto> {
     // UPDATE (RoleDto)
     // http://localhost:4444/role/api/v1.0.0/update
     @Override
-    @PutMapping({"/update", "/update/id"})
+    @PutMapping({"/update", "/update/{id}"})
     public ResponseEntity<?> objectApiUpdate(@PathVariable(name = "id", required = false) Long id, @Valid @RequestBody RoleDto roleDto) {
         RoleDto roleDtoUpdate= (RoleDto) iRoleServices.objectServiceUpdate(id,roleDto);
 
@@ -120,9 +120,9 @@ public class RoleApiImpl implements IRoleApi<RoleDto> {
     }
 
     // DELETE
-    // http://localhost:4444/role/api/v1.0.0/delete
+    // http://localhost:4444/role/api/v1.0.0/delete/1
     @Override
-    @DeleteMapping({"/delete", "/delete/id"})
+    @DeleteMapping({"/delete", "/delete/{id}"})
     public ResponseEntity<?> objectApiDelete(@PathVariable(name = "id", required = false) Long id) {
         RoleDto roleDtoDelete= (RoleDto) iRoleServices.objectServiceDelete(id);
 

@@ -9,6 +9,7 @@ import com.hamitmizrak.exception.HamitMizrakException;
 import com.hamitmizrak.exception._404_NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -112,7 +113,9 @@ public class RoleServicesImpl implements IRoleServices<RoleDto, RoleEntity> {
                     //()-> { return new _404_NotFoundException(id+" nolu ID bulunamadı");}  //1.YOL
                     () -> new _404_NotFoundException(id + " nolu ID bulunamadı") // 2.YOL
             );
-        } else if (isRoleFindById == null) {
+        } else if (!isRoleFindById ) {
+            throw new HamitMizrakException("Role Dto parametreyi bulamadı....");
+        }else if (isRoleFindById == null) {
             throw new HamitMizrakException("Role Dto id boş değer geldi");
         }
         return entityToDto(roleEntity);
