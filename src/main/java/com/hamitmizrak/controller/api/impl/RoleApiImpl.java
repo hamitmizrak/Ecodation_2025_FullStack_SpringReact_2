@@ -98,6 +98,8 @@ public class RoleApiImpl implements IRoleApi<RoleDto> {
 
     // UPDATE (RoleDto)
     // http://localhost:4444/role/api/v1.0.0/update
+    // http://localhost:4444/role/api/v1.0.0/update/0
+    // http://localhost:4444/role/api/v1.0.0/update/1
     @Override
     @PutMapping({"/update", "/update/{id}"})
     public ResponseEntity<?> objectApiUpdate(@PathVariable(name = "id", required = false) Long id, @Valid @RequestBody RoleDto roleDto) {
