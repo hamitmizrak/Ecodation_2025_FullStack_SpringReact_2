@@ -18,6 +18,7 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResult<T> {
 
+    // Status enum'u
     public enum Status {
         SUCCESS,
         ERROR,
@@ -28,21 +29,13 @@ public class ApiResult<T> {
         SERVER_ERROR
     }
 
-    private Status status; // enum tipinde status
-    private String message; // Kullanıcıya veya frontend'e gösterilecek mesaj
-    private String path; // Endpoint path
+    private Status status;            // Enum tipinde durum
+    private String message;           // Kullanıcıya veya frontend'e gösterilecek mesaj
+    private String error;             // Opsiyonel hata kodu veya kısa açıklama
+    private String path;              // Endpoint path
     private Map<String, Object> errors; // Validation hataları
-    private T data; // Generic data
-    private Date createdDate = new Date(System.currentTimeMillis());
-
-    // Constructor Parametresiz
-    public ApiResult() { }
-
-    // Constructor (Parametreli) pmes
-    public ApiResult(String path, String message, String error, Status status) { this.path = path; this.message = message; this.error = error; this.status = status; }
-
-    // Constructor (Parametreli) pms
-    public ApiResult(String path, String message, Status status) { this.path = path; this.message = message; this.status = status; }
+    private T data;                   // Generic data
+    private Date createdDate = new Date(System.currentTimeMillis()); // Oluşturulma zamanı
 
     // ------------------ Static Factory Methods ------------------
 
@@ -54,25 +47,10 @@ public class ApiResult<T> {
                 .build();
     }
 
-    public static <T> ApiResult<T> error(String message, String path) {
+    public static <T> ApiResult<T> error(String error, String message, String path) {
         return ApiResult.<T>builder()
                 .status(Status.ERROR)
-                .message(message)
-                .path(path)
-                .build();
-    }
-
-    public static <T> ApiResult<T> nullPointer(String message, String path) {
-        return ApiResult.<T>builder()
-                .status(Status.NOT_FOUND)
-                .message(message)
-                .path(path)
-                .build();
-    }
-
-    public static <T> ApiResult<T> badReqquest(String message, String path) {
-        return ApiResult.<T>builder()
-                .status(Status.NOT_FOUND)
+                .error(error)
                 .message(message)
                 .path(path)
                 .build();
@@ -118,22 +96,13 @@ public class ApiResult<T> {
                 .path(path)
                 .build();
     }
+
+    public static <T> ApiResult<T> nullPointer(String message, String path) {
+        return ApiResult.<T>builder()
+                .status(Status.NOT_FOUND)
+                .message(message)
+                .path(path)
+                .build();
+    }
+
 }
-
-
-
-/*
-// Başarılı response
-ApiResult<User> res1 = ApiResult.success(user);
-
-// Not found
-ApiResult<Object> res2 = ApiResult.notFound("Kullanıcı bulunamadı", "/api/user/123");
-
-// Hata response
-ApiResult<Object> res3 = ApiResult.error("Beklenmedik hata oluştu", "/api/login");
-
-// Validation hataları
-Map<String, Object> errors = Map.of("email", "Geçersiz email", "password", "Şifre çok kısa");
-ApiResult<Object> res4 = ApiResult.unprocessable("Validation Hataları", "/api/register", errors);
-
-*/

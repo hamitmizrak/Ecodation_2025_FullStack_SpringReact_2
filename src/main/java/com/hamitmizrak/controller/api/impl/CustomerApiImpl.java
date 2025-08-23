@@ -84,7 +84,7 @@ public class CustomerApiImpl implements ICustomerApi<CustomerDto> {
             apiResult= new ApiResult();
             apiResult.setError("unAuthorized: Yetkisiz Giriş");
             apiResult.setPath("/api/customer//find");
-            apiResult.setStatus(HttpStatus.UNAUTHORIZED.value());
+            apiResult.setStatus(ApiResult.Status.UNAUTHORIZED);
             apiResult.setMessage(message);
             return ResponseEntity.ok(apiResult);
         }

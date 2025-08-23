@@ -84,7 +84,7 @@ public class OrderApiImpl implements IOrderApi<OrderDto> {
             apiResult= new ApiResult();
             apiResult.setError("unAuthorized: Yetkisiz Giriş");
             apiResult.setPath("/api/order/find");
-            apiResult.setStatus(HttpStatus.UNAUTHORIZED.value());
+            apiResult.setStatus(ApiResult.Status.UNAUTHORIZED);
             apiResult.setMessage(message);
             return ResponseEntity.ok(apiResult);
         }

@@ -28,10 +28,6 @@ public class RoleApiImpl implements IRoleApi<RoleDto> {
     // Injection
     private final IRoleService iRoleService;
 
-    // Error
-    private ApiResult apiResult;
-
-
     // CREATE Role(Api)
     // http://localhost:4444/role/api/v1.0.0/create
     @PostMapping("/create")
@@ -45,7 +41,7 @@ public class RoleApiImpl implements IRoleApi<RoleDto> {
         }
         else if(roleCreateApi.getRoleId()==0){
 
-            return ResponseEntity.status(400).body(ApiResult.badReqquest("Role Eklenmedi","localhost:4444/role/api/v1.0.0/create"));
+            return ResponseEntity.status(400).body(ApiResult.notFound("Role Eklenmedi","localhost:4444/role/api/v1.0.0/create"));
         }
         log.info("Role Api eklendi");
         return ResponseEntity.status(201).body(

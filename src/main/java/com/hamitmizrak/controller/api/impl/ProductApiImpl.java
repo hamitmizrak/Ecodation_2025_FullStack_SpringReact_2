@@ -83,7 +83,7 @@ public class ProductApiImpl implements IProductApi<ProductDto> {
             apiResult= new ApiResult();
             apiResult.setError("unAuthorized: Yetkisiz Giriş");
             apiResult.setPath("/api/product/find");
-            apiResult.setStatus(HttpStatus.UNAUTHORIZED.value());
+            apiResult.setStatus(ApiResult.Status.UNAUTHORIZED);
             apiResult.setMessage(message);
             return ResponseEntity.ok(apiResult);
         }
