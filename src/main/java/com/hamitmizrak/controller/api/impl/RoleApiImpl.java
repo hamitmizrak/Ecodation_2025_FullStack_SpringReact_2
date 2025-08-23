@@ -7,110 +7,87 @@ import com.hamitmizrak.error.ApiResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// Lombok
-@RequiredArgsConstructor
-@Log4j2
-
-// API (REST)
 @RestController
 @RequestMapping("/role/api/v1.0.0")
-@CrossOrigin //CORS: Hatası
+@CrossOrigin
+@RequiredArgsConstructor
+@Log4j2
 public class RoleApiImpl implements IRoleApi<RoleDto> {
 
     private final IRoleService iRoleService;
 
-    // CREATE Role(Api)
+    // Sadece ADMIN yeni rol oluşturabilsin
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     @Override
     public ResponseEntity<ApiResult<?>> objectApiCreate(@Valid @RequestBody RoleDto roleDtoData) {
         try {
-            RoleDto roleCreateApi = (RoleDto) iRoleService.objectServiceCreate(roleDtoData);
-
-            if (roleCreateApi == null) {
-                return ResponseEntity.status(404)
-                        .body(ApiResult.nullPointer("Role Eklenmedi", "/role/api/v1.0.0/create"));
-            } else if (roleCreateApi.getRoleId() == 0) {
-                return ResponseEntity.status(400)
-                        .body(ApiResult.notFound("Role Eklenmedi", "/role/api/v1.0.0/create"));
+            RoleDto created = (RoleDto) iRoleService.objectServiceCreate(roleDtoData);
+            if (created == null) {
+                return ResponseEntity.ok(ApiResult.notFound("Role eklenemedi", "/role/api/v1.0.0/create"));
             }
-
-            log.info("Role Api eklendi");
-            return ResponseEntity.status(201).body(ApiResult.success(roleCreateApi));
-
+            return ResponseEntity.ok(ApiResult.success(created));
         } catch (Exception ex) {
-            return ResponseEntity.status(500)
-                    .body(ApiResult.error("serverError", ex.getMessage(), "/role/api/v1.0.0/create"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/role/api/v1.0.0/create"));
         }
     }
 
-    // LIST Role(Api)
+    // Listeyi herkes görebilir
     @GetMapping("/list")
     @Override
     public ResponseEntity<ApiResult<List<RoleDto>>> objectApiList() {
         try {
-            List<RoleDto> list = iRoleService.objectServiceList();
-            log.info("Role Api Listelendi");
-            return ResponseEntity.ok(ApiResult.success(list));
+            return ResponseEntity.ok(ApiResult.success(iRoleService.objectServiceList()));
         } catch (Exception ex) {
-            return ResponseEntity.status(500)
-                    .body(ApiResult.error("serverError", ex.getMessage(), "/role/api/v1.0.0/list"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/role/api/v1.0.0/list"));
         }
     }
 
-    // FIND Role(Api)
+    // Detay için ADMIN veya MODERATOR
+    @PreAuthorize("hasAnyRole('ADMIN','MODERATOR')")
     @GetMapping({"/find", "/find/{id}"})
     @Override
-    public ResponseEntity<ApiResult<?>> objectApiFindById(@PathVariable(name="id", required = false) Long id) {
+    public ResponseEntity<ApiResult<?>> objectApiFindById(@PathVariable(name = "id", required = false) Long id) {
         try {
-            RoleDto roleFindApi = (RoleDto) iRoleService.objectServiceFindById(id);
-            if (roleFindApi == null) {
-                return ResponseEntity.status(404)
-                        .body(ApiResult.nullPointer("Role Dto bulunmadı", "/role/api/v1.0.0/find"));
-            }
-            log.info("Role Api bulundu");
-            return ResponseEntity.ok(ApiResult.success(roleFindApi));
+            RoleDto found = (RoleDto) iRoleService.objectServiceFindById(id);
+            if (found == null) return ResponseEntity.ok(ApiResult.notFound("Role bulunamadı", "/role/api/v1.0.0/find"));
+            return ResponseEntity.ok(ApiResult.success(found));
         } catch (Exception ex) {
-            return ResponseEntity.status(500)
-                    .body(ApiResult.error("serverError", ex.getMessage(), "/role/api/v1.0.0/find"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/role/api/v1.0.0/find"));
         }
     }
 
-    // UPDATE Role(Api)
+    // Güncelle sadece ADMIN
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping({"/update", "/update/{id}"})
     @Override
     public ResponseEntity<ApiResult<?>> objectApiUpdate(@PathVariable(name="id", required = false) Long id,
                                                         @Valid @RequestBody RoleDto roleDto) {
         try {
-            RoleDto roleUpdateApi = (RoleDto) iRoleService.objectServiceUpdate(id, roleDto);
-            if (roleUpdateApi == null) {
-                return ResponseEntity.status(404)
-                        .body(ApiResult.notFound("Role Dto bulunmadı", "/role/api/v1.0.0/update"));
-            }
-            log.info("Role Api Güncellendi");
-            return ResponseEntity.ok(ApiResult.success(roleUpdateApi));
+            RoleDto updated = (RoleDto) iRoleService.objectServiceUpdate(id, roleDto);
+            if (updated == null) return ResponseEntity.ok(ApiResult.notFound("Role güncellenemedi", "/role/api/v1.0.0/update"));
+            return ResponseEntity.ok(ApiResult.success(updated));
         } catch (Exception ex) {
-            return ResponseEntity.status(500)
-                    .body(ApiResult.error("serverError", ex.getMessage(), "/role/api/v1.0.0/update"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/role/api/v1.0.0/update"));
         }
     }
 
-    // DELETE Role(Api)
+    // Sil sadece ADMIN
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping({"/delete", "/delete/{id}"})
     @Override
     public ResponseEntity<ApiResult<?>> objectApiDelete(@PathVariable(name="id", required = false) Long id) {
         try {
-            RoleDto roleDto = (RoleDto) iRoleService.objectServiceDelete(id);
-            log.info("Role Api Silindi");
-            return ResponseEntity.ok(ApiResult.success(roleDto));
+            RoleDto deleted = (RoleDto) iRoleService.objectServiceDelete(id);
+            return ResponseEntity.ok(ApiResult.success(deleted));
         } catch (Exception ex) {
-            return ResponseEntity.status(500)
-                    .body(ApiResult.error("serverError", ex.getMessage(), "/role/api/v1.0.0/delete"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/role/api/v1.0.0/delete"));
         }
     }
-
-} // end RoleApiImpl
+}

@@ -1,0 +1,12 @@
+POST
+http://localhost:4444/register/api/v1.0.0/create/1
+
+{
+  "registerName": "hamit",
+  "registerNickName":"hamit",
+  "registerSurname": "mızrak",
+  "registerEmail": "hamitmizrak@gmail.com",
+  "registerPassword": "Hm123456@.",
+  "registerRePassword": "Hm123456@.",
+  "phoneNumber": "+90 555 000 00 00"
+}

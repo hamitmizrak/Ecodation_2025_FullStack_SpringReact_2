@@ -26,4 +26,5 @@ public interface IRegisterRepository extends CrudRepository<RegisterEntity,Long>
     List<RegisterEntity> findAllByRegisterInJoinRolesRoleName(@Param("roleNameParam") String roleName );
 
 
+    boolean existsRegisterEntitiesByRegisterEmail(String registerEmail);
 } //end interface

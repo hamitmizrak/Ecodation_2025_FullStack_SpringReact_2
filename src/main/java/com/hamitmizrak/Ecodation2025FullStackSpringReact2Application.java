@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.TimeZone;
@@ -25,6 +26,10 @@ import java.util.TimeZone;
 // Dikkat: public class AuditingAwareBean içindeki method ismi:auditorAwareBeanMethod
 @EnableJpaAuditing(auditorAwareRef = "auditingAwareBeanMethod")
 
+
+// Configuration Properties taramasını aç
+@ConfigurationPropertiesScan(basePackageClasses = com.hamitmizrak.security.jwt.JwtProps.class)
+
 // Spring Security: Şimdilik dahil etme, çünkü Bcrypted kullancağım ancak Spring security için gerekli kütüphaneleri dahil
 // Buradaki exclude ne zaman kapatmam gerekiyor ? cevap: Spring Security ile çalıştığımız zaman kapat
 
@@ -32,7 +37,7 @@ import java.util.TimeZone;
 //@EntityScan(basePackages = "com.hamitmizrak.techcareer_2025_backend_1.data.entity")//Entity bulamadığı zaman
 //@EnableJpaRepositories(basePackages = "com.hamitmizrak.techcareer_2025_backend_1.data.repository") //Repository bulamadığı zaman
 //@ComponentScan("com")
-@SpringBootApplication(exclude = {
+/*@SpringBootApplication(exclude = {
         // Spring Security Dahil etme
         //SecurityAutoConfiguration.class,
         SecurityAutoConfiguration.class,
@@ -47,8 +52,8 @@ import java.util.TimeZone;
         // Eğer Redis bağımlılığını kaldırmak istemiyorsanız ancak Redis yapılandırmasını devre dışı bırakmak istiyorsanız
         RedisAutoConfiguration.class,
 }
-)
-//@SpringBootApplication
+)*/
+@SpringBootApplication(exclude = { RedisAutoConfiguration.class })
 public class Ecodation2025FullStackSpringReact2Application {
 
     // Normal Constructor

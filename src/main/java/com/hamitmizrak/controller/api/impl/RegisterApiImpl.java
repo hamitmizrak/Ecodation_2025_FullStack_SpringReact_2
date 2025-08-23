@@ -49,6 +49,7 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
     // REGISTER CRUD
 
     // CREATE Register(Api)
+    // http://localhost:4444/register/api/v1.0.0/create/1
     @PostMapping("/create/{roles_id}")
     @Override
     public ResponseEntity<ApiResult<?>> objectApiCreate(
@@ -68,6 +69,7 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
     }
 
     // LIST Register(Api)
+    // http://localhost:4444/register/api/v1.0.0/list
     @GetMapping("/list")
     @Override
     public ResponseEntity<ApiResult<List<RegisterDto>>> objectApiList() {
@@ -80,6 +82,9 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
     }
 
     // FIND Register(Api)
+    // http://localhost:4444/register/api/v1.0.0/find
+    // http://localhost:4444/register/api/v1.0.0/find/0
+    // http://localhost:4444/register/api/v1.0.0/find/1
     @GetMapping({"/find","/find/{id}"})
     @Override
     public ResponseEntity<ApiResult<?>> objectApiFindById(@PathVariable(name="id",required = false) Long id) {
@@ -100,6 +105,9 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
     }
 
     // UPDATE Register(Api)
+    // http://localhost:4444/register/api/v1.0.0/update
+    // http://localhost:4444/register/api/v1.0.0/update/0
+    // http://localhost:4444/register/api/v1.0.0/update/1
     @PutMapping({"/update","/update/{id}"})
     @Override
     public ResponseEntity<ApiResult<?>> objectApiUpdate(
@@ -114,6 +122,9 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
     }
 
     // DELETE Register(Api)
+    // http://localhost:4444/register/api/v1.0.0/delete
+    // http://localhost:4444/register/api/v1.0.0/delete/0
+    // http://localhost:4444/register/api/v1.0.0/delete/1
     @DeleteMapping({"/delete","/delete/{id}"})
     @Override
     public ResponseEntity<ApiResult<?>> objectApiDelete(@PathVariable(name="id",required = false) Long id) {

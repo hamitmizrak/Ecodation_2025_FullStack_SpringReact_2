@@ -75,6 +75,9 @@ public class RegisterEntity extends AuditingAwareBaseEntity implements Serializa
     @Column(name = "page_authorization")
     private Boolean pageAuthorization = false;
 
+
+
+
     /////////////////////////////////////////////
     // Relation
     // Rolles (Enum)

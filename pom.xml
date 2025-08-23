@@ -93,7 +93,6 @@
         </dependency>-->
 
         <!-- #### REDIS #################################################  -->
-        <!-- #### REDIS #################################################  -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -314,28 +313,18 @@
 
         <!-- #### JWT #################################################  -->
         <!-- #### AUTHENTICATION / AUTHORIZATION #################################################  -->
-        <!--jjwt-api-->
+        <!-- JWT -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
             <version>0.11.5</version>
         </dependency>
-
-        <!--jjwt-->
-        <!--<dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.9.1</version>
-        </dependency>-->
-
-        <!--jjwt-impl-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency>
-
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>

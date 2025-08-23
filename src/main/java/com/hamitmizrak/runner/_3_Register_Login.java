@@ -79,7 +79,7 @@ public class _3_Register_Login implements CommandLineRunner {
     public void run(String... args) throws Exception {
         //log.info("Command Line Runner Bean-2");
         System.out.println("Command Line Runner Bean-2");
-        roleAndRegisterCreate();
+        //roleAndRegisterCreate();
     }
 
 } //end BlogCommandLineRunner1
