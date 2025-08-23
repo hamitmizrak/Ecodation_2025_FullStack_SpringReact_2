@@ -1,3 +1,7 @@
+
+-------------------------------------------------
+REGISTER
+
 POST
 http://localhost:4444/register/api/v1.0.0/create/1
 
@@ -13,4 +17,29 @@ http://localhost:4444/register/api/v1.0.0/create/1
 --------------------------------------------------
 yukarıda işlemden sonra denememalatya4444@gmail.com mail gelecek
 tıkladığımda Account_non_lockerd  true olacak
+
+
 --------------------------------------------------
+LOGIN
+
+POST
+http://localhost:4444/auth/api/v1/login
+{
+ "email": "hamitmizrak@gmail.com",
+  "password": "Hm123456@."
+}
+
+Bearer Token vericek:  eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOIl0sInN1YiI6ImhhbWl0bWl6cmFrQGdtYWlsLmNvbSIsImlhdCI6MTc1NTk4NDMyNSwiZXhwIjoxNzU1OTg3OTI1fQ.ZAjvCmOJ88VbvfBOLCIU4fuFYJvvwicJVc-Gpa25xbM
+
+
+------------------------------------------------------
+
+TEST
+
+http://localhost:4444/role/api/v1.0.0/list
+
+Bearer Token eklemeden 403 alırsın:(HATA)
+
+
+Bearer Token eklemeden 201 alırsın:(OKEY)
+Postman => Authorization => Beare Token =>
