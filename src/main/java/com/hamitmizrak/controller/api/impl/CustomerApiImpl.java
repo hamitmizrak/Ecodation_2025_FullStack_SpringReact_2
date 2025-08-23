@@ -1,6 +1,5 @@
 package com.hamitmizrak.controller.api.impl;
 
-
 import com.hamitmizrak.business.dto.CustomerDto;
 import com.hamitmizrak.business.services.interfaces.ICustomerService;
 import com.hamitmizrak.controller.api.interfaces.ICustomerApi;
@@ -12,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,11 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Log4j2
 
-// Api: Dış dünyaya açılan kapı
 @RestController
 @RequestMapping("/api/customer/")
-// @CrossOrigin
-// @CrossOrigin(origins = "http://localhost:4000")
 @CrossOrigin(origins = {FrontEnd.REACT_URL, FrontEnd.ANGULAR_URL})
 public class CustomerApiImpl implements ICustomerApi<CustomerDto> {
 
@@ -41,72 +36,76 @@ public class CustomerApiImpl implements ICustomerApi<CustomerDto> {
     // CRUD
 
     // CREATE
-    // http://localhost:4444/api/customer/create
     @PostMapping("/create")
     @Override
-    public ResponseEntity<?> objectApiCreate(@Valid @RequestBody CustomerDto customerDto) {
-        CustomerDto customerDtoCreate= (CustomerDto) iCustomerService.objectServiceCreate(customerDto);
-        // return ResponseEntity.status(201).body(customerDtoCreate); //1.YOL
-        // return ResponseEntity.status(HttpStatus.CREATED).body(customerDtoCreate); //2.YOL
-        // return new ResponseEntity<>(customerDtoCreate,HttpStatus.CREATED); //3.YOL
-        // return  ResponseEntity.ok().body(customerDtoCreate); //4.YOL
-        return  ResponseEntity.ok(customerDtoCreate); //5.YOL
+    public ResponseEntity<ApiResult<?>> objectApiCreate(@Valid @RequestBody CustomerDto customerDto) {
+        try {
+            CustomerDto created = (CustomerDto) iCustomerService.objectServiceCreate(customerDto);
+            return ResponseEntity.ok(ApiResult.success(created));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/api/customer/create"));
+        }
     }
 
     // LIST
-    // http://localhost:4444/api/customer/list
-    @GetMapping(value = "/list")
+    @GetMapping("/list")
     @Override
-    public ResponseEntity<List<CustomerDto>> objectApiList() {
-        List<CustomerDto> customerDtoList = iCustomerService.objectServiceList();
-        // Stream Value
-        return ResponseEntity.ok(customerDtoList);
+    public ResponseEntity<ApiResult<List<CustomerDto>>> objectApiList() {
+        try {
+            List<CustomerDto> list = iCustomerService.objectServiceList();
+            return ResponseEntity.ok(ApiResult.success(list));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/api/customer/list"));
+        }
     }
 
     // FIND BY ID
-    // http://localhost:4444/api/customer/find
-    // http://localhost:4444/api/customer/find/0
-    // http://localhost:4444/api/customer/find/-1
-    // http://localhost:4444/api/customer/find/%20%    boşluk:%20%
-    // http://localhost:4444/api/customer/find/1
-    @GetMapping({"/find/","/find/{id}"})
+    @GetMapping({"/find/", "/find/{id}"})
     @Override
-    public ResponseEntity<?> objectApiFindById(@PathVariable(name="id",required = false) Long id) { //NOT: @PathVariable sadece yazabiliriz
-        String message="";
-        if(id ==null){
-            throw new NullPointerException("Null Pointer Exception: Null değer");
-        }else if(id==0){
-            throw new _400_BadRequestException("Bad Request Exception: Kötü istek");
-        } else if(id<0){
-            // Config ApiResultValidationMessage
-            // resource/ValidationMessages/ValidationMessages.properties => error.unauthorized
-            message= messageSource.getMessage("error.unauthorized",null, LocaleContextHolder.getLocale());
-            apiResult= new ApiResult();
-            apiResult.setError("unAuthorized: Yetkisiz Giriş");
-            apiResult.setPath("/api/customer//find");
-            apiResult.setStatus(ApiResult.Status.UNAUTHORIZED);
-            apiResult.setMessage(message);
-            return ResponseEntity.ok(apiResult);
+    public ResponseEntity<ApiResult<?>> objectApiFindById(@PathVariable(name="id", required=false) Long id) {
+        try {
+            if (id == null) {
+                return ResponseEntity.ok(ApiResult.notFound("Id değeri boş", "/api/customer/find"));
+            } else if (id == 0) {
+                throw new _400_BadRequestException("Bad Request Exception: Kötü istek");
+            } else if (id < 0) {
+                String message = messageSource.getMessage("error.unauthorized", null, LocaleContextHolder.getLocale());
+                return ResponseEntity.ok(ApiResult.unauthorized(message, "/api/customer/find"));
+            }
+
+            CustomerDto found = (CustomerDto) iCustomerService.objectServiceFindById(id);
+            return ResponseEntity.ok(ApiResult.success(found));
+        } catch (_400_BadRequestException ex) {
+            return ResponseEntity.ok(ApiResult.error("badRequest", ex.getMessage(), "/api/customer/find"));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/api/customer/find"));
         }
-        // customer Find By Id
-        CustomerDto customerDtoFind= (CustomerDto) iCustomerService.objectServiceFindById(id);
-        return ResponseEntity.ok(customerDtoFind);
     }
 
     // UPDATE
-    // http://localhost:4444/api/customer//update/1
-    @PutMapping({"/update/","/update/{id}"})
+    @PutMapping({"/update/", "/update/{id}"})
     @Override
-    public ResponseEntity<?> objectApiUpdate(@PathVariable(name = "id",required = false)  Long id, @Valid @RequestBody CustomerDto customerDto) {
-        return ResponseEntity.ok(iCustomerService.objectServiceUpdate(id, customerDto));
+    public ResponseEntity<ApiResult<?>> objectApiUpdate(
+            @PathVariable(name="id", required=false) Long id,
+            @Valid @RequestBody CustomerDto customerDto) {
+        try {
+            CustomerDto updated = (CustomerDto) iCustomerService.objectServiceUpdate(id, customerDto);
+            return ResponseEntity.ok(ApiResult.success(updated));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/api/customer/update"));
+        }
     }
 
     // DELETE
-    // http://localhost:4444/api/customer/delete/1
-    @DeleteMapping({"/delete/","/delete/{id}"})
+    @DeleteMapping({"/delete/", "/delete/{id}"})
     @Override
-    public ResponseEntity<?> objectApiDelete(@PathVariable(name = "id",required = false) Long id) {
-        return ResponseEntity.ok(iCustomerService.objectServiceDelete(id));
+    public ResponseEntity<ApiResult<?>> objectApiDelete(@PathVariable(name="id", required=false) Long id) {
+        try {
+            String deleted = iCustomerService.objectServiceDelete(id).toString();
+            return ResponseEntity.ok(ApiResult.success(deleted));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/api/customer/delete"));
+        }
     }
 
 } //end CustomerApiImpl

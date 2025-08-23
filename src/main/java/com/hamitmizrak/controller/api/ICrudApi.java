@@ -1,5 +1,6 @@
 package com.hamitmizrak.controller.api;
 
+import com.hamitmizrak.error.ApiResult;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -8,18 +9,18 @@ import java.util.List;
 public interface ICrudApi<D> {
 
     // CREATE
-    public ResponseEntity<?> objectApiCreate(D d);
+    public ResponseEntity<ApiResult<?>> objectApiCreate(D d);
 
     // LIST
-    public ResponseEntity<List<D>> objectApiList();
+    public ResponseEntity<ApiResult<List<D>>> objectApiList();
 
     // FIND BY ID
-    public ResponseEntity<?> objectApiFindById(Long id);
+    public ResponseEntity<ApiResult<?>> objectApiFindById(Long id);
 
     // UPDATE
-    public ResponseEntity<?> objectApiUpdate(Long id, D d);
+    public ResponseEntity<ApiResult<?>> objectApiUpdate(Long id, D d);
 
     // DELETE
-    public ResponseEntity<?> objectApiDelete(Long id);
+    public ResponseEntity<ApiResult<?>> objectApiDelete(Long id);
 
 }

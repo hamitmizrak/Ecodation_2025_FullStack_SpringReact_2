@@ -5,6 +5,7 @@ import com.hamitmizrak.business.services.impl.RegisterServicesImpl;
 import com.hamitmizrak.business.services.interfaces.IRegisterServices;
 import com.hamitmizrak.controller.api.interfaces.IRegisterApi;
 import com.hamitmizrak.error.ApiResult;
+import com.hamitmizrak.exception._400_BadRequestException;
 import com.hamitmizrak.tokenmail.ForRegisterTokenEmailConfirmationEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,40 +19,28 @@ import java.util.Optional;
 // Lombok
 @RequiredArgsConstructor
 @Log4j2
-
-// API (REST)
 @RestController
 @RequestMapping("/register/api/v1.0.0")
-@CrossOrigin //CORS: Hatası
-//@CrossOrigin(origins = ProjectUrl.REACT_FRONTEND_PORT_URL)
-//@CrossOrigin(origins = "localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:4200"}) // Frontend portları
 public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
 
-    // Injection
     private final IRegisterServices iRegisterServices;
 
-    // Error
-    private ApiResult apiResult;
-
-
-    // Email ***********************************************
-    // Register Services Impl
     private final RegisterServicesImpl registerServicesImpl;
 
-    /////////////////////////////////////////////////////////////
+    private ApiResult apiResult;
 
+    /////////////////////////////////////////////////////////////
     // SPEED DATA
-    // http://localhost:4444/register/api/v1.0.0/speed/data
-    @Override
     @GetMapping("/speed/data")
+    @Override
     public ResponseEntity<?> registerApiSpeedData(Long key) {
         return ResponseEntity.ok(iRegisterServices.registerSpeedData(key));
     }
 
     // USER ALL DELETE
-    // http://localhost:4444/register/api/v1.0.0/all/delete
-    @Override
     @GetMapping("/all/delete")
+    @Override
     public ResponseEntity<?> registerApiUserAllDelete() {
         return ResponseEntity.ok(iRegisterServices.registerAllUSerDelete());
     }
@@ -60,62 +49,83 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
     // REGISTER CRUD
 
     // CREATE Register(Api)
-    // http://localhost:4444/register/api/v1.0.0/create/1
     @PostMapping("/create/{roles_id}")
     @Override
-    public ResponseEntity<?> objectApiCreate(
+    public ResponseEntity<ApiResult<?>> objectApiCreate(
             @PathVariable(name = "roles_id", required = false) Long rolesId,
             @Valid @RequestBody RegisterDto registerDto) {
-        return ResponseEntity.ok(iRegisterServices.objectServiceCreate(rolesId,registerDto));
+        try {
+            RegisterDto created = iRegisterServices.objectServiceCreate(rolesId, registerDto);
+            return ResponseEntity.ok(ApiResult.success(created));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/register/api/v1.0.0/create"));
+        }
     }
 
     @Override
-    public ResponseEntity<?> objectApiCreate(RegisterDto registerDto) {
+    public ResponseEntity<ApiResult<?>> objectApiCreate(RegisterDto registerDto) {
         return null;
     }
 
     // LIST Register(Api)
-    // http://localhost:4444/register/api/v1.0.0/list
-    @Override
     @GetMapping("/list")
-    public ResponseEntity<List<RegisterDto>> objectApiList() {
-        return ResponseEntity.ok(iRegisterServices.objectServiceList());
+    @Override
+    public ResponseEntity<ApiResult<List<RegisterDto>>> objectApiList() {
+        try {
+            List<RegisterDto> list = iRegisterServices.objectServiceList();
+            return ResponseEntity.ok(ApiResult.success(list));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/register/api/v1.0.0/list"));
+        }
     }
 
     // FIND Register(Api)
-    // http://localhost:4444/register/api/v1.0.0/find
-    // http://localhost:4444/register/api/v1.0.0/find/0
-    // http://localhost:4444/register/api/v1.0.0/find/1
-    @Override
     @GetMapping({"/find","/find/{id}"})
-    public ResponseEntity<?> objectApiFindById( @PathVariable(name="id",required = false) Long id) {
-        return ResponseEntity.ok(iRegisterServices.objectServiceFindById(id));
+    @Override
+    public ResponseEntity<ApiResult<?>> objectApiFindById(@PathVariable(name="id",required = false) Long id) {
+        try {
+            if (id == null) throw new NullPointerException("Null pointer exception: Null değer");
+            if (id == 0) throw new _400_BadRequestException("Bad Request Exception: Kötü istek");
+            if (id < 0) {
+                return ResponseEntity.ok(ApiResult.unauthorized("Yetkisiz giriş", "/register/api/v1.0.0/find"));
+            }
+
+            RegisterDto found = (RegisterDto) iRegisterServices.objectServiceFindById(id);
+            return ResponseEntity.ok(ApiResult.success(found));
+        } catch (_400_BadRequestException ex) {
+            return ResponseEntity.ok(ApiResult.error("badRequest", ex.getMessage(), "/register/api/v1.0.0/find"));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/register/api/v1.0.0/find"));
+        }
     }
 
     // UPDATE Register(Api)
-    // http://localhost:4444/register/api/v1.0.0/update
-    // http://localhost:4444/register/api/v1.0.0/update/0
-    // http://localhost:4444/register/api/v1.0.0/update/1
-    @Override
     @PutMapping({"/update","/update/{id}"})
-    public ResponseEntity<?> objectApiUpdate(
+    @Override
+    public ResponseEntity<ApiResult<?>> objectApiUpdate(
             @PathVariable(name="id",required = false) Long id,
-            @Valid @RequestBody  RegisterDto registerDto) {
-        return ResponseEntity.ok(iRegisterServices.objectServiceUpdate(id,registerDto));
+            @Valid @RequestBody RegisterDto registerDto) {
+        try {
+            RegisterDto updated = (RegisterDto) iRegisterServices.objectServiceUpdate(id, registerDto);
+            return ResponseEntity.ok(ApiResult.success(updated));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/register/api/v1.0.0/update"));
+        }
     }
 
     // DELETE Register(Api)
-    // http://localhost:4444/register/api/v1.0.0/delete
-    // http://localhost:4444/register/api/v1.0.0/delete/0
-    // http://localhost:4444/register/api/v1.0.0/delete/1
-    @Override
     @DeleteMapping({"/delete","/delete/{id}"})
-    public ResponseEntity<?> objectApiDelete(@PathVariable(name="id",required = false) Long id) {
-        return ResponseEntity.ok(iRegisterServices.objectServiceDelete(id));
+    @Override
+    public ResponseEntity<ApiResult<?>> objectApiDelete(@PathVariable(name="id",required = false) Long id) {
+        try {
+            String deleted = iRegisterServices.objectServiceDelete(id).toString();
+            return ResponseEntity.ok(ApiResult.success(deleted));
+        } catch (Exception ex) {
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/register/api/v1.0.0/delete"));
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // EMAIL CONFIRMATION
     // EMAIL CONFIRMATION
     //http://localhost:4444/register/api/v1/confirm?token=ca478481-5f7a-406b-aaa4-2012ebe1afb4
     @GetMapping("/confirm")
@@ -124,26 +134,19 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
         tokenConfirmationEntity.ifPresent(registerServicesImpl::emailTokenConfirmation);
         String html="<!doctype html>\n" +
                 "<html lang=\"en\">\n" +
-                "\n" +
                 "<head>\n" +
                 "  <title>Register</title>\n" +
                 "  <meta charset=\"utf-8\">\n" +
                 "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n" +
                 "  <style>\n" +
-                "    body{\n" +
-                "        background-color: black;\n" +
-                "        color:white;\n" +
-                "    }\n" +
+                "    body{ background-color: black; color:white; }\n" +
                 "  </style>\n" +
                 "</head>\n" +
-                "\n" +
                 "<body>\n" +
-                "\n" +
                 "    <p style='padding:4rem;'>Üyeliğiniz Aktif olunmuştur.  <a href='http://localhost:3000'>Ana sayfa için tıklayınız </a></p>\n" +
-                "  \n" +
                 "</body>\n" +
                 "</html>";
         return ResponseEntity.ok(html);
     }
 
-}// end RegisterApiImpl
+} // end RegisterApiImpl
