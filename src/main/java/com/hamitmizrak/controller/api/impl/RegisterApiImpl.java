@@ -146,7 +146,7 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
         String html="<!doctype html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
-                "  <title>Register</title>\n" +
+                "  <summary>Register</summary>\n" +
                 "  <meta charset=\"utf-8\">\n" +
                 "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n" +
                 "  <style>\n" +

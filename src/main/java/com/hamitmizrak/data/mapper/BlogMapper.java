@@ -1,7 +1,6 @@
 package com.hamitmizrak.data.mapper;
 
 
-import com.hamitmizrak.business.dto.BlogCategoryDto;
 import com.hamitmizrak.business.dto.BlogDto;
 import com.hamitmizrak.data.entity.BlogEntity;
 
@@ -17,7 +16,7 @@ public class BlogMapper {
         // Field
         blogDto.setBlogId(blogEntity.getBlogId());
         blogDto.setHeader(blogEntity.getHeader());
-        blogDto.setTitle(blogEntity.getTitle());
+        blogDto.setTitle(blogEntity.getSummary());
         blogDto.setContent(blogEntity.getContent());
 
         // DİKKAT: Composition (Blog(N)- BlogCategory(1))
@@ -35,7 +34,7 @@ public class BlogMapper {
         // Field
         blogEntity.setBlogId(blogDto.getBlogId());
         blogEntity.setHeader(blogDto.getHeader());
-        blogEntity.setTitle(blogDto.getTitle());
+        blogEntity.setSummary(blogDto.getTitle());
         blogEntity.setContent(blogDto.getContent());
 
         // DİKKAT: Composition (Order(N)- Customer(1))

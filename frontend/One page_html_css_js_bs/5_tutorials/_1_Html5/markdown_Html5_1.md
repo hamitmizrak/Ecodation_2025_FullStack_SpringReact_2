@@ -23,7 +23,7 @@ from bs4 import BeautifulSoup
 
 # Düzenlemek istediğiniz HTML içeriği (örnek)
 html_content = """
-<html><head><title>Başlık</title></head><body><h1>Merhaba</h1><p>HTML5 formatter örneği</p></body></html>
+<html><head><summary>Başlık</summary></head><body><h1>Merhaba</h1><p>HTML5 formatter örneği</p></body></html>
 """
 
 # BeautifulSoup ile biçimlendirme

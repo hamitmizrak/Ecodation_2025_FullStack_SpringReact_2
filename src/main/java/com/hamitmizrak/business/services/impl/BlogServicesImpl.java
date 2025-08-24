@@ -3,6 +3,7 @@ package com.hamitmizrak.business.services.impl;
 
 import com.hamitmizrak.bean.ModelMapperBean;
 import com.hamitmizrak.business.dto.BlogDto;
+import com.hamitmizrak.business.services.IPicturesService;
 import com.hamitmizrak.business.services.interfaces.IBlogServices;
 import com.hamitmizrak.data.entity.BlogEntity;
 import com.hamitmizrak.data.mapper.BlogMapper;
@@ -23,7 +24,7 @@ import java.util.List;
 
 // SERVICES
 @Service
-public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
+public abstract class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
 
     // INJECTION (Lombok Constructor Field) => 3.YOL
     private final IBlogRepository iBlogRepository;
@@ -43,6 +44,7 @@ public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
         return null;
     }
 
+
     //////////////////////////////////////////////////////////////////////////////
     // MODEL MAPPER
     @Override
@@ -61,6 +63,27 @@ public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
 
         // 2.YOL
         return BlogMapper.BlogDtoToBlogEntity(blogDto);
+    }
+    //////////////////////////////////////////////////////////////////////////////
+    /// // FILE UPLOAD
+    @Transactional
+    @Override
+    public BlogDto updateImageUrl(Long id, String imageUrl) {
+        BlogEntity blogEntity = iBlogRepository.findById(id).orElseThrow(
+                ()-> new IllegalArgumentException("Blog Not Found id: "+id)
+        );
+        blogEntity.setImageUrl(imageUrl);
+        return entityToDto(iBlogRepository.save(blogEntity));
+    }
+
+    @Transactional
+    @Override
+    public BlogDto clearImageUrl(Long id) {
+        BlogEntity blogEntity = iBlogRepository.findById(id).orElseThrow(
+                ()-> new IllegalArgumentException("Blog Not Found id: "+id)
+        );
+        blogEntity.setImageUrl(null);
+        return entityToDto(iBlogRepository.save(blogEntity));
     }
 
     //////////////////////////////////////////////////////////////////////////////
@@ -124,7 +147,7 @@ public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
         BlogDto blogFindDto= objectServiceFindById(id);
        if(blogFindDto!=null){
            BlogEntity blogEntity=dtoToEntity(blogFindDto);
-           blogEntity.setTitle(blogDto.getTitle());
+           blogEntity.setSummary(blogDto.getTitle());
            blogEntity.setHeader(blogDto.getHeader());
            blogEntity.setContent(blogDto.getContent());
            iBlogRepository.save(blogEntity);
