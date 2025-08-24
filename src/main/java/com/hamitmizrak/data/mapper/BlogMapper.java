@@ -1,6 +1,7 @@
 package com.hamitmizrak.data.mapper;
 
 
+import com.hamitmizrak.business.dto.BlogCategoryDto;
 import com.hamitmizrak.business.dto.BlogDto;
 import com.hamitmizrak.data.entity.BlogEntity;
 

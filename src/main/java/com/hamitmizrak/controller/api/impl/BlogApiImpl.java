@@ -47,9 +47,9 @@ public class BlogApiImpl implements IBlogApi<BlogDto> {
     // http://localhost:4444/blog/api/v1/create
     @Override
     @PostMapping("/create")
-    public ResponseEntity<ApiResult<?>> objectApiCreate(@Valid @RequestBody BlogDto categoryDto) {
+    public ResponseEntity<ApiResult<?>> objectApiCreate(@Valid @RequestBody BlogDto blogDto) {
         try {
-            BlogDto created = (BlogDto) iBlogServices.objectServiceCreate(categoryDto);
+            BlogDto created = (BlogDto) iBlogServices.objectServiceCreate(blogDto);
             return ResponseEntity.ok(ApiResult.success(created));
         } catch (Exception ex) {
             return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/api/v1/create"));
