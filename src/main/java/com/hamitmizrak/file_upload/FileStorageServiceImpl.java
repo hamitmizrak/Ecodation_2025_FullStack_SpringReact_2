@@ -1,4 +1,4 @@
-package com.hamitmizrak.file;
+package com.hamitmizrak.file_upload;
 
 
 import lombok.RequiredArgsConstructor;
@@ -14,8 +14,6 @@ import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-
-import com.hamitmizrak.file.FileStorageException;
 
 @Service
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package com.hamitmizrak.file;
+package com.hamitmizrak.file_upload;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

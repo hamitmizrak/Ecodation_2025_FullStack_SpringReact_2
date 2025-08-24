@@ -8,8 +8,8 @@ import com.hamitmizrak.business.services.interfaces.IRegisterServices;
 import com.hamitmizrak.controller.api.interfaces.IRegisterApi;
 import com.hamitmizrak.error.ApiResult;
 import com.hamitmizrak.exception._400_BadRequestException;
-import com.hamitmizrak.file.FileProps;
-import com.hamitmizrak.file.ImageService;
+import com.hamitmizrak.file_upload.FileProps;
+import com.hamitmizrak.file_upload.ImageService;
 import com.hamitmizrak.token_mail.entity.ForRegisterTokenEmailConfirmationEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -102,11 +102,6 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
         RegisterDto created = iRegisterServices.objectServiceCreate(rolesId, registerDto);
         return ResponseEntity.ok(ApiResult.success(created));
     }
-
-
-
-
-
 
     // LIST Register(Api)
     // http://localhost:4444/register/api/v1.0.0/list
