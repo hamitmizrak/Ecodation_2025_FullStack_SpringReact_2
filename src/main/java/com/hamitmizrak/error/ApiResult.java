@@ -14,6 +14,9 @@ import java.util.Map;
 @NoArgsConstructor
 @Builder
 
+// Spring Framuworkun Error mekanizması yerine bizim yazdığımız hata yakalama mekanizmasıdır
+// Jackson: Objeyi , Json'a çevirmek
+// @JsonInclude(JsonInclude.Include.NON_NULL): Eğer ApiResultta null değer varsa backent'te gönder
 // Eğer null değer varsa JSON'a dahil etme
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResult<T> {
@@ -29,6 +32,7 @@ public class ApiResult<T> {
         SERVER_ERROR
     }
 
+    // sem pvc
     private Status status;            // Enum tipinde durum
     private String message;           // Kullanıcıya veya frontend'e gösterilecek mesaj
     private String error;             // Opsiyonel hata kodu veya kısa açıklama
@@ -38,7 +42,6 @@ public class ApiResult<T> {
     private Date createdDate = new Date(System.currentTimeMillis()); // Oluşturulma zamanı
 
     // ------------------ Static Factory Methods ------------------
-
     public static <T> ApiResult<T> success(T data) {
         return ApiResult.<T>builder()
                 .status(Status.SUCCESS)
@@ -105,4 +108,4 @@ public class ApiResult<T> {
                 .build();
     }
 
-}
+} // end class ApiResult

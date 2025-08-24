@@ -1,17 +1,21 @@
 package com.hamitmizrak.runner;
 
 import com.hamitmizrak.business.dto.RegisterDto;
+import com.hamitmizrak.business.dto.RoleDto;
 import com.hamitmizrak.business.services.interfaces.IRegisterServices;
 import com.hamitmizrak.business.services.interfaces.IRoleService;
 import com.hamitmizrak.data.entity.RoleEntity;
 import com.hamitmizrak.data.repository.IRegisterRepository;
 import com.hamitmizrak.data.repository.IRoleRepository;
-import com.hamitmizrak.role.ERole;
+import com.hamitmizrak.business.role.ERole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // email@gmail.com
 // Java12345@.
@@ -23,7 +27,6 @@ import org.springframework.stereotype.Component;
 @Log4j2
 
 @Component // Spring Boot bir parçasısın.
-
 @Order(3) // Runner Sırası
 public class _3_Register_Login implements CommandLineRunner {
     // Injection
@@ -33,8 +36,30 @@ public class _3_Register_Login implements CommandLineRunner {
     private final IRegisterRepository iRegisterRepository;
     private final IRegisterServices iRegisterServices;
 
-    // Role ve Register Ekleme
-    private void roleAndRegisterCreate(){
+    // Role
+    private void roleAdd(){
+        //log.info("role And Register Create");
+        System.out.println("Role Create");
+        List<RoleDto> roleDtoList = new ArrayList<>();
+
+        synchronized (this){
+            Long adminRoleID= iRoleRepository.save(RoleEntity.builder().roleId(0L).roleName(ERole.ADMIN.toString()).build()).getRoleId();
+            Long writerRoleID= iRoleRepository.save(RoleEntity.builder().roleId(0L).roleName(ERole.WRITER.toString()).build()).getRoleId();
+            Long userRoleID= iRoleRepository.save(RoleEntity.builder().roleId(0L).roleName(ERole.USER.toString()).build()).getRoleId();
+
+            // Thread
+            Thread thread= new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            });
+        }
+    }
+
+
+    // User
+    private void userAdd(){
         //log.info("role And Register Create");
         System.out.println("role And Register Create");
         synchronized (this){
@@ -50,7 +75,9 @@ public class _3_Register_Login implements CommandLineRunner {
                 }
             });
 
-            if(false){
+            // Eğer isterseniz proje ayağa kalkarken buradki gibi mail göndererek direk kullanıcı eklesin
+            boolean isLoginDataSet =false;
+            if(isLoginDataSet){
                 for (long i = 1; i <=3 ; i++) {
                     // REGISTER
                     RegisterDto registerDto=new RegisterDto();
@@ -80,7 +107,7 @@ public class _3_Register_Login implements CommandLineRunner {
     public void run(String... args) throws Exception {
         //log.info("Command Line Runner Bean-2");
         System.out.println("Command Line Runner Bean-2");
-        roleAndRegisterCreate();
+        roleAdd();
     }
 
 } //end BlogCommandLineRunner1

@@ -25,6 +25,10 @@ import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
+// HEADER
+// PAYLOAD
+// SIGNATURE
+
 /**
  * JWT üretimi, doğrulaması ve çözümlemesi.
  * app.jwt.secret ve app.jwt.expire (Duration: 1h, 15m, 3600s, 3600000ms) property’lerinden beslenir.

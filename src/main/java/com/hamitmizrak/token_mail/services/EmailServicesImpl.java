@@ -1,12 +1,12 @@
-package com.hamitmizrak.business.services.impl;
+package com.hamitmizrak.token_mail.services;
 
 import com.hamitmizrak.bean.ModelMapperBean;
 import com.hamitmizrak.bean.PasswordEncoderBean;
-import com.hamitmizrak.business.dto.EmailDto;
 import com.hamitmizrak.business.services.interfaces.IEmailServices;
-import com.hamitmizrak.data.entity.EmailEntity;
-import com.hamitmizrak.data.repository.IEmailRepository;
+import com.hamitmizrak.token_mail.entity.EmailEntity;
+import com.hamitmizrak.token_mail.repository.IEmailRepository;
 import com.hamitmizrak.exception.HamitMizrakException;
+import com.hamitmizrak.token_mail.dto.EmailDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.SimpleMailMessage;
@@ -24,11 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Component("emailServicesImpl") // @Component => Spring'in bir parcasısın
 public class EmailServicesImpl implements IEmailServices<EmailDto, EmailEntity> {
 
-    // Injection
-    private final ModelMapperBean modelMapperBeanClass;
-    private final PasswordEncoderBean passwordEncoderBeanClass;
-
     // Injection Email
+    private final ModelMapperBean modelMapperBeanClass;
     private final IEmailRepository iEmailRepository;
     private final JavaMailSender javaMailSender;
 
@@ -61,7 +58,7 @@ public class EmailServicesImpl implements IEmailServices<EmailDto, EmailEntity> 
 
     ///////////////////////////////////////////////////////////////////////////////////////
     //**** EMAIL SEND BASIC*****************************************************************//
-    // Email Basic Send
+    // Email Basic (Doküman olmadan gönderdim)
     @Override
     @Transactional // Create,Delete, Update
     public EmailDto basicSendEmail(EmailDto emailDto) {

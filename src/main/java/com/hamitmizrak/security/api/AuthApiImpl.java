@@ -70,7 +70,7 @@ public class AuthApiImpl {
             // JWT üret
             String token = jwtTokenProvider.generateToken(principal);
 
-            // Cevap
+            // PAYLOAD (Cevap)
             AuthResponse payload = new AuthResponse(
                     token,
                     "Bearer",
@@ -103,6 +103,7 @@ public class AuthApiImpl {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")
     public ResponseEntity<ApiResult<UserMe>> me() {
+        // Sistemde kullanıcı var mı ?
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !(auth.getPrincipal() instanceof UserPrincipal up)) {
             return ResponseEntity.ok(ApiResult.unauthorized("Oturum bulunamadı.", "/auth/api/v1/me"));
@@ -186,7 +187,6 @@ public class AuthApiImpl {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // DTO’lar (Controller içinde sade DTO/record; projende ayrı dosya olarak tutmak istersen taşıyabilirsin)
-
     public static record LoginRequest(
             @Email(message = "Geçerli bir e-posta girin")
             @NotBlank(message = "E-posta zorunludur")

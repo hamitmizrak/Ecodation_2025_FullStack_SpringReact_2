@@ -6,7 +6,7 @@ import com.hamitmizrak.business.services.interfaces.IRegisterServices;
 import com.hamitmizrak.controller.api.interfaces.IRegisterApi;
 import com.hamitmizrak.error.ApiResult;
 import com.hamitmizrak.exception._400_BadRequestException;
-import com.hamitmizrak.tokenmail.ForRegisterTokenEmailConfirmationEntity;
+import com.hamitmizrak.token_mail.entity.ForRegisterTokenEmailConfirmationEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.webjars.NotFoundException;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -182,7 +182,7 @@ public class AddresServiceImpl implements IAddressService<AddressDto, AddressEnt
                     .map(AddressMapper::AddressEntityToAddressDto)// 2.YOL (Method Referances)
                     .collect(Collectors.toList());
         } else {
-            throw new NotFoundException("null pointer exception message");
+            throw new _404_NotFoundException("null pointer exception message");
         }
         return addressDtoList;
     }

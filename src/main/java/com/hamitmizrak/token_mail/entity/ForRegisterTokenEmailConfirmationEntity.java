@@ -1,4 +1,4 @@
-package com.hamitmizrak.tokenmail;
+package com.hamitmizrak.token_mail.entity;
 
 import com.hamitmizrak.data.entity.BaseEntity;
 import com.hamitmizrak.data.entity.RegisterEntity;

@@ -12,7 +12,7 @@ public class AuthExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiResult<?>> handleBadCredentials(BadCredentialsException ex) {
-        return ResponseEntity.ok(ApiResult.error("badCredentials", "Email/Şifre hatalı", "/auth/login"));
+        return ResponseEntity.ok(ApiResult.error("badCredentials", "Email veya Şifre hatalı", "/auth/login"));
     }
 
     @ExceptionHandler(DisabledException.class)

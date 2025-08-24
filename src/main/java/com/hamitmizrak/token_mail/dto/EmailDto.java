@@ -1,5 +1,6 @@
-package com.hamitmizrak.business.dto;
+package com.hamitmizrak.token_mail.dto;
 
+import com.hamitmizrak.business.dto.BaseDto;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

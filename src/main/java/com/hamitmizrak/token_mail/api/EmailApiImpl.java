@@ -1,6 +1,6 @@
-package com.hamitmizrak.controller.api.impl;
+package com.hamitmizrak.token_mail.api;
 
-import com.hamitmizrak.business.dto.EmailDto;
+import com.hamitmizrak.token_mail.dto.EmailDto;
 import com.hamitmizrak.business.services.interfaces.IEmailServices;
 import com.hamitmizrak.controller.api.interfaces.IEmailApi;
 import jakarta.validation.Valid;

@@ -1,6 +1,6 @@
 package com.hamitmizrak.aspect;
 
-import com.hamitmizrak.login.AuthenticationName;
+import com.hamitmizrak.security.login.AuthenticationName;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;

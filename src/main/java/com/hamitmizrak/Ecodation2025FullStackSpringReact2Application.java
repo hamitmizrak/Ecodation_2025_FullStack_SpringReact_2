@@ -26,7 +26,6 @@ import java.util.TimeZone;
 // Dikkat: public class AuditingAwareBean içindeki method ismi:auditorAwareBeanMethod
 @EnableJpaAuditing(auditorAwareRef = "auditingAwareBeanMethod")
 
-
 // Configuration Properties taramasını aç
 @ConfigurationPropertiesScan(basePackageClasses = com.hamitmizrak.security.jwt.JwtProps.class)
 

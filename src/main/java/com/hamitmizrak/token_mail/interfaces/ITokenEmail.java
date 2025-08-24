@@ -1,7 +1,7 @@
-package com.hamitmizrak.tokenmail;
+package com.hamitmizrak.token_mail.interfaces;
 
 // Generics
-public interface IForRegisterTokenEmailConfirmationServices<T> {
+public interface ITokenEmail<T> {
 
     // CREATE (TOKEN)
     public String createToken(T t);

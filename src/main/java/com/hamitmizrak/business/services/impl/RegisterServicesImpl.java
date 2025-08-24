@@ -5,17 +5,17 @@ import com.hamitmizrak.bean.ModelMapperBean;
 import com.hamitmizrak.bean.PasswordEncoderBean;
 import com.hamitmizrak.business.dto.RegisterDto;
 import com.hamitmizrak.business.services.interfaces.IRegisterServices;
-import com.hamitmizrak.data.entity.EmailEntity;
+import com.hamitmizrak.token_mail.entity.EmailEntity;
 import com.hamitmizrak.data.entity.RegisterEntity;
 import com.hamitmizrak.data.entity.RoleEntity;
-import com.hamitmizrak.data.repository.IEmailRepository;
+import com.hamitmizrak.token_mail.repository.IEmailRepository;
 import com.hamitmizrak.data.repository.IRegisterRepository;
 import com.hamitmizrak.data.repository.IRoleRepository;
 import com.hamitmizrak.exception.HamitMizrakException;
 import com.hamitmizrak.exception._404_NotFoundException;
-import com.hamitmizrak.tokenmail.ForRegisterTokenEmailConfirmationEntity;
-import com.hamitmizrak.tokenmail.IForRegisterTokenEmailConfirmationEntity;
-import com.hamitmizrak.tokenmail.IForRegisterTokenEmailConfirmationServices;
+import com.hamitmizrak.token_mail.entity.ForRegisterTokenEmailConfirmationEntity;
+import com.hamitmizrak.token_mail.repository.IForRegisterTokenEmailConfirmationEntity;
+import com.hamitmizrak.token_mail.interfaces.ITokenEmail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +57,7 @@ public class RegisterServicesImpl implements IRegisterServices<RegisterDto, Regi
     private final IEmailRepository iEmailRepository;
 
     // Email Token Field
-    private final IForRegisterTokenEmailConfirmationServices tokenServices; // Email Token confirmation
+    private final ITokenEmail tokenServices; // Email Token confirmation
     private final IForRegisterTokenEmailConfirmationEntity iTokenRepository; // Token oluşturma
 
 

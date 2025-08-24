@@ -1,4 +1,4 @@
-package com.hamitmizrak.login;
+package com.hamitmizrak.security.login;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.Authentication;
