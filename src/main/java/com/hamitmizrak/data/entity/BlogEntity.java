@@ -48,23 +48,14 @@ public class BlogEntity extends AuditingAwareBaseEntity implements Serializable 
 
     // CONTENT
     @Lob
-    @Basic(fetch = FetchType.LAZY)
     @Column(name = "content", columnDefinition = "varchar(255) default 'blog için içerik girilmedi'")
     private String content;
 
-    // SUMMARY
-    private String summary;
+    // TITLE
+    private String title;
 
     // IMAGE
-    // examp: http://localhost:4444/files/blog/{id}/{uuid}.png
-    @Column(name = "image_url",length = 500)
-    private String imageUrl;
-
-    // Basit Yayın Durumu
-    @Builder.Default
-    @Column(name="active",nullable = false)
-    private Boolean active=true;
-
+    private String image;
 
    /*
    Javada olsun Database(Entity) olmasının

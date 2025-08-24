@@ -124,7 +124,7 @@ public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
         BlogDto blogFindDto= objectServiceFindById(id);
        if(blogFindDto!=null){
            BlogEntity blogEntity=dtoToEntity(blogFindDto);
-           blogEntity.setSummary(blogDto.getTitle());
+           blogEntity.setTitle(blogDto.getTitle());
            blogEntity.setHeader(blogDto.getHeader());
            blogEntity.setContent(blogDto.getContent());
            iBlogRepository.save(blogEntity);

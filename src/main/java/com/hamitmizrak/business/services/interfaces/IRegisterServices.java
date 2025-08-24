@@ -3,7 +3,6 @@ package com.hamitmizrak.business.services.interfaces;
 import com.hamitmizrak.business.dto.RegisterDto;
 import com.hamitmizrak.business.services.ICrudService;
 import com.hamitmizrak.business.services.IModelMapperService;
-import com.hamitmizrak.business.services.IPicturesService;
 
 /*
  Register başlangıçta pasif durumda;
@@ -16,7 +15,7 @@ import com.hamitmizrak.business.services.IPicturesService;
 
 // Register(N) Roles(M)
 public interface IRegisterServices<D, E>  extends IModelMapperService<D,E>,
-        ICrudService<D,E>, IPicturesService {
+        ICrudService<D,E> {
 
     // SPEED DATA
     public String registerSpeedData(Long data);

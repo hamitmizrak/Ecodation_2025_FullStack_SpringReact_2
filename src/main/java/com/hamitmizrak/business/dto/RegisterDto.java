@@ -2,7 +2,6 @@ package com.hamitmizrak.business.dto;
 
 import com.hamitmizrak.annotation.AnnotationUniqueEmailAddress;
 import com.hamitmizrak.audit.AuditingAwareBaseDto;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -88,15 +87,6 @@ public class RegisterDto extends AuditingAwareBaseDto implements Serializable {
     // Kullanıcı Sistemde mi ?
     public Boolean isEnabled;
 
-    /// //////////////////////////////////////////////////////////////
-    // ---------- Profil Görseli ----------
-    @Schema(description = "Profil görselinin tam (public) URL'i",
-            example = "http://localhost:4444/files/users/42/avatars/uuid.png")
-    private String avatarUrl;
-
-    public boolean hasAvatar() {
-        return avatarUrl != null && !avatarUrl.isBlank();
-    }
     /////////////////////////////////////////////////////////////////////////////////
     // PARAMETRESIZ CONSTRUCTOR
     // PARAMETRELI CONSTRUCTOR

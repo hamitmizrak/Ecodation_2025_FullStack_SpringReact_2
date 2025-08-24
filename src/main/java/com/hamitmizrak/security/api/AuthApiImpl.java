@@ -1,4 +1,4 @@
-package com.hamitmizrak.controller.api.impl;
+package com.hamitmizrak.security.api;
 
 import com.hamitmizrak.error.ApiResult;
 import com.hamitmizrak.security.jwt.JwtTokenProvider;
@@ -103,6 +103,7 @@ public class AuthApiImpl {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")
     public ResponseEntity<ApiResult<UserMe>> me() {
+        // Sistemde kullanıcı var mı ?
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !(auth.getPrincipal() instanceof UserPrincipal up)) {
             return ResponseEntity.ok(ApiResult.unauthorized("Oturum bulunamadı.", "/auth/api/v1/me"));

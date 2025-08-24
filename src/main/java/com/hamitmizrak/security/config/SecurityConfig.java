@@ -34,12 +34,9 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtFilter,
+    public SecurityFilterChain filterChain(HttpSecurity http,JwtAuthenticationFilter jwtFilter,
                                            DaoAuthenticationProvider daoProvider) throws Exception {
 
-
-
-        // JWT için
         http.authenticationProvider(daoProvider);
 
         // H2 console matcher

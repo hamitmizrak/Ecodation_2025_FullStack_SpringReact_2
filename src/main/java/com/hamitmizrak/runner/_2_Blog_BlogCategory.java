@@ -65,7 +65,7 @@ public class _2_Blog_BlogCategory {
             BlogEntity blogEntity1=new BlogEntity();
             blogEntity1.setHeader("Header-1");
             blogEntity1.setContent("Content-1");
-            blogEntity1.setSummary("Title-1");
+            blogEntity1.setTitle("Title-1");
             blogEntity1.setBlogCategoryBlogEntity((computerCategory));
             iBlogRepository.save(blogEntity1);
 
@@ -73,7 +73,7 @@ public class _2_Blog_BlogCategory {
             BlogEntity blogEntity2=new BlogEntity();
             blogEntity2.setHeader("Header-2");
             blogEntity2.setContent("Content-2");
-            blogEntity2.setSummary("Title-2");
+            blogEntity2.setTitle("Title-2");
             blogEntity2.setBlogCategoryBlogEntity(computerCategory);
             iBlogRepository.save(blogEntity2);
 
@@ -82,7 +82,7 @@ public class _2_Blog_BlogCategory {
             BlogEntity blogEntity3=new BlogEntity();
             blogEntity3.setHeader("Header-3");
             blogEntity3.setContent("Content-3");
-            blogEntity3.setSummary("Title-3");
+            blogEntity3.setTitle("Title-3");
             blogEntity3.setBlogCategoryBlogEntity(gymCategory);
             iBlogRepository.save(blogEntity3);
         };

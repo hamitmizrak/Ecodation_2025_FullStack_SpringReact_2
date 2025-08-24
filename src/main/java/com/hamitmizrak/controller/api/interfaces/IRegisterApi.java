@@ -2,12 +2,11 @@ package com.hamitmizrak.controller.api.interfaces;
 
 import com.hamitmizrak.business.dto.RegisterDto;
 import com.hamitmizrak.controller.api.ICrudApi;
-import com.hamitmizrak.controller.api.IPicturesApi;
 import org.springframework.http.ResponseEntity;
 
 // API INTERFACE (IRegisterApi)
 // D: Dto
-public interface IRegisterApi<D> extends ICrudApi<D>, IPicturesApi {
+public interface IRegisterApi<D> extends ICrudApi<D> {
     // Register SpeedData
     public ResponseEntity<?> registerApiSpeedData(Long data);
 
