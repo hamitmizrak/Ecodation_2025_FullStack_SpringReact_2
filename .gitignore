@@ -5,6 +5,9 @@ frontend/blog/node_modules
 tutorials
 pictures
 
+# Upload
+upload
+
 # Special files: untracked (Backend)
 log
 database_memory_persist
