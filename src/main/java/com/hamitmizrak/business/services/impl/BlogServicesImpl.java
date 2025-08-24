@@ -3,7 +3,6 @@ package com.hamitmizrak.business.services.impl;
 
 import com.hamitmizrak.bean.ModelMapperBean;
 import com.hamitmizrak.business.dto.BlogDto;
-import com.hamitmizrak.business.services.IPicturesService;
 import com.hamitmizrak.business.services.interfaces.IBlogServices;
 import com.hamitmizrak.data.entity.BlogEntity;
 import com.hamitmizrak.data.mapper.BlogMapper;
@@ -24,7 +23,7 @@ import java.util.List;
 
 // SERVICES
 @Service
-public abstract class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
+public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
 
     // INJECTION (Lombok Constructor Field) => 3.YOL
     private final IBlogRepository iBlogRepository;
@@ -44,7 +43,6 @@ public abstract class BlogServicesImpl implements IBlogServices<BlogDto, BlogEnt
         return null;
     }
 
-
     //////////////////////////////////////////////////////////////////////////////
     // MODEL MAPPER
     @Override
@@ -63,27 +61,6 @@ public abstract class BlogServicesImpl implements IBlogServices<BlogDto, BlogEnt
 
         // 2.YOL
         return BlogMapper.BlogDtoToBlogEntity(blogDto);
-    }
-    //////////////////////////////////////////////////////////////////////////////
-    /// // FILE UPLOAD
-    @Transactional
-    @Override
-    public BlogDto updateImageUrl(Long id, String imageUrl) {
-        BlogEntity blogEntity = iBlogRepository.findById(id).orElseThrow(
-                ()-> new IllegalArgumentException("Blog Not Found id: "+id)
-        );
-        blogEntity.setImageUrl(imageUrl);
-        return entityToDto(iBlogRepository.save(blogEntity));
-    }
-
-    @Transactional
-    @Override
-    public BlogDto clearImageUrl(Long id) {
-        BlogEntity blogEntity = iBlogRepository.findById(id).orElseThrow(
-                ()-> new IllegalArgumentException("Blog Not Found id: "+id)
-        );
-        blogEntity.setImageUrl(null);
-        return entityToDto(iBlogRepository.save(blogEntity));
     }
 
     //////////////////////////////////////////////////////////////////////////////

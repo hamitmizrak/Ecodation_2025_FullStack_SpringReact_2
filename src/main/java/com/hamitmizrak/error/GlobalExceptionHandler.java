@@ -3,7 +3,6 @@ package com.hamitmizrak.error;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,8 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-
+import java.util.List;
 
 /**
  * Global Exception Handler
@@ -23,37 +21,6 @@ import java.util.stream.Collectors;
 @Log4j2
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
-    // File upload
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiResult<?>> handleIllegalArgument(IllegalArgumentException ex, org.springframework.web.context.request.WebRequest req) {
-        String path = req.getDescription(false).replace("uri=","");
-        return ResponseEntity.badRequest()
-                .body(ApiResult.error("badRequest", ex.getMessage(), path));
-    }
-
-    @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
-    public ResponseEntity<ApiResult<?>> handleValidation(Exception ex, org.springframework.web.context.request.WebRequest req) {
-        Map<String, Object> errors =
-                ((ex instanceof MethodArgumentNotValidException manv) ? manv.getBindingResult().getFieldErrors()
-                        : ((BindException) ex).getBindingResult().getFieldErrors())
-                        .stream().collect(Collectors.toMap(
-                                fe -> fe.getField(),
-                                fe -> fe.getDefaultMessage(),
-                                (a,b)->a
-                        ));
-        String path = req.getDescription(false).replace("uri=","");
-        return ResponseEntity.unprocessableEntity()
-                .body(ApiResult.unprocessable("Validation hataları", path, errors));
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResult<?>> handleGeneric(Exception ex, org.springframework.web.context.request.WebRequest req) {
-        log.error("Unhandled error", ex);
-        String path = req.getDescription(false).replace("uri=","");
-        return ResponseEntity.internalServerError()
-                .body(ApiResult.serverError(ex.getMessage(), path));
-    }
 
     // BadRequestException
     public class BadRequestException extends RuntimeException {

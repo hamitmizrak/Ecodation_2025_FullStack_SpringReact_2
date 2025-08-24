@@ -103,7 +103,6 @@ public class AuthApiImpl {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")
     public ResponseEntity<ApiResult<UserMe>> me() {
-        // Sistemde kullanıcı var mı ?
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !(auth.getPrincipal() instanceof UserPrincipal up)) {
             return ResponseEntity.ok(ApiResult.unauthorized("Oturum bulunamadı.", "/auth/api/v1/me"));

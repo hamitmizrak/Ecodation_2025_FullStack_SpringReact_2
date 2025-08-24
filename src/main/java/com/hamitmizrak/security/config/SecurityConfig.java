@@ -37,13 +37,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtFilter,
                                            DaoAuthenticationProvider daoProvider) throws Exception {
 
-        // Ayrıca multipart POST’lar için CORS/CSRF ayarlarınız proje politikanıza göre düzenli olmalı.
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/files/**").permitAll()
-                        // diğer public uçlar…
-                        .anyRequest().authenticated()
-                );
+
 
         // JWT için
         http.authenticationProvider(daoProvider);
