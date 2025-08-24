@@ -1,5 +1,7 @@
 package com.hamitmizrak.config;
 
+import com.hamitmizrak.file.FileProps;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -9,11 +11,38 @@ import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
+import java.nio.file.Path;
 import java.util.Locale;
+
+//LOMBOK
+@RequiredArgsConstructor
 
 //@Configuration: Bean tanımlarımını ve uygulamada yapılandırmalarını sağlamak içindir
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    private final FileProps fileProps;
+
+    // Statik Kaynaklara İzin vermem (Spring MVC içindir)
+   /* @Override
+    public void addResourceHandlers(ResourceHandlerRegistry resourceHandlerRegistry) {
+        resourceHandlerRegistry
+                .addResourceHandler("/resources/**")// Statik kod kaynakların URL deseni
+                .addResourceLocations("/public/", "classpath:/static/") //Kaynakların Yeri
+                .setCachePeriod(3600); // Cache Süresi Saniye cinsinden: 1=60 saniye 60*60=3600 =1 saat boyunca statik kod kaynaklarını cache belleğinde sakla
+    }*/
+
+
+    // http://localhost:4444/upload
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        Path uploadRoot = fileProps.getUploadRoot();
+        String uploadUri = uploadRoot.toUri().toString(); // "file:/.../upload/"
+
+        registry.addResourceHandler("/upload/**")
+                .addResourceLocations(uploadUri)
+                .setCachePeriod(3600);
+    }
 
     // CORS (Cross Origin Resource Sharing)
     @Override
@@ -25,15 +54,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // İzin verilen Http Metotları
                 .allowedHeaders("*") //  izin verilen başlılar => Tüm başlıkları kabul et,
                 .allowCredentials(true); // Kimlik doğrulama bilgilerinde izin ver(Cookie, header, authorization vs)
-    }
-
-    // Statik Kaynaklara İzin vermem (Spring MVC içindir)
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry resourceHandlerRegistry) {
-        resourceHandlerRegistry
-                .addResourceHandler("/resources/**")// Statik kod kaynakların URL deseni
-                .addResourceLocations("/public/", "classpath:/static/") //Kaynakların Yeri
-                .setCachePeriod(3600); // Cache Süresi Saniye cinsinden: 1=60 saniye 60*60=3600 =1 saat boyunca statik kod kaynaklarını cache belleğinde sakla
     }
 
     // Eğer Spring MVC uygulamanızda JSP, Thymeleaf gibi görünümler kullanıyorsanız,

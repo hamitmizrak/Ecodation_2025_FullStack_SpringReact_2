@@ -75,8 +75,8 @@ public class RegisterEntity extends AuditingAwareBaseEntity implements Serializa
     @Column(name = "page_authorization")
     private Boolean pageAuthorization = false;
 
-
-
+    @Column(length = 512)
+    private String imageUrl;
 
     /////////////////////////////////////////////
     // Relation

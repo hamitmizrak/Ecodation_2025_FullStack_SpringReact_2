@@ -2,6 +2,7 @@ package com.hamitmizrak.business.dto;
 
 import com.hamitmizrak.annotation.AnnotationUniqueEmailAddress;
 import com.hamitmizrak.audit.AuditingAwareBaseDto;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -73,6 +74,9 @@ public class RegisterDto extends AuditingAwareBaseDto implements Serializable {
     // Rolles (Enum)
     private Collection<RoleDto> roles;
 
+    private String imageUrl;        // Örn: /upload/register/2025/08/24/uuid.jpg
+    // İsterseniz response tarafında doldurmak için:
+    private String fullImageUrl;    // Örn: http://localhost:4444/upload/...
     /////////////////////////////////////////////////////////////////////////////////
     // USER DETAILS
     // Kullanıcı üye olurken kilitli olsun ancak mail onayı ile aktifleştirilsin
