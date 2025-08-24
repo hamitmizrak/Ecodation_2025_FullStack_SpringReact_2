@@ -39,7 +39,6 @@ public class RegisterEntity extends AuditingAwareBaseEntity implements Serializa
     @Column(name = "register_id")
     private Long registerId;
 
-
     // System Created Date
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -76,7 +75,16 @@ public class RegisterEntity extends AuditingAwareBaseEntity implements Serializa
     private Boolean pageAuthorization = false;
 
 
-
+    // ---------- Profil Görseli ----------
+    /**
+     * Dosya sistemindeki RELATIF yol (ör: users/42/avatars/uuid.png).
+     * Public URL: DTO katmanında FileProps.getBaseUrl() ile birleştir.
+     */
+    @Column(name = "avatar_path", length = 512)
+    private String avatarPath;
+    /////////////////////////////////////////////
+    // Image
+    private String avatarUrl;
 
     /////////////////////////////////////////////
     // Relation

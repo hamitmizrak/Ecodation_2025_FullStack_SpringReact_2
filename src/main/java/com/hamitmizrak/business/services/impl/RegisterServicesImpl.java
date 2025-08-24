@@ -5,6 +5,7 @@ import com.hamitmizrak.bean.ModelMapperBean;
 import com.hamitmizrak.bean.PasswordEncoderBean;
 import com.hamitmizrak.business.dto.RegisterDto;
 import com.hamitmizrak.business.services.interfaces.IRegisterServices;
+import com.hamitmizrak.file.*;
 import com.hamitmizrak.token_mail.entity.EmailEntity;
 import com.hamitmizrak.data.entity.RegisterEntity;
 import com.hamitmizrak.data.entity.RoleEntity;
@@ -20,11 +21,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -36,13 +39,19 @@ import java.util.*;
 // Service: Asıl İş Yükünü sırtlayan
 @Service
 @Component("registerServicesImpl") // @Component => Spring'in bir parcasısın
-public class RegisterServicesImpl implements IRegisterServices<RegisterDto, RegisterEntity> {
+public abstract class RegisterServicesImpl implements IRegisterServices<RegisterDto, RegisterEntity> {
 
     // Injection
     private final IRoleRepository iRoleRepository;
     private final IRegisterRepository iRegisterRepository;
     private final ModelMapperBean modelMapperBeanClass;
     private final PasswordEncoderBean passwordEncoderBeanClass;
+
+    // Pictures
+    // Dosya sistemi & generic attachment bileşenleri
+    private final GenericAttachmentService attachmentService; // store/delete için generic servis
+    private final FileStorageService storage;                 // stream/load için
+    private final FileProps fileProps;                        // baseUrl, baseDir, sınırlar
 
     //////////////////////////////////////////////////////////
     // Email Sender
@@ -220,12 +229,10 @@ public class RegisterServicesImpl implements IRegisterServices<RegisterDto, Regi
         return null;
     }
 
-    @Override
-    public RegisterDto objectServiceCreate(RegisterDto registerDto) {
-        return null;
-    }
+
 
     // LIST (REGISTER)
+    @Transactional(readOnly = true)
     @Override
     public List<RegisterDto> objectServiceList() {
        Iterable<RegisterEntity> registerEntityIterable= iRegisterRepository.findAll();
@@ -243,6 +250,7 @@ public class RegisterServicesImpl implements IRegisterServices<RegisterDto, Regi
 
     // FIND BY ID (REGISTER)
     @Override
+    @Transactional(readOnly = true)
     public RegisterDto objectServiceFindById(Long id) {
         // Öncelikle ilgili ID sistemde var mı yok mu kontrolünü sağlıyorum.
         Boolean booleanRegisterEntityFindById = iRegisterRepository.findById(id).isPresent();
@@ -289,6 +297,11 @@ public class RegisterServicesImpl implements IRegisterServices<RegisterDto, Regi
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////
-    //**** EMAIL TOKEN ****************************************************//
 
+    private final ImageService imageService;
+    @Override
+    public AttachmentResponse uploadUserAvatar(Long userId, MultipartFile file) {
+        final AttachmentOwner owner = AttachmentOwners.user(userId);
+        return imageService.uploadAvatar(owner, file);
+    }
 } //end RegisterImpl

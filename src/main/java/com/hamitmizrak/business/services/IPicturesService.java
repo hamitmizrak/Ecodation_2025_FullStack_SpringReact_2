@@ -1,13 +1,10 @@
 package com.hamitmizrak.business.services;
 
-import java.util.List;
+import com.hamitmizrak.file.AttachmentResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 // D: Dto
 // E: Entity
-public interface IPicturesService<D, E> {
-
-    // Görsel URL yönetimi (best practice: alan bazlı update)
-    D updateImageUrl(Long id, String imageUrl);
-    D clearImageUrl(Long id);
-
+public interface IPicturesService {
+    public AttachmentResponse uploadUserAvatar(Long userId, MultipartFile file);
 } // end ICrudService

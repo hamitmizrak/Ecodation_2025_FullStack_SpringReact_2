@@ -3,15 +3,23 @@ package com.hamitmizrak.controller.api.impl;
 import com.hamitmizrak.business.dto.RegisterDto;
 import com.hamitmizrak.business.services.impl.RegisterServicesImpl;
 import com.hamitmizrak.business.services.interfaces.IRegisterServices;
+import com.hamitmizrak.controller.api.IPicturesApi;
 import com.hamitmizrak.controller.api.interfaces.IRegisterApi;
 import com.hamitmizrak.error.ApiResult;
 import com.hamitmizrak.exception._400_BadRequestException;
+import com.hamitmizrak.file.AttachmentResponse;
+import com.hamitmizrak.file.FileStorageService;
 import com.hamitmizrak.token_mail.entity.ForRegisterTokenEmailConfirmationEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,15 +30,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/register/api/v1.0.0")
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:4200"}) // Frontend portları
-public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
+public abstract class RegisterApiImpl implements IRegisterApi<RegisterDto>, IPicturesApi {
 
+    // Injection
     private final IRegisterServices iRegisterServices;
 
     private final RegisterServicesImpl registerServicesImpl;
 
-    private ApiResult apiResult;
 
-    /////////////////////////////////////////////////////////////
+    /// //////////////////////////////////////////////////////////
     // SPEED DATA
     @GetMapping("/speed/data")
     @Override
@@ -45,7 +53,7 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
         return ResponseEntity.ok(iRegisterServices.registerAllUSerDelete());
     }
 
-    /////////////////////////////////////////////////////////////
+    /// //////////////////////////////////////////////////////////
     // REGISTER CRUD
 
     // CREATE Register(Api)
@@ -85,9 +93,9 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
     // http://localhost:4444/register/api/v1.0.0/find
     // http://localhost:4444/register/api/v1.0.0/find/0
     // http://localhost:4444/register/api/v1.0.0/find/1
-    @GetMapping({"/find","/find/{id}"})
+    @GetMapping({"/find", "/find/{id}"})
     @Override
-    public ResponseEntity<ApiResult<?>> objectApiFindById(@PathVariable(name="id",required = false) Long id) {
+    public ResponseEntity<ApiResult<?>> objectApiFindById(@PathVariable(name = "id", required = false) Long id) {
         try {
             if (id == null) throw new NullPointerException("Null pointer exception: Null değer");
             if (id == 0) throw new _400_BadRequestException("Bad Request Exception: Kötü istek");
@@ -108,10 +116,10 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
     // http://localhost:4444/register/api/v1.0.0/update
     // http://localhost:4444/register/api/v1.0.0/update/0
     // http://localhost:4444/register/api/v1.0.0/update/1
-    @PutMapping({"/update","/update/{id}"})
+    @PutMapping({"/update", "/update/{id}"})
     @Override
     public ResponseEntity<ApiResult<?>> objectApiUpdate(
-            @PathVariable(name="id",required = false) Long id,
+            @PathVariable(name = "id", required = false) Long id,
             @Valid @RequestBody RegisterDto registerDto) {
         try {
             RegisterDto updated = (RegisterDto) iRegisterServices.objectServiceUpdate(id, registerDto);
@@ -125,9 +133,9 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
     // http://localhost:4444/register/api/v1.0.0/delete
     // http://localhost:4444/register/api/v1.0.0/delete/0
     // http://localhost:4444/register/api/v1.0.0/delete/1
-    @DeleteMapping({"/delete","/delete/{id}"})
+    @DeleteMapping({"/delete", "/delete/{id}"})
     @Override
-    public ResponseEntity<ApiResult<?>> objectApiDelete(@PathVariable(name="id",required = false) Long id) {
+    public ResponseEntity<ApiResult<?>> objectApiDelete(@PathVariable(name = "id", required = false) Long id) {
         try {
             String deleted = iRegisterServices.objectServiceDelete(id).toString();
             return ResponseEntity.ok(ApiResult.success(deleted));
@@ -136,14 +144,14 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // EMAIL CONFIRMATION
     //http://localhost:4444/register/api/v1/confirm?token=ca478481-5f7a-406b-aaa4-2012ebe1afb4
     @GetMapping("/confirm")
     public ResponseEntity<String> emailTokenConfirmation(@RequestParam("token") String token) {
         Optional<ForRegisterTokenEmailConfirmationEntity> tokenConfirmationEntity = registerServicesImpl.findTokenConfirmation(token);
         tokenConfirmationEntity.ifPresent(registerServicesImpl::emailTokenConfirmation);
-        String html="<!doctype html>\n" +
+        String html = "<!doctype html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
                 "  <summary>Register</summary>\n" +
@@ -160,4 +168,28 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
         return ResponseEntity.ok(html);
     }
 
+    /// ///////////////////////////////////////////////////////////////////
+
+    private final FileStorageService storage;
+
+    @Override
+    @GetMapping("/api/files")
+    public ResponseEntity<Resource> download(@RequestParam("path") String relativePath) {
+        Resource res = storage.loadAsResource(relativePath);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + res.getFilename() + "\"")
+                .body(res);
+    }
+
+    @Override
+    @PostMapping(path = "/{userId}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<AttachmentResponse> uploadAvatar(
+            @PathVariable Long userId,
+            @RequestPart("file") MultipartFile file) {
+        return ResponseEntity.ok(iRegisterServices.uploadUserAvatar(userId, file));
+    }
+
+
 } // end RegisterApiImpl
+
