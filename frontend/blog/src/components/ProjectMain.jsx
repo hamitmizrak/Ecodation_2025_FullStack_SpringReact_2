@@ -2,6 +2,15 @@
 
 import React from 'react';
 
+// pictures
+import Main1 from '../assets/images/main1.jpg';
+import Main2 from '../assets/images/main2.jpg';
+import Main3 from '../assets/images/main3.jpg';
+import Main4 from '../assets/images/main4.jpg';
+import Main5 from '../assets/images/main5.jpg';
+import Main6 from '../assets/images/main6.jpg';
+import About from '../assets/images/about.jpg';
+
 function ProjectMain() {
   return (
     <React.Fragment>
@@ -204,7 +213,7 @@ function ProjectMain() {
                 <div className="col-12 col-lg-6 mb-4 text-center">
                   <img
                     id="about_picture"
-                    src="images/about.jpg"
+                    src={About}
                     alt="Şirketimiz Hakkında"
                     loading="lazy"
                     className="img-glare"
@@ -262,7 +271,7 @@ function ProjectMain() {
                 <div className="col-md-3 img-glare">
                   <div className="card">
                     <a href="#!">
-                      <img className="card-img-top" src="./images/main1.jpg" alt="Title" />
+                      <img className="card-img-top" src={Main1} alt="Title" />
                     </a>
                     <div className="card-body">
                       <h4 className="card-title">Blog-1</h4>
@@ -283,7 +292,7 @@ function ProjectMain() {
                 <div className="col-md-3 img-glare">
                   <div className="card ">
                     <a href="#!">
-                      <img className="card-img-top" src="./images/main2.jpg" alt="Title" />
+                      <img className="card-img-top" src={Main2} alt="Title" />
                     </a>
                     <div className="card-body">
                       <h4 className="card-title">Blog-2</h4>
@@ -304,7 +313,7 @@ function ProjectMain() {
                 <div className="col-md-3 img-glare">
                   <div className="card">
                     <a href="#!">
-                      <img className="card-img-top" src="./images/main3.jpg" alt="Title" />
+                      <img className="card-img-top" src={Main3} alt="Title" />
                     </a>
                     <div className="card-body">
                       <h4 className="card-title">Blog-3</h4>
@@ -325,7 +334,7 @@ function ProjectMain() {
                 <div className="col-md-3 img-glare">
                   <div className="card">
                     <a href="#!">
-                      <img className="card-img-top" src="./images/main4.jpg" alt="Title" />
+                      <img className="card-img-top" src={Main4} alt="Title" />
                     </a>
                     <div className="card-body">
                       <h4 className="card-title">Blog-4</h4>
@@ -346,7 +355,7 @@ function ProjectMain() {
                 <div className="col-md-3 img-glare">
                   <div className="card">
                     <a href="#!">
-                      <img className="card-img-top" src="./images/main5.jpg" alt="Title" />
+                      <img className="card-img-top" src={Main5} alt="Title" />
                     </a>
                     <div className="card-body">
                       <h4 className="card-title">Blog-5</h4>
@@ -367,7 +376,7 @@ function ProjectMain() {
                 <div className="col-md-3 img-glare">
                   <div className="card">
                     <a href="#!">
-                      <img className="card-img-top" src="./images/main6.jpg" alt="Title" />
+                      <img className="card-img-top" src={Main6} alt="Title" />
                     </a>
                     <div className="card-body">
                       <h4 className="card-title">Blog-6</h4>

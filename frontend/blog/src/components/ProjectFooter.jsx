@@ -1,6 +1,9 @@
 // rfce
 import React from 'react';
 
+// pictures
+import Coffee from '../assets/images/coffee.jpg';
+
 function ProjectFooter() {
   return (
     <React.Fragment>
@@ -12,7 +15,7 @@ function ProjectFooter() {
               {/* 1. Sütun: Logo + Hakkında + Abone Ol */}
               <div className="col-md-4 mb-4">
                 <h5 className="mt-3">Abone Ol</h5>
-                <img id="footer-logo" src="./images/coffee.jpg" alt="xyz.inc" className="mb-3" />
+                <img id="footer-logo" src={Coffee} alt="xyz.inc" className="mb-3" />
                 <p className="footer-company-text">
                   Yenilikçi teknoloji çözümleri ile sektörde öncü
                 </p>

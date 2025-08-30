@@ -1,6 +1,10 @@
 // rfce
 import React from 'react';
 
+// pictures
+import TrFlag from '../assets/images/flag/tr.png';
+import EnFlag from '../assets/images/flag/en.png';
+
 function ProjectHeader() {
   return (
     <React.Fragment>
@@ -59,14 +63,14 @@ function ProjectHeader() {
                 <li className="nav-item">
                   <a href="#" className="nav-link text-white small">
                     <span>
-                      <img className="flag" src="./images/flag/tr.png" />
+                      <img className="flag" src={TrFlag} />
                     </span>
                   </a>
                 </li>
                 <li className="nav-item">
                   <a href="#" className="nav-link text-white small">
                     <span>
-                      <img className="flag" src="./images/flag/en.png" />
+                      <img className="flag" src={EnFlag} />
                     </span>
                   </a>
                 </li>
@@ -308,7 +312,7 @@ function ProjectHeader() {
           <div className="container">
             {/* Logo */}
             <a className="navbar-brand" href="/">
-              <img id="logo_id" src="images/flag/tr.png" alt="Logo" />
+              <img id="logo_id" src={TrFlag} alt="Logo" />
             </a>
             {/* Hamburger Menü */}
             <button
