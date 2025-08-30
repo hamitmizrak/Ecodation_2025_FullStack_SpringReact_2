@@ -38,7 +38,7 @@ Status Code (Bilgi)
 
 // API (REST)
 @RestController
-@RequestMapping("/auth/api/v1")
+@RequestMapping("/auth/api/v1.0.0")
 @CrossOrigin(origins = {FrontEnd.REACT_URL, FrontEnd.ANGULAR_URL})
 public class AuthApiImpl {
 
