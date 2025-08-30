@@ -397,7 +397,7 @@ function ProjectMain() {
                 <div className="col-md-3 img-glare">
                   <div className="card">
                     <a href="#!">
-                      <img className="card-img-top" src="./images/main1.jpg" alt="Title" />
+                      <img className="card-img-top" src={Main1} alt="Title" />
                     </a>
                     <div className="card-body">
                       <h4 className="card-title">Blog-7</h4>
@@ -418,7 +418,7 @@ function ProjectMain() {
                 <div className="col-md-3 img-glare">
                   <div className="card">
                     <a href="#!">
-                      <img className="card-img-top" src="./images/main2.jpg" alt="Title" />
+                      <img className="card-img-top" src={Main2} alt="Title" />
                     </a>
                     <div className="card-body">
                       <h4 className="card-title">Blog-8</h4>

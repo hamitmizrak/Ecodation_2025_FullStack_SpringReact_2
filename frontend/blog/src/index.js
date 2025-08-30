@@ -7,8 +7,26 @@ import reportWebVitals from './reportWebVitals';
 // ROUTER
 import ProjectRouter from './ProjectRouter';
 
+// CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+import 'jquery-ui/dist/themes/base/jquery-ui.css';
+import 'sweetalert2/dist/sweetalert2.min.css';
+import 'animate.css/animate.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
+// JS
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+// jQuery + jQuery UI (UI init edeceğin component’te de import edebilirsin)
+import $ from 'jquery';
+window.$ = $;            // bazı eklentiler global jQuery bekler
+window.jQuery = $;
+import 'jquery-ui/dist/jquery-ui.min.js';
+
+/////////////////////////////////////////////
 // Dark Mode
-import './index.css';
+import './styles/index.css';
 
 // Dil Secenegi
 import './internationalization/i18nlanguage';
@@ -32,7 +50,11 @@ root.render(
 
 reportWebVitals();
 
-//////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
 /* 
 Project name: jquery with web design
 - Author  : MsC Hamit Mızrak
@@ -528,4 +550,3 @@ document.addEventListener('DOMContentLoaded', () => {
     observer.observe(counter);
   });
 });
-
