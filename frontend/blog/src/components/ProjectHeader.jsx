@@ -101,6 +101,7 @@ function mapRegisterFieldName(beField) {
     rePassword: 'confirmPassword',
     confirm_password: 'confirmPassword',
     terms: 'terms',
+    roleId: 'roleId',
   };
   return map[beField] || beField;
 }
@@ -115,6 +116,13 @@ function mapLoginFieldName(beField) {
   return map[beField] || beField;
 }
 /* --------------------------------------------------------------------- */
+
+/* ---- Sabit rol seçenekleri (1=Admin, 2=Writer, 3=User) ---- */
+const ROLE_OPTIONS = [
+  { id: 1, name: 'Admin' },
+  { id: 2, name: 'Writer' },
+  { id: 3, name: 'User' },
+];
 
 function ProjectHeader() {
   const dispatch = useDispatch();
@@ -150,7 +158,7 @@ function ProjectHeader() {
     try {
       await dispatch(loginThunk({ email: loginForm.email, password: loginForm.password })).unwrap();
 
-      // >>> Başarı: modalı kapat, artıkları temizle, /admin'e yönlendir <<<
+      // Başarı: modal kapat + artıkları temizle + yönlendir
       const modalEl = document.getElementById('loginId');
       if (modalEl) {
         try {
@@ -176,12 +184,13 @@ function ProjectHeader() {
     }
   };
 
-  /* -------------------- REGISTER FORM (RESİMLİ) -------------------- */
+  /* -------------------- REGISTER FORM (RESİMLİ + SABİT ROLE ID) -------------------- */
   const [regForm, setRegForm] = useState({
     fullname: '',
     email: '',
     password: '',
     confirmPassword: '',
+    roleId: '3', // Varsayılan: User (3)
     terms: false,
   });
   const [regErr, setRegErr] = useState({
@@ -189,6 +198,7 @@ function ProjectHeader() {
     email: '',
     password: '',
     confirmPassword: '',
+    roleId: '',
     terms: '',
     general: '',
   });
@@ -202,6 +212,7 @@ function ProjectHeader() {
       email: !!regErr.email,
       password: !!regErr.password,
       confirmPassword: !!regErr.confirmPassword,
+      roleId: !!regErr.roleId,
       terms: !!regErr.terms,
     }),
     [regErr]
@@ -227,6 +238,7 @@ function ProjectHeader() {
       email: '',
       password: '',
       confirmPassword: '',
+      roleId: '',
       terms: '',
       general: '',
     };
@@ -235,9 +247,18 @@ function ProjectHeader() {
     if (!regForm.password) errs.password = 'Şifre zorunlu';
     if (regForm.password && regForm.password.length < 6) errs.password = 'En az 6 karakter';
     if (regForm.confirmPassword !== regForm.password) errs.confirmPassword = 'Şifreler uyuşmuyor';
+    if (!regForm.roleId || Number.isNaN(Number(regForm.roleId))) errs.roleId = 'Rol seçmelisiniz';
     if (!regForm.terms) errs.terms = 'Koşulları kabul etmelisiniz';
     setRegErr(errs);
-    if (errs.fullname || errs.email || errs.password || errs.confirmPassword || errs.terms) return;
+    if (
+      errs.fullname ||
+      errs.email ||
+      errs.password ||
+      errs.confirmPassword ||
+      errs.roleId ||
+      errs.terms
+    )
+      return;
 
     const dto = {
       registerName: regForm.fullname,
@@ -246,10 +267,12 @@ function ProjectHeader() {
       registerRePassword: regForm.confirmPassword,
     };
 
+    const rolesId = Number(regForm.roleId); // 1:Admin, 2:Writer, 3:User
+
     try {
       await dispatch(
         registerWithImageThunk({
-          rolesId: 1,
+          rolesId, // PATH paramı olarak roleId
           values: dto,
           file: regFile,
           onProgress: (p) => setUploadPct(p),
@@ -266,7 +289,14 @@ function ProjectHeader() {
       showLoginModal();
 
       // Temizle
-      setRegForm({ fullname: '', email: '', password: '', confirmPassword: '', terms: false });
+      setRegForm({
+        fullname: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        roleId: '3',
+        terms: false,
+      });
       setRegFile(null);
       setRegPreview(null);
       setUploadPct(0);
@@ -283,6 +313,7 @@ function ProjectHeader() {
         email: mapped.email || s.email,
         password: mapped.password || s.password,
         confirmPassword: mapped.confirmPassword || s.confirmPassword,
+        roleId: mapped.roleId || s.roleId,
         terms: mapped.terms || s.terms,
         general: general || 'Kayıt başarısız',
       }));
@@ -312,7 +343,7 @@ function ProjectHeader() {
     if (fieldErrors) {
       for (const [k, v] of Object.entries(fieldErrors)) {
         const kk = mapRegisterFieldName(k);
-        if (['fullname', 'email', 'password', 'confirmPassword', 'terms'].includes(kk)) {
+        if (['fullname', 'email', 'password', 'confirmPassword', 'roleId', 'terms'].includes(kk)) {
           regMap[kk] = Array.isArray(v) ? v[0] : String(v);
         }
       }
@@ -322,6 +353,7 @@ function ProjectHeader() {
       email: regMap.email || s.email,
       password: regMap.password || s.password,
       confirmPassword: regMap.confirmPassword || s.confirmPassword,
+      roleId: regMap.roleId || s.roleId,
       terms: regMap.terms || s.terms,
       general: error || s.general,
     }));
@@ -436,7 +468,7 @@ function ProjectHeader() {
           </div>
         </nav>
 
-        {/* REGISTER MODAL (resimli) */}
+        {/* REGISTER MODAL (resimli + roleId: 1/2/3) */}
         <div
           className="modal fade"
           id="registerId"
@@ -494,6 +526,31 @@ function ProjectHeader() {
                       placeholder="ornek@mail.com"
                     />
                     <div className="invalid-feedback">{regErr.email}</div>
+                  </div>
+
+                  {/* Rol seçimi (1=Admin, 2=Writer, 3=User) */}
+                  <div className="mb-3">
+                    <label htmlFor="roleId" className="form-label">
+                      Rol (ID)
+                    </label>
+                    <select
+                      id="roleId"
+                      name="roleId"
+                      className={`form-select ${regInvalid.roleId ? 'is-invalid' : ''}`}
+                      value={regForm.roleId}
+                      onChange={onRegChange}
+                    >
+                      {ROLE_OPTIONS.map((r) => (
+                        <option key={r.id} value={r.id}>
+                          {r.id}: {r.name}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="invalid-feedback">{regErr.roleId}</div>
+                    <div className="form-text">
+                      Seçiminiz backend’e <code>/create/{'{rolesId}'}</code> parametresi olarak
+                      gönderilir.
+                    </div>
                   </div>
 
                   {/* Fotoğraf (opsiyonel) */}

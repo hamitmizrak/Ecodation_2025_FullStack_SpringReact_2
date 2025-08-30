@@ -21,7 +21,7 @@ import java.util.List;
 // API
 @RestController
 @CrossOrigin(origins = FrontEnd.REACT_URL) // http://localhost:3000
-@RequestMapping("/blog/api/v1")
+@RequestMapping("/blog/api/v1.0.0")
 public class BlogApiImpl implements IBlogApi<BlogDto> {
 
     // Injection

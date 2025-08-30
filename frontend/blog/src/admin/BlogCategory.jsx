@@ -1,22 +1,11 @@
 // src/admin/BlogCategory.jsx
 import React, { useEffect, useMemo, useState } from 'react';
-import { Modal } from 'bootstrap';
-import { useSelector } from 'react-redux';
-import { selectAuth } from '../features/auth/authSlice';
 import {
-  fetchCategories,
-  createCategory,
-  updateCategory,
-  deleteCategory,
+  listBlogCategories,
+  createBlogCategory,
+  updateBlogCategory,
+  deleteBlogCategory,
 } from '../api/blogCategoryService';
-
-/* ---------- yardımcılar: modal artıkları temizle + hata normalize ---------- */
-function cleanupBootstrapModalArtifacts() {
-  document.body.classList.remove('modal-open');
-  document.body.style.overflow = '';
-  document.body.style.paddingRight = '';
-  document.querySelectorAll('.modal-backdrop').forEach((el) => el.remove());
-}
 
 function pick(obj, ...keys) {
   for (const k of keys) {
@@ -49,404 +38,252 @@ function normalizeBackendError(be) {
       if (v) fields[k] = Array.isArray(v) ? v[0] : String(v);
     }
   }
+  const arrayLike =
+    (Array.isArray(be?.fieldErrors) && be.fieldErrors) ||
+    (Array.isArray(be?.errors) && be.errors) ||
+    (Array.isArray(be?.validationErrors) && be.validationErrors) ||
+    (Array.isArray(be?.violations) && be.violations) ||
+    (Array.isArray(be?.data?.errors) && be.data.errors) ||
+    (Array.isArray(be?.result?.errors) && be.result.errors) ||
+    null;
+  if (arrayLike) {
+    arrayLike.forEach((it) => {
+      const key = it?.field || it?.name || it?.propertyPath || it?.path || it?.param || it?.code;
+      const msg =
+        it?.message || it?.defaultMessage || it?.errorMessage || it?.reason || it?.description;
+      if (key && msg) fields[key] = msg;
+    });
+  }
   return { general, fields };
 }
-/* ------------------------------------------------------------------------- */
 
 export default function BlogCategory() {
-  const { roles } = useSelector(selectAuth);
-  const isAdmin = useMemo(
-    () =>
-      (roles || [])
-        .map(String)
-        .map((r) => r.toUpperCase())
-        .includes('ADMIN'),
-    [roles]
-  );
-
   const [items, setItems] = useState([]);
-  const [page, setPage] = useState(0);
-  const [size, setSize] = useState(10);
-  const [totalPages, setTotalPages] = useState(0);
-  const [q, setQ] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // form state
-  const emptyForm = { id: null, name: '', slug: '', description: '', active: true };
-  const [form, setForm] = useState(emptyForm);
-  const [err, setErr] = useState({ name: '', slug: '', description: '', active: '', general: '' });
-  const invalid = useMemo(() => ({ name: !!err.name, slug: !!err.slug }), [err]);
+  const empty = { name: '', description: '', visible: true };
+  const [form, setForm] = useState(empty);
+  const [editId, setEditId] = useState(null);
 
-  const [deleteId, setDeleteId] = useState(null);
+  const [errs, setErrs] = useState({ name: '', description: '', visible: '', general: '' });
+  const invalid = useMemo(() => ({ name: !!errs.name, description: !!errs.description }), [errs]);
 
-  const list = async (opts = {}) => {
+  const refresh = async () => {
     setLoading(true);
     try {
-      const res = await fetchCategories({
-        page: opts.page ?? page,
-        size: opts.size ?? size,
-        q: opts.q ?? q,
-      });
-      // Backend list dönüşü farklı olabilir:
-      // 1) { content, totalPages } (Spring Page)
-      // 2) { data: { content, totalPages } }
-      // 3) Düz liste []
-      const body = res?.data ?? {};
-      let content =
-        body.content ||
-        body.items ||
-        body.results ||
-        body.data?.content ||
-        body.data?.items ||
-        body.data?.results;
-      let tp = body.totalPages ?? body.data?.totalPages ?? 0;
-
-      if (!Array.isArray(content)) {
-        // Düz liste döndüyse
-        if (Array.isArray(body)) content = body;
-        else content = [];
-      }
-
-      setItems(content);
-      setTotalPages(Number(tp) || 0);
+      const res = await listBlogCategories();
+      const data = res?.data?.data || res?.data?.result || res?.data || [];
+      setItems(Array.isArray(data) ? data : data.content || []);
     } catch (e) {
-      console.error('Kategori listesi alınamadı:', e);
+      // no-op
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (isAdmin) list({ page: 0 });
-  }, [isAdmin]);
+    refresh();
+  }, []);
 
-  const openCreate = () => {
-    setForm(emptyForm);
-    setErr({ name: '', slug: '', description: '', active: '', general: '' });
-    const el = document.getElementById('catModal');
-    if (el) Modal.getOrCreateInstance(el).show();
-  };
-
-  const openEdit = (row) => {
-    setForm({
-      id: row.id ?? row.categoryId ?? row.uuid ?? null,
-      name: row.name ?? row.categoryName ?? '',
-      slug: row.slug ?? row.seoSlug ?? '',
-      description: row.description ?? row.explanation ?? '',
-      active: row.active ?? row.enabled ?? true ? true : false,
-    });
-    setErr({ name: '', slug: '', description: '', active: '', general: '' });
-    const el = document.getElementById('catModal');
-    if (el) Modal.getOrCreateInstance(el).show();
-  };
-
-  const onFormChange = (e) => {
+  const onChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((s) => ({ ...s, [name]: type === 'checkbox' ? checked : value }));
-    setErr((s) => ({ ...s, [name]: '', general: '' }));
+    setErrs((s) => ({ ...s, [name]: '', general: '' }));
   };
 
-  const save = async (e) => {
+  const validate = () => {
+    const e = { name: '', description: '', general: '' };
+    if (!form.name) e.name = 'Kategori adı zorunlu';
+    return e;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const next = { name: '', slug: '', description: '', active: '', general: '' };
-    if (!form.name) next.name = 'Kategori adı zorunlu';
-    if (!form.slug) next.slug = 'Slug zorunlu';
-    setErr(next);
-    if (next.name || next.slug) return;
-
-    const payload = {
-      name: form.name,
-      slug: form.slug,
-      description: form.description,
-      active: !!form.active,
-    };
+    const e0 = validate();
+    setErrs((s) => ({ ...s, ...e0 }));
+    if (e0.name || e0.description) return;
 
     try {
-      if (form.id) {
-        await updateCategory(form.id, payload);
-      } else {
-        await createCategory(payload);
-      }
+      if (editId) await updateBlogCategory(editId, form);
+      else await createBlogCategory(form);
 
-      const modalEl = document.getElementById('catModal');
-      if (modalEl) {
-        const inst = Modal.getOrCreateInstance(modalEl);
-        modalEl.addEventListener(
-          'hidden.bs.modal',
-          () => {
-            cleanupBootstrapModalArtifacts();
-            setForm(emptyForm);
-            list();
-          },
-          { once: true }
-        );
-        inst.hide();
-      } else {
-        cleanupBootstrapModalArtifacts();
-        setForm(emptyForm);
-        list();
-      }
-    } catch (e2) {
-      const be = e2?.response?.data;
+      setForm(empty);
+      setEditId(null);
+      setErrs({ name: '', description: '', visible: '', general: '' });
+      refresh();
+    } catch (ex) {
+      const be = ex?.response?.data;
       const { general, fields } = normalizeBackendError(be);
-      setErr((s) => ({
+      setErrs((s) => ({
         ...s,
-        name: fields?.name || s.name,
-        slug: fields?.slug || s.slug,
-        description: fields?.description || s.description,
-        active: fields?.active || s.active,
+        name: fields.name || s.name,
+        description: fields.description || s.description,
+        visible: fields.visible || s.visible,
         general: general || 'Kaydetme başarısız',
       }));
     }
   };
 
-  const askDelete = (id) => {
-    setDeleteId(id);
-    const el = document.getElementById('deleteModal');
-    if (el) Modal.getOrCreateInstance(el).show();
+  const onEdit = (it) => {
+    setForm({
+      name: it.name ?? it.categoryName ?? '',
+      description: it.description ?? it.categoryDescription ?? '',
+      visible: it.visible ?? it.status ?? true,
+    });
+    setEditId(it.id ?? it.categoryId ?? null);
+    setErrs({ name: '', description: '', visible: '', general: '' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const confirmDelete = async () => {
-    if (!deleteId) return;
+  const onDelete = async (id) => {
+    if (!window.confirm('Silmek istediğinize emin misiniz?')) return;
     try {
-      await deleteCategory(deleteId);
-      const el = document.getElementById('deleteModal');
-      if (el) {
-        const inst = Modal.getOrCreateInstance(el);
-        el.addEventListener(
-          'hidden.bs.modal',
-          () => {
-            cleanupBootstrapModalArtifacts();
-            setDeleteId(null);
-            list();
-          },
-          { once: true }
-        );
-        inst.hide();
-      } else {
-        cleanupBootstrapModalArtifacts();
-        setDeleteId(null);
-        list();
-      }
-    } catch (e2) {
-      console.error('Silme hata:', e2);
+      await deleteBlogCategory(id);
+      refresh();
+    } catch (ex) {
+      alert(ex?.response?.data?.message || ex.message || 'Silme başarısız');
     }
   };
 
-  const onSearch = (e) => {
-    e.preventDefault();
-    list({ page: 0, q });
+  const onCancel = () => {
+    setForm(empty);
+    setEditId(null);
+    setErrs({ name: '', description: '', visible: '', general: '' });
   };
-
-  const changePage = (p) => {
-    if (p < 0) return;
-    if (totalPages && p >= totalPages) return;
-    setPage(p);
-    list({ page: p });
-  };
-
-  if (!isAdmin) {
-    return (
-      <div className="container py-4">
-        <h4>403 - Yetkisiz</h4>
-        <p>Bu sayfaya erişmek için ADMIN rolü gerekli.</p>
-      </div>
-    );
-  }
 
   return (
-    <div className="container py-4">
-      <div className="d-flex align-items-center justify-content-between mb-3">
-        <h3>Blog Kategorileri</h3>
-        <button className="btn btn-primary" onClick={openCreate}>
-          <i className="fa fa-plus me-1" /> Yeni Kategori
-        </button>
-      </div>
+    <div>
+      <h5 className="mb-3">
+        <i className="fa fa-tags me-2" />
+        Blog Kategorileri
+      </h5>
 
-      {/* Arama */}
-      <form className="row g-2 mb-3" onSubmit={onSearch}>
-        <div className="col-auto">
-          <input
-            className="form-control"
-            placeholder="Ara..."
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-          />
-        </div>
-        <div className="col-auto">
-          <button className="btn btn-outline-secondary">Ara</button>
-        </div>
-      </form>
-
-      {/* Liste */}
-      <div className="table-responsive">
-        <table className="table table-striped align-middle">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Ad</th>
-              <th>Slug</th>
-              <th>Durum</th>
-              <th style={{ width: 160 }}>İşlemler</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={5}>Yükleniyor...</td>
-              </tr>
-            ) : items.length ? (
-              items.map((it, idx) => {
-                const id = it.id ?? it.categoryId ?? it.uuid ?? idx;
-                return (
-                  <tr key={id}>
-                    <td>{id}</td>
-                    <td>{it.name ?? it.categoryName ?? '-'}</td>
-                    <td>{it.slug ?? it.seoSlug ?? '-'}</td>
-                    <td>
-                      {it.active ?? it.enabled ?? true ? (
-                        <span className="badge bg-success">Aktif</span>
-                      ) : (
-                        <span className="badge bg-secondary">Pasif</span>
-                      )}
-                    </td>
-                    <td>
-                      <button
-                        className="btn btn-sm btn-outline-primary me-2"
-                        onClick={() => openEdit(it)}
-                      >
-                        <i className="fa fa-pen" />
-                      </button>
-                      <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => askDelete(id)}
-                      >
-                        <i className="fa fa-trash" />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
-              <tr>
-                <td colSpan={5}>Kayıt bulunamadı.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Sayfalama (Spring Page varsa) */}
-      {totalPages > 1 && (
-        <div className="d-flex gap-2">
-          <button className="btn btn-outline-secondary btn-sm" onClick={() => changePage(page - 1)}>
-            ‹ Önceki
-          </button>
-          <span className="align-self-center small">
-            Sayfa {page + 1} / {totalPages}
-          </span>
-          <button className="btn btn-outline-secondary btn-sm" onClick={() => changePage(page + 1)}>
-            Sonraki ›
-          </button>
-        </div>
-      )}
-
-      {/* Kategori Modal */}
-      <div className="modal fade" id="catModal" tabIndex={-1} aria-hidden="true">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <form onSubmit={save} noValidate>
-              <div className="modal-header">
-                <h5 className="modal-title">{form.id ? 'Kategoriyi Düzenle' : 'Yeni Kategori'}</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Kapat"
-                />
-              </div>
-              <div className="modal-body">
+      <div className="row g-3">
+        <div className="col-12 col-xl-5">
+          <div className="card border-0 shadow-sm">
+            <div className="card-header fw-semibold">
+              {editId ? 'Kategoriyi Düzenle' : 'Yeni Kategori Ekle'}
+            </div>
+            <div className="card-body">
+              <form onSubmit={handleSubmit} noValidate>
                 <div className="mb-3">
-                  <label className="form-label">Ad</label>
+                  <label className="form-label">
+                    Ad <span className="text-danger">*</span>
+                  </label>
                   <input
                     name="name"
                     className={`form-control ${invalid.name ? 'is-invalid' : ''}`}
                     value={form.name}
-                    onChange={onFormChange}
+                    onChange={onChange}
+                    placeholder="Örn: Java, Frontend..."
                   />
-                  <div className="invalid-feedback">{err.name}</div>
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Slug</label>
-                  <input
-                    name="slug"
-                    className={`form-control ${invalid.slug ? 'is-invalid' : ''}`}
-                    value={form.slug}
-                    onChange={onFormChange}
-                  />
-                  <div className="invalid-feedback">{err.slug}</div>
+                  <div className="invalid-feedback">{errs.name}</div>
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Açıklama</label>
                   <textarea
                     name="description"
-                    className="form-control"
-                    rows={3}
+                    className={`form-control ${invalid.description ? 'is-invalid' : ''}`}
                     value={form.description}
-                    onChange={onFormChange}
+                    onChange={onChange}
+                    placeholder="Kısa açıklama..."
+                    rows={3}
                   />
+                  <div className="invalid-feedback">{errs.description}</div>
                 </div>
-                <div className="form-check">
+                <div className="form-check mb-3">
                   <input
-                    id="active"
-                    name="active"
+                    id="visible"
                     type="checkbox"
+                    name="visible"
                     className="form-check-input"
-                    checked={!!form.active}
-                    onChange={onFormChange}
+                    checked={!!form.visible}
+                    onChange={onChange}
                   />
-                  <label htmlFor="active" className="form-check-label">
+                  <label htmlFor="visible" className="form-check-label">
                     Aktif
                   </label>
                 </div>
-                {err.general && <div className="text-danger small mt-2">{err.general}</div>}
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                  Kapat
-                </button>
-                <button className="btn btn-primary" type="submit">
-                  Kaydet
-                </button>
-              </div>
-            </form>
+                {errs.general && <div className="text-danger small mb-2">{errs.general}</div>}
+                <div className="d-flex gap-2">
+                  <button className="btn btn-primary" type="submit">
+                    <i className="fa fa-save me-1" />
+                    {editId ? 'Güncelle' : 'Ekle'}
+                  </button>
+                  {editId && (
+                    <button type="button" className="btn btn-outline-secondary" onClick={onCancel}>
+                      İptal
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Silme Onay Modal */}
-      <div className="modal fade" id="deleteModal" tabIndex={-1} aria-hidden="true">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Silme Onayı</h5>
+        {/* Liste */}
+        <div className="col-12 col-xl-7">
+          <div className="card border-0 shadow-sm h-100">
+            <div className="card-header fw-semibold d-flex align-items-center justify-content-between">
+              <span>Mevcut Kategoriler</span>
               <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Kapat"
-              />
-            </div>
-            <div className="modal-body">Bu kategoriyi silmek istediğinize emin misiniz?</div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                İptal
-              </button>
-              <button type="button" className="btn btn-danger" onClick={confirmDelete}>
-                Sil
+                className="btn btn-sm btn-outline-secondary"
+                onClick={refresh}
+                disabled={loading}
+              >
+                <i className={`fa ${loading ? 'fa-spinner fa-spin' : 'fa-rotate'}`} /> Yenile
               </button>
             </div>
+            <div className="table-responsive">
+              <table className="table align-middle mb-0">
+                <thead className="table-light">
+                  <tr>
+                    <th>#</th>
+                    <th>Ad</th>
+                    <th>Açıklama</th>
+                    <th>Durum</th>
+                    <th className="text-end">İşlem</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((it, idx) => (
+                    <tr key={it.id ?? it.categoryId ?? idx}>
+                      <td>{idx + 1}</td>
+                      <td>{it.name ?? it.categoryName}</td>
+                      <td className="text-muted">{it.description ?? it.categoryDescription}</td>
+                      <td>
+                        {it.visible ?? it.status ? (
+                          <span className="badge rounded-pill text-bg-success">Aktif</span>
+                        ) : (
+                          <span className="badge rounded-pill text-bg-secondary">Pasif</span>
+                        )}
+                      </td>
+                      <td className="text-end">
+                        <div className="btn-group btn-group-sm">
+                          <button className="btn btn-outline-primary" onClick={() => onEdit(it)}>
+                            <i className="fa fa-pen" />
+                          </button>
+                          <button
+                            className="btn btn-outline-danger"
+                            onClick={() => onDelete(it.id ?? it.categoryId)}
+                          >
+                            <i className="fa fa-trash" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                  {items.length === 0 && (
+                    <tr>
+                      <td colSpan="5" className="text-center text-muted py-4">
+                        Kategori yok.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            {/* istersen footer'a sayfalama ekleriz */}
           </div>
         </div>
       </div>

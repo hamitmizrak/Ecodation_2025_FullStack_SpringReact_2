@@ -2,25 +2,23 @@
 import { axiosClient } from './axiosClient';
 import { ENDPOINTS } from '../config/api';
 
-// Eğer config’te BLOG_CATEGORIES yoksa şu fallback kullanılır:
-const BASE = ENDPOINTS?.BLOG_CATEGORIES || '/blog/api/v1.0.0/categories';
-
-// GET /categories?page=&size=&q=
-export function fetchCategories({ page = 0, size = 10, q = '' } = {}) {
-  return axiosClient.get(BASE, { params: { page, size, q } });
+// Liste (opsiyonel sayfalama parametreleri)
+export function listBlogCategories(params = {}) {
+  return axiosClient.get(ENDPOINTS.BLOG_CATEGORY.LIST, { params });
 }
 
-// POST /categories
-export function createCategory(payload) {
-  return axiosClient.post(BASE, payload);
+// Ekle
+export function createBlogCategory(payload) {
+  // payload: { name, description?, visible? }
+  return axiosClient.post(ENDPOINTS.BLOG_CATEGORY.CREATE, payload);
 }
 
-// PUT /categories/{id}
-export function updateCategory(id, payload) {
-  return axiosClient.put(`${BASE}/${id}`, payload);
+// Güncelle
+export function updateBlogCategory(id, payload) {
+  return axiosClient.put(ENDPOINTS.BLOG_CATEGORY.UPDATE(id), payload);
 }
 
-// DELETE /categories/{id}
-export function deleteCategory(id) {
-  return axiosClient.delete(`${BASE}/${id}`);
+// Sil
+export function deleteBlogCategory(id) {
+  return axiosClient.delete(ENDPOINTS.BLOG_CATEGORY.DELETE(id));
 }

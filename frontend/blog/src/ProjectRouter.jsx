@@ -16,6 +16,8 @@ import Forbidden403 from './pages/Forbidden403';
 import BlogCategory from './admin/BlogCategory';
 import AdminLayout from './admin/AdminLayout';
 import AdminHome from './admin/AdminHome';
+import WriterRoute from './routes/WriterRoute';
+import BlogApi from './writer/BlogApi';
 
 /** Public layout: Header + Footer sadece public rotalarda */
 function PublicLayout() {
@@ -46,6 +48,14 @@ function ProjectRouter() {
 
         {/* Catch-all -> anasayfa */}
         <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+
+      {/* PUBLIC layout içinde kalacaksa (Header/Footer ile) */}
+      <Route element={<PublicLayout />}>
+        {/* ...diğer public rotalar */}+{' '}
+        <Route element={<WriterRoute />}>
+          + <Route path="/writer/blog-api" element={<BlogApi />} />+{' '}
+        </Route>
       </Route>
 
       {/* ADMIN: Kendi layout’unu (AdminLayout) kullansın, public header/footer YOK */}

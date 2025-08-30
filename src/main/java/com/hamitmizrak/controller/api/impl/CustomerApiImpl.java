@@ -21,7 +21,7 @@ import java.util.List;
 @Log4j2
 
 @RestController
-@RequestMapping("/api/customer/")
+@RequestMapping("/api/customer/v1.0.0")
 @CrossOrigin(origins = {FrontEnd.REACT_URL, FrontEnd.ANGULAR_URL})
 public class CustomerApiImpl implements ICustomerApi<CustomerDto> {
 

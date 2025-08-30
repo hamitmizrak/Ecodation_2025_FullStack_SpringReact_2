@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Log4j2
 @RestController
-@RequestMapping("/api/order/")
+@RequestMapping("/api/order/v1.0.0")
 @CrossOrigin(origins = {FrontEnd.REACT_URL, FrontEnd.ANGULAR_URL})
 public class OrderApiImpl implements IOrderApi<OrderDto> {
 

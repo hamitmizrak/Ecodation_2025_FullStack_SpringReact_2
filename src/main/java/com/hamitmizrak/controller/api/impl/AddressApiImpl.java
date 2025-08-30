@@ -34,7 +34,7 @@ DELETE	204 No Content	Başarıyla silindi, ancak yanıt yok.
 
 // API: Dış dünyaya bağlantı kuran yer
 @RestController
-@RequestMapping("/api/address/")
+@RequestMapping("/api/address/v1.0.0")
 @CrossOrigin(origins = {FrontEnd.REACT_URL, FrontEnd.ANGULAR_URL})
 public class AddressApiImpl implements IAddressApi<AddressDto> {
 
