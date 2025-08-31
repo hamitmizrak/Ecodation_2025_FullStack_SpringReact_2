@@ -270,7 +270,7 @@ function ProjectMain() {
                 {/* 1.blog */}
                 <div className="col-md-3 img-glare">
                   <div className="card">
-                    <a href="">
+                    <a href="#!">
                       <img className="card-img-top" src={Main1} alt="Title" />
                     </a>
                     <div className="card-body">
@@ -291,7 +291,7 @@ function ProjectMain() {
                 {/* 1.blog */}
                 <div className="col-md-3 img-glare">
                   <div className="card ">
-                    <a href="">
+                    <a href="#!">
                       <img className="card-img-top" src={Main2} alt="Title" />
                     </a>
                     <div className="card-body">
@@ -312,7 +312,7 @@ function ProjectMain() {
                 {/* 1.blog */}
                 <div className="col-md-3 img-glare">
                   <div className="card">
-                    <a href="">
+                    <a href="#!">
                       <img className="card-img-top" src={Main3} alt="Title" />
                     </a>
                     <div className="card-body">
@@ -333,7 +333,7 @@ function ProjectMain() {
                 {/* 1.blog */}
                 <div className="col-md-3 img-glare">
                   <div className="card">
-                    <a href="">
+                    <a href="#!">
                       <img className="card-img-top" src={Main4} alt="Title" />
                     </a>
                     <div className="card-body">
@@ -354,7 +354,7 @@ function ProjectMain() {
                 {/* 1.blog */}
                 <div className="col-md-3 img-glare">
                   <div className="card">
-                    <a href="">
+                    <a href="#!">
                       <img className="card-img-top" src={Main5} alt="Title" />
                     </a>
                     <div className="card-body">
@@ -375,7 +375,7 @@ function ProjectMain() {
                 {/* 1.blog */}
                 <div className="col-md-3 img-glare">
                   <div className="card">
-                    <a href="">
+                    <a href="#!">
                       <img className="card-img-top" src={Main6} alt="Title" />
                     </a>
                     <div className="card-body">
@@ -396,7 +396,7 @@ function ProjectMain() {
                 {/* 1.blog */}
                 <div className="col-md-3 img-glare">
                   <div className="card">
-                    <a href="">
+                    <a href="#!">
                       <img className="card-img-top" src={Main1} alt="Title" />
                     </a>
                     <div className="card-body">
@@ -417,8 +417,8 @@ function ProjectMain() {
                 {/* 1.blog */}
                 <div className="col-md-3 img-glare">
                   <div className="card">
-                    <a href="">
-                      <img className="card-img-top" src={Main1} alt="Title" />
+                    <a href="#!">
+                      <img className="card-img-top" src={Main2} alt="Title" />
                     </a>
                     <div className="card-body">
                       <h4 className="card-title">Blog-8</h4>
