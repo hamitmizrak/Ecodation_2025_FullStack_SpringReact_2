@@ -21,10 +21,10 @@ import ProtectedRoute from './ProtectedRoute';
  *     <Route path="blog-editor" element={<BlogEditorPage />} />
  *   </Route>
  */
-export default function WriterRoute() {
+export default function DefaultUserRoute() {
   // Eğer sadece WRITER erişsin istiyorsan:
   // return <ProtectedRoute roles={['WRITER']} />;
 
   // Eğer hem WRITER hem ADMIN erişebilsin istiyorsan (yönetici de yazı ekleyebilsin):
-  return <ProtectedRoute roles={['WRITER', 'ADMIN']} />;
+  return <ProtectedRoute roles={['USER', 'ADMIN']} />;
 }

@@ -7,7 +7,7 @@ import Coffee from '../shared/assets/images/coffee.jpg';
 function ProjectFooter() {
   return (
     <React.Fragment>
-      <>
+
         {/* start  Footer */}
         <footer id="footer_id" className="pt-5">
           <div className="footer-container container">
@@ -120,7 +120,6 @@ function ProjectFooter() {
         </a>
         {/* end  backtotop */}
         {/* end code */}
-      </>
     </React.Fragment>
   );
 }

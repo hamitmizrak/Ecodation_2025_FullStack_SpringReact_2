@@ -211,6 +211,7 @@ export const loginThunk = createAsyncThunk(
       const token = extractToken(res);
       if (!token) return rejectWithValue({ message: 'Token bulunamadı' });
 
+      //Eğer token varsa bunu set etsin
       setAccessToken(token);
 
       // Roller: önce token’dan
@@ -284,8 +285,9 @@ const authSlice = createSlice({
       state.error = null;
       state.fieldErrors = null;
 
-      localStorage.removeItem('token');
-      localStorage.removeItem('roles');
+      // Logout sonrasında token silmek istemezsek bunu kaldırabilirsiniz
+      //localStorage.removeItem('token');
+      //localStorage.removeItem('roles');
       clearAccessToken();
     },
     resetErrors(state) {
