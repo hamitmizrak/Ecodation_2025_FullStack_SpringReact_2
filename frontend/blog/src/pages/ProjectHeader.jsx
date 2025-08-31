@@ -2,6 +2,7 @@
 // rfce
 import React, { useEffect, useMemo, useState } from 'react';
 import { Modal } from 'bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 // pictures
@@ -31,7 +32,7 @@ function showLoginModal() {
 }
 /* --------------------------------------------------------------------- */
 
-/* -------------------- Backend hata normalizer -------------------- */
+/* -------------------- Backend hata normalizer (formlar için) ---------- */
 function pick(obj, ...keys) {
   for (const k of keys) {
     const v = obj?.[k];
@@ -49,7 +50,6 @@ function normalizeBackendError(be) {
     'İşlem başarısız';
 
   const fields = {};
-
   const mapLike =
     be?.fieldErrors && typeof be.fieldErrors === 'object' && !Array.isArray(be.fieldErrors)
       ? be.fieldErrors
@@ -60,7 +60,6 @@ function normalizeBackendError(be) {
       : be?.result?.fieldErrors && typeof be.result.fieldErrors === 'object'
       ? be.result.fieldErrors
       : null;
-
   if (mapLike) {
     for (const [k, v] of Object.entries(mapLike)) {
       if (v) fields[k] = Array.isArray(v) ? v[0] : String(v);
@@ -87,32 +86,25 @@ function normalizeBackendError(be) {
 
   return { general, fields };
 }
-
-/** Front alan adları ile backend alan adlarını eşleştirir (Register) */
 function mapRegisterFieldName(beField) {
   const map = {
     registerName: 'fullname',
     name: 'fullname',
     fullName: 'fullname',
-
     registerEmail: 'email',
     username: 'email',
     userName: 'email',
     mail: 'email',
-
     registerPassword: 'password',
     passwordHash: 'password',
-
     registerRePassword: 'confirmPassword',
     rePassword: 'confirmPassword',
     confirm_password: 'confirmPassword',
-
     terms: 'terms',
+    roleId: 'roleId',
   };
   return map[beField] || beField;
 }
-
-/** Front alan adları ile backend alan adlarını eşleştirir (Login) */
 function mapLoginFieldName(beField) {
   const map = {
     emailAddress: 'email',
@@ -125,11 +117,20 @@ function mapLoginFieldName(beField) {
 }
 /* --------------------------------------------------------------------- */
 
+/* ---- Sabit rol seçenekleri (1=Admin, 2=Writer, 3=User) ---- */
+const ROLE_OPTIONS = [
+  { id: 1, name: 'Admin' },
+  { id: 2, name: 'Writer' },
+  { id: 3, name: 'User' },
+];
+
+/* --------------------------------------------------------------------- */
+/* --------------------------------------------------------------------- */
 function ProjectHeader() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { isAuthenticated, error, fieldErrors } = useSelector(selectAuth);
 
-  // Storage'tan token/user yükle
   useEffect(() => {
     dispatch(initFromStorage());
   }, [dispatch]);
@@ -159,40 +160,39 @@ function ProjectHeader() {
     try {
       await dispatch(loginThunk({ email: loginForm.email, password: loginForm.password })).unwrap();
 
-      // Başarı: modal kapanınca temizle + yönlendir
+      // Başarı: modal kapat + artıkları temizle + yönlendir
       const modalEl = document.getElementById('loginId');
       if (modalEl) {
-        const inst = Modal.getOrCreateInstance(modalEl);
-        modalEl.addEventListener(
-          'hidden.bs.modal',
-          () => {
-            cleanupBootstrapModalArtifacts();
-            window.location.href = '/admin/blog-category'; // ihtiyaca göre değiştir
-          },
-          { once: true }
-        );
-        inst.hide();
-      } else {
-        cleanupBootstrapModalArtifacts();
-        window.location.href = '/admin/blog-category';
+        try {
+          Modal.getOrCreateInstance(modalEl).hide();
+        } catch {}
       }
+      cleanupBootstrapModalArtifacts();
+      navigate('/admin', { replace: true });
     } catch (e2) {
-      setLoginErr((s) => ({
-        ...s,
+      const be = e2?.response?.data;
+      const { general, fields } = normalizeBackendError(be);
+      const mapped = Object.fromEntries(
+        Object.entries(fields).map(([k, v]) => [mapLoginFieldName(k), v])
+      );
+      setLoginErr({
+        email: mapped.email || '',
+        password: mapped.password || '',
         general:
-          e2?.message === 'Bad credentials' || e2?.message === 'Unauthorized'
+          general === 'Bad credentials' || general === 'Unauthorized'
             ? 'Kullanıcı adı veya şifre hatalı'
-            : e2?.message || s.general || 'Giriş başarısız',
-      }));
+            : general || e2?.message || 'Giriş başarısız',
+      });
     }
   };
 
-  /* -------------------- REGISTER FORM (RESİMLİ) -------------------- */
+  /* -------------------- REGISTER FORM (RESİMLİ + SABİT ROLE ID) -------------------- */
   const [regForm, setRegForm] = useState({
     fullname: '',
     email: '',
     password: '',
     confirmPassword: '',
+    roleId: '3', // Varsayılan: User (3)
     terms: false,
   });
   const [regErr, setRegErr] = useState({
@@ -200,6 +200,7 @@ function ProjectHeader() {
     email: '',
     password: '',
     confirmPassword: '',
+    roleId: '',
     terms: '',
     general: '',
   });
@@ -213,6 +214,7 @@ function ProjectHeader() {
       email: !!regErr.email,
       password: !!regErr.password,
       confirmPassword: !!regErr.confirmPassword,
+      roleId: !!regErr.roleId,
       terms: !!regErr.terms,
     }),
     [regErr]
@@ -238,6 +240,7 @@ function ProjectHeader() {
       email: '',
       password: '',
       confirmPassword: '',
+      roleId: '',
       terms: '',
       general: '',
     };
@@ -246,9 +249,18 @@ function ProjectHeader() {
     if (!regForm.password) errs.password = 'Şifre zorunlu';
     if (regForm.password && regForm.password.length < 6) errs.password = 'En az 6 karakter';
     if (regForm.confirmPassword !== regForm.password) errs.confirmPassword = 'Şifreler uyuşmuyor';
+    if (!regForm.roleId || Number.isNaN(Number(regForm.roleId))) errs.roleId = 'Rol seçmelisiniz';
     if (!regForm.terms) errs.terms = 'Koşulları kabul etmelisiniz';
     setRegErr(errs);
-    if (errs.fullname || errs.email || errs.password || errs.confirmPassword || errs.terms) return;
+    if (
+      errs.fullname ||
+      errs.email ||
+      errs.password ||
+      errs.confirmPassword ||
+      errs.roleId ||
+      errs.terms
+    )
+      return;
 
     const dto = {
       registerName: regForm.fullname,
@@ -257,36 +269,36 @@ function ProjectHeader() {
       registerRePassword: regForm.confirmPassword,
     };
 
+    const rolesId = Number(regForm.roleId); // 1:Admin, 2:Writer, 3:User
+
     try {
       await dispatch(
         registerWithImageThunk({
-          rolesId: 1,
+          rolesId, // PATH paramı olarak roleId
           values: dto,
           file: regFile,
           onProgress: (p) => setUploadPct(p),
         })
       ).unwrap();
 
-      // Register kapanınca Login aç
+      // Register kapanınca Login aç (backdrop temiz)
       const regEl = document.getElementById('registerId');
       if (regEl) {
         const regInst = Modal.getOrCreateInstance(regEl);
-        regEl.addEventListener(
-          'hidden.bs.modal',
-          () => {
-            cleanupBootstrapModalArtifacts();
-            showLoginModal();
-          },
-          { once: true }
-        );
         regInst.hide();
-      } else {
-        cleanupBootstrapModalArtifacts();
-        showLoginModal();
       }
+      cleanupBootstrapModalArtifacts();
+      showLoginModal();
 
       // Temizle
-      setRegForm({ fullname: '', email: '', password: '', confirmPassword: '', terms: false });
+      setRegForm({
+        fullname: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        roleId: '3',
+        terms: false,
+      });
       setRegFile(null);
       setRegPreview(null);
       setUploadPct(0);
@@ -297,13 +309,13 @@ function ProjectHeader() {
       const mapped = Object.fromEntries(
         Object.entries(fields).map(([k, v]) => [mapRegisterFieldName(k), v])
       );
-
       setRegErr((s) => ({
         ...s,
         fullname: mapped.fullname || s.fullname,
         email: mapped.email || s.email,
         password: mapped.password || s.password,
         confirmPassword: mapped.confirmPassword || s.confirmPassword,
+        roleId: mapped.roleId || s.roleId,
         terms: mapped.terms || s.terms,
         general: general || 'Kayıt başarısız',
       }));
@@ -333,7 +345,7 @@ function ProjectHeader() {
     if (fieldErrors) {
       for (const [k, v] of Object.entries(fieldErrors)) {
         const kk = mapRegisterFieldName(k);
-        if (['fullname', 'email', 'password', 'confirmPassword', 'terms'].includes(kk)) {
+        if (['fullname', 'email', 'password', 'confirmPassword', 'roleId', 'terms'].includes(kk)) {
           regMap[kk] = Array.isArray(v) ? v[0] : String(v);
         }
       }
@@ -343,6 +355,7 @@ function ProjectHeader() {
       email: regMap.email || s.email,
       password: regMap.password || s.password,
       confirmPassword: regMap.confirmPassword || s.confirmPassword,
+      roleId: regMap.roleId || s.roleId,
       terms: regMap.terms || s.terms,
       general: error || s.general,
     }));
@@ -352,9 +365,9 @@ function ProjectHeader() {
   const authLinks = (
     <>
       <li className="nav-item">
-        <a id="adminLink" className="nav-link" href="/admin/blog-category">
+        <Link id="adminLink" className="nav-link" to="/admin">
           <i className="fa fa-user-shield" /> Admin Paneli
-        </a>
+        </Link>
       </li>
       <li className="nav-item">
         <a
@@ -457,7 +470,7 @@ function ProjectHeader() {
           </div>
         </nav>
 
-        {/* REGISTER MODAL (resimli) */}
+        {/* REGISTER MODAL (resimli + roleId: 1/2/3) */}
         <div
           className="modal fade"
           id="registerId"
@@ -515,6 +528,31 @@ function ProjectHeader() {
                       placeholder="ornek@mail.com"
                     />
                     <div className="invalid-feedback">{regErr.email}</div>
+                  </div>
+
+                  {/* Rol seçimi (1=Admin, 2=Writer, 3=User) */}
+                  <div className="mb-3">
+                    <label htmlFor="roleId" className="form-label">
+                      Rol (ID)
+                    </label>
+                    <select
+                      id="roleId"
+                      name="roleId"
+                      className={`form-select ${regInvalid.roleId ? 'is-invalid' : ''}`}
+                      value={regForm.roleId}
+                      onChange={onRegChange}
+                    >
+                      {ROLE_OPTIONS.map((r) => (
+                        <option key={r.id} value={r.id}>
+                          {r.id}: {r.name}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="invalid-feedback">{regErr.roleId}</div>
+                    <div className="form-text">
+                      Seçiminiz backend’e <code>/create/{'{rolesId}'}</code> parametresi olarak
+                      gönderilir.
+                    </div>
                   </div>
 
                   {/* Fotoğraf (opsiyonel) */}
@@ -700,7 +738,6 @@ function ProjectHeader() {
             </div>
           </div>
         </div>
-
         {/* NAVBAR SECOND */}
         <nav
           id="navbar_second"
