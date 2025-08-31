@@ -2,10 +2,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { jwtDecode } from 'jwt-decode';
 
-import { axiosClient, setAccessToken, clearAccessToken } from '../../api/axiosClient';
+import { axiosClient, setAccessToken, clearAccessToken } from '../../lib/axiosClient';
 import { ENDPOINTS } from '../../config/api';
-import { fetchMe } from '../../api/authService';
-import { createRegisterWithImage } from '../../api/registerService';
+import { fetchMe } from './authService';
+import { createRegisterWithImage } from '../register/registerService';
 
 /* =========================== Helpers =========================== */
 

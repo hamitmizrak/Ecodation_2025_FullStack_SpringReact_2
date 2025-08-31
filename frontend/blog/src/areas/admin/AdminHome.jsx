@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectAuth } from '../features/auth/authSlice';
+import { selectAuth } from '../../features/auth/authSlice';
 
 /** Kullanıcı adını üret */
 function useDisplayName() {

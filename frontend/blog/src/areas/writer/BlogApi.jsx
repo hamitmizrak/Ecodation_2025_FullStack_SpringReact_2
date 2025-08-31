@@ -1,7 +1,7 @@
 // src/writer/BlogApi.jsx
 import React, { useEffect, useMemo, useState } from 'react';
-import { listBlogCategories } from '../api/blogCategoryService';
-import { listBlogs, createBlogWithImage, deleteBlog } from '../api/blogService';
+import { listBlogCategories } from '../../features/blogCategory/blogCategoryService';
+import { listBlogs, createBlogWithImage, deleteBlog } from '../../features/blog/blogService';
 
 function pick(obj, ...keys) {
   for (const k of keys) {

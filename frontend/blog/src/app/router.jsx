@@ -1,66 +1,88 @@
-// rfce  ==> TAB
+// src/Router.jsx
+
 // REACT
 import React from 'react';
 
 // I18N
 import { withTranslation } from 'react-i18next';
 
-// HEADER,MAIN,FOOTER
-
 // ROUTER
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, Outlet } from 'react-router-dom';
+
+// HEADER MAIN FOOTER
 import ProjectHeader from '../pages/ProjectHeader';
-import ProjectMain from '../pages/ProjectMain';
 import ProjectFooter from '../pages/ProjectFooter';
+import ProjectMain from '../pages/ProjectMain';
 
-// CLASS COMPONENT BlogRouter
-function Router() {
-  // RETURN
+// AUTH
+import Forbidden403 from '../pages/Forbidden403';
+
+// ROUTERS
+import ProtectedRoute from '../routes/ProtectedRoute';
+import WriterRoute from '../routes/WriterRoute';
+
+// Admin sayfaları
+
+import AdminRoute from '../routes/AdminRoute';
+import AdminLayout from '../areas/admin/AdminLayout';
+import AdminHome from '../areas/admin/AdminHome';
+import BlogApi from '../areas/writer/BlogApi';
+import BlogCategory from '../areas/admin/BlogCategory';
+
+/** Public layout: Header + Footer sadece public rotalarda */
+
+function PublicLayout() {
   return (
-    <React.Fragment>
-      {/* Blog Header */}
-      <ProjectHeader logo="fa-solid fa-blog"></ProjectHeader>
-
-      {/* Blog Main */}
-      {/* Dark Mode için: App-header yazmalısınız*/}
-      <div class="container">
-        <Routes>
-          {/* Root Path */}
-          <Route path={'/'} element={<ProjectMain />} />
-          <Route path={'/index'} element={<ProjectMain />} />
-
-          {/* Blog Categories */}
-          {/* <Route path={'/blog/list'} element={<BlogList />} />
-          <Route path={'/blog/create'} element={<BlogCreate />} />
-          <Route path={'/blog/view/:id'} element={<BlogView />} />
-          <Route path={'/blog/update/:id'} element={<BlogUpdate />} /> */}
-
-          {/* Blog Categories */}
-          {/* <Route path={'/blog/category/list'} element={<BlogCategoryList />} />
-          <Route path={'/blog/category/create'} element={<BlogCategoryCreate />} />
-          <Route path={'/blog/category/view/:id'} element={<BlogCategoryView />} />
-          <Route path={'/blog/category/update/:id'} element={<BlogCategoryUpdate />} /> */}
-
-          {/* Blog */}
-          {/* Register */}
-          {/* Login */}
-          {/* Email */}
-          {/* Rol */}
-
-          {/* Bad Request */}
-          {/* <Route path={"*"} element={<h1>404</h1>} /> */}
-          <Route path={'*'} element={<Navigate to={'/'} />} />
-          {/* 
-                            <Route path="/blog/:slug" element={<BlogDetail />} />
-                            <Route path="*" element={<NotFound />} /> */}
-        </Routes>
+    <>
+      <ProjectHeader logo="fa-solid fa-blog" />
+      <div className="container">
+        <Outlet />
       </div>
+      <ProjectFooter copy="&copy; Bütün Haklar Saklıdır." />
+    </>
+  );
+}
 
-      <ProjectFooter copy="&copy; Bütün Haklar Saklıdır."></ProjectFooter>
-    </React.Fragment>
-  ); //end Return
-} //end BlogRouter
+// FUNCTION COMPONENT
+function Router() {
+  return (
+    <Routes>
+      {/* PUBLIC: Header/Footer görünsün */}
+      <Route element={<PublicLayout />}>
+        {/*Anasayfa*/}
+        <Route path="/" element={<ProjectMain />} />
+        <Route path="/index" element={<ProjectMain />} />
+        <Route path="/403" element={<Forbidden403 />} />
+
+        {/* (İsteğe bağlı) sadece login gerektiren public alanlar */}
+        <Route element={<ProtectedRoute />}>
+          {/* örn: <Route path="/dashboard" element={<Dashboard />} /> */}
+        </Route>
+
+        {/* Catch-all -> anasayfa */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+
+      {/* PUBLIC layout içinde kalacaksa (Header/Footer ile) */}
+      <Route element={<PublicLayout />}>
+        {/* ...diğer public rotalar */}+{' '}
+        <Route element={<WriterRoute />}>
+          <Route path="/writer/blog-api" element={<BlogApi />} />+{' '}
+        </Route>
+      </Route>
+
+      {/* ADMIN: Kendi layout’unu (AdminLayout) kullansın, public header/footer YOK */}
+      <Route element={<AdminRoute />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          {/* <Route index element={<Navigate to="blog-category" replace />} /> */}
+          <Route index element={<AdminHome />} />
+          <Route path="blog-category" element={<BlogCategory />} />
+        </Route>
+      </Route>
+    </Routes>
+  );
+}
 
 // I18N => EXPORT
-// export default withTranslation()(BlogRouter);
+// export default
 export default withTranslation()(Router);

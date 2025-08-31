@@ -1,6 +1,6 @@
 // src/api/blogCategoryService.js
-import { axiosClient } from './axiosClient';
-import { ENDPOINTS } from '../config/api';
+import { axiosClient } from '../../lib/axiosClient';
+import { ENDPOINTS } from '../../config/api';
 
 // Liste (opsiyonel sayfalama parametreleri)
 export function listBlogCategories(params = {}) {

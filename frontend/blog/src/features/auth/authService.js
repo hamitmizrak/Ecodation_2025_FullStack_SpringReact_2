@@ -1,6 +1,6 @@
 // src/api/authService.js
-import { axiosClient } from './axiosClient';
-import { ENDPOINTS } from '../config/api';
+import { axiosClient } from '../../lib/axiosClient';
+import { ENDPOINTS } from '../../config/api';
 
 export async function loginApi(email, password) {
   // backend’ine göre alan isimleri farklıysa burada eşleştir

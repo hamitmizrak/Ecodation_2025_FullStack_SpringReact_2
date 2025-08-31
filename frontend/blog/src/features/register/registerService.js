@@ -1,6 +1,6 @@
 // src/api/registerService.js
-import { axiosClient } from './axiosClient';
-import { ENDPOINTS } from '../config/api';
+import { axiosClient } from '../../lib/axiosClient';
+import { ENDPOINTS } from '../../config/api';
 
 export async function createRegisterWithImage(rolesId = 1, values, file = null, onProgress) {
   const fd = new FormData();

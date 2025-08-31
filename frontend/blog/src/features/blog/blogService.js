@@ -1,6 +1,6 @@
 // src/api/blogService.js
-import { axiosClient } from './axiosClient';
-import { ENDPOINTS } from '../config/api';
+import { axiosClient } from '../../lib/axiosClient';
+import { ENDPOINTS } from '../../config/api';
 
 // Liste
 export function listBlogs(params = {}) {
