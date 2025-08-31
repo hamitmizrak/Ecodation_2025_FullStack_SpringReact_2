@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 
 // ROUTER
-import ProjectRouter from './ProjectRouter';
+import ProjectRouter from './app/router';
 
 // CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -26,10 +26,10 @@ import 'jquery-ui/dist/jquery-ui.min.js';
 
 /////////////////////////////////////////////
 // Dark Mode
-import './styles/index.css';
+import './app/index.css';
 
 // Dil Secenegi
-import './internationalization/i18nlanguage';
+import './lib/internationalization/i18nlanguage';
 
 // ROUTER
 // BrowserRouter  http://localhost:3000/

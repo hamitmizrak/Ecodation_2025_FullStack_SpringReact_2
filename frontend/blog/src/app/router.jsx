@@ -9,12 +9,12 @@ import { withTranslation } from 'react-i18next';
 
 // ROUTER
 import { Navigate, Route, Routes } from 'react-router-dom';
-import ProjectHeader from './components/ProjectHeader';
-import ProjectMain from './components/ProjectMain';
-import ProjectFooter from './components/ProjectFooter';
+import ProjectHeader from '../pages/ProjectHeader';
+import ProjectMain from '../pages/ProjectMain';
+import ProjectFooter from '../pages/ProjectFooter';
 
 // CLASS COMPONENT BlogRouter
-function ProjectRouter() {
+function Router() {
   // RETURN
   return (
     <React.Fragment>
@@ -63,4 +63,4 @@ function ProjectRouter() {
 
 // I18N => EXPORT
 // export default withTranslation()(BlogRouter);
-export default withTranslation()(ProjectRouter);
+export default withTranslation()(Router);

@@ -2,8 +2,8 @@
 import React from 'react';
 
 // pictures
-import TrFlag from '../../assets/images/flag/tr.png';
-import EnFlag from '../../assets/images/flag/en.png';
+import TrFlag from '../shared/assets/images/flag/tr.png';
+import EnFlag from '../shared/assets/images/flag/en.png';
 
 function ProjectHeader() {
   return (

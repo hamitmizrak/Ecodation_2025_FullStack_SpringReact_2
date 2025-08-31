@@ -3,13 +3,13 @@
 import React from 'react';
 
 // pictures
-import Main1 from '../../assets/images/main1.jpg';
-import Main2 from '../../assets/images/main2.jpg';
-import Main3 from '../../assets/images/main3.jpg';
-import Main4 from '../../assets/images/main4.jpg';
-import Main5 from '../../assets/images/main5.jpg';
-import Main6 from '../../assets/images/main6.jpg';
-import About from '../../assets/images/about.jpg';
+import Main1 from '../shared/assets/images/main1.jpg';
+import Main2 from '../shared/assets/images/main2.jpg';
+import Main3 from '../shared/assets/images/main3.jpg';
+import Main4 from '../shared/assets/images/main4.jpg';
+import Main5 from '../shared/assets/images/main5.jpg';
+import Main6 from '../shared/assets/images/main6.jpg';
+import About from '../shared/assets/images/about.jpg';
 
 function ProjectMain() {
   return (
