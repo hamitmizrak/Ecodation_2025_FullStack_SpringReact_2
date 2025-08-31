@@ -2,8 +2,8 @@
 import React from 'react';
 
 // pictures
-import TrFlag from '../assets/images/flag/tr.png';
-import EnFlag from '../assets/images/flag/en.png';
+import TrFlag from '../../assets/images/flag/tr.png';
+import EnFlag from '../../assets/images/flag/en.png';
 
 function ProjectHeader() {
   return (
@@ -311,7 +311,7 @@ function ProjectHeader() {
         >
           <div className="container">
             {/* Logo */}
-            <a className="navbar-brand" href="/">
+            <a className="navbar-brand" href="/frontend/blog/public">
               <img id="logo_id" src={TrFlag} alt="Logo" />
             </a>
             {/* Hamburger Menü */}
@@ -330,7 +330,7 @@ function ProjectHeader() {
             <div className="collapse navbar-collapse" id="navbarMenu">
               <ul className="navbar-nav me-auto">
                 <li className="nav-item">
-                  <a className="nav-link active" href="/">
+                  <a className="nav-link active" href="/frontend/blog/public">
                     <i className="fa-solid fa-house" />
                     Anasayfa
                   </a>

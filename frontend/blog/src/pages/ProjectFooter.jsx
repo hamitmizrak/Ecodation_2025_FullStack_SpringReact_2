@@ -2,7 +2,7 @@
 import React from 'react';
 
 // pictures
-import Coffee from '../assets/images/coffee.jpg';
+import Coffee from '../../assets/images/coffee.jpg';
 
 function ProjectFooter() {
   return (
