@@ -2,7 +2,6 @@
 // rfce
 import React, { useEffect, useMemo, useState } from 'react';
 import { Modal } from 'bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 // pictures
@@ -32,7 +31,7 @@ function showLoginModal() {
 }
 /* --------------------------------------------------------------------- */
 
-/* -------------------- Backend hata normalizer (formlar için) ---------- */
+/* -------------------- Backend hata normalizer -------------------- */
 function pick(obj, ...keys) {
   for (const k of keys) {
     const v = obj?.[k];
@@ -50,6 +49,7 @@ function normalizeBackendError(be) {
     'İşlem başarısız';
 
   const fields = {};
+
   const mapLike =
     be?.fieldErrors && typeof be.fieldErrors === 'object' && !Array.isArray(be.fieldErrors)
       ? be.fieldErrors
@@ -60,6 +60,7 @@ function normalizeBackendError(be) {
       : be?.result?.fieldErrors && typeof be.result.fieldErrors === 'object'
       ? be.result.fieldErrors
       : null;
+
   if (mapLike) {
     for (const [k, v] of Object.entries(mapLike)) {
       if (v) fields[k] = Array.isArray(v) ? v[0] : String(v);
@@ -86,25 +87,32 @@ function normalizeBackendError(be) {
 
   return { general, fields };
 }
+
+/** Front alan adları ile backend alan adlarını eşleştirir (Register) */
 function mapRegisterFieldName(beField) {
   const map = {
     registerName: 'fullname',
     name: 'fullname',
     fullName: 'fullname',
+
     registerEmail: 'email',
     username: 'email',
     userName: 'email',
     mail: 'email',
+
     registerPassword: 'password',
     passwordHash: 'password',
+
     registerRePassword: 'confirmPassword',
     rePassword: 'confirmPassword',
     confirm_password: 'confirmPassword',
+
     terms: 'terms',
-    roleId: 'roleId',
   };
   return map[beField] || beField;
 }
+
+/** Front alan adları ile backend alan adlarını eşleştirir (Login) */
 function mapLoginFieldName(beField) {
   const map = {
     emailAddress: 'email',
@@ -117,18 +125,11 @@ function mapLoginFieldName(beField) {
 }
 /* --------------------------------------------------------------------- */
 
-/* ---- Sabit rol seçenekleri (1=Admin, 2=Writer, 3=User) ---- */
-const ROLE_OPTIONS = [
-  { id: 1, name: 'Admin' },
-  { id: 2, name: 'Writer' },
-  { id: 3, name: 'User' },
-];
-
 function ProjectHeader() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { isAuthenticated, error, fieldErrors } = useSelector(selectAuth);
 
+  // Storage'tan token/user yükle
   useEffect(() => {
     dispatch(initFromStorage());
   }, [dispatch]);
@@ -158,39 +159,40 @@ function ProjectHeader() {
     try {
       await dispatch(loginThunk({ email: loginForm.email, password: loginForm.password })).unwrap();
 
-      // Başarı: modal kapat + artıkları temizle + yönlendir
+      // Başarı: modal kapanınca temizle + yönlendir
       const modalEl = document.getElementById('loginId');
       if (modalEl) {
-        try {
-          Modal.getOrCreateInstance(modalEl).hide();
-        } catch {}
+        const inst = Modal.getOrCreateInstance(modalEl);
+        modalEl.addEventListener(
+          'hidden.bs.modal',
+          () => {
+            cleanupBootstrapModalArtifacts();
+            window.location.href = '/admin/blog-category'; // ihtiyaca göre değiştir
+          },
+          { once: true }
+        );
+        inst.hide();
+      } else {
+        cleanupBootstrapModalArtifacts();
+        window.location.href = '/admin/blog-category';
       }
-      cleanupBootstrapModalArtifacts();
-      navigate('/admin', { replace: true });
     } catch (e2) {
-      const be = e2?.response?.data;
-      const { general, fields } = normalizeBackendError(be);
-      const mapped = Object.fromEntries(
-        Object.entries(fields).map(([k, v]) => [mapLoginFieldName(k), v])
-      );
-      setLoginErr({
-        email: mapped.email || '',
-        password: mapped.password || '',
+      setLoginErr((s) => ({
+        ...s,
         general:
-          general === 'Bad credentials' || general === 'Unauthorized'
+          e2?.message === 'Bad credentials' || e2?.message === 'Unauthorized'
             ? 'Kullanıcı adı veya şifre hatalı'
-            : general || e2?.message || 'Giriş başarısız',
-      });
+            : e2?.message || s.general || 'Giriş başarısız',
+      }));
     }
   };
 
-  /* -------------------- REGISTER FORM (RESİMLİ + SABİT ROLE ID) -------------------- */
+  /* -------------------- REGISTER FORM (RESİMLİ) -------------------- */
   const [regForm, setRegForm] = useState({
     fullname: '',
     email: '',
     password: '',
     confirmPassword: '',
-    roleId: '3', // Varsayılan: User (3)
     terms: false,
   });
   const [regErr, setRegErr] = useState({
@@ -198,7 +200,6 @@ function ProjectHeader() {
     email: '',
     password: '',
     confirmPassword: '',
-    roleId: '',
     terms: '',
     general: '',
   });
@@ -212,7 +213,6 @@ function ProjectHeader() {
       email: !!regErr.email,
       password: !!regErr.password,
       confirmPassword: !!regErr.confirmPassword,
-      roleId: !!regErr.roleId,
       terms: !!regErr.terms,
     }),
     [regErr]
@@ -238,7 +238,6 @@ function ProjectHeader() {
       email: '',
       password: '',
       confirmPassword: '',
-      roleId: '',
       terms: '',
       general: '',
     };
@@ -247,18 +246,9 @@ function ProjectHeader() {
     if (!regForm.password) errs.password = 'Şifre zorunlu';
     if (regForm.password && regForm.password.length < 6) errs.password = 'En az 6 karakter';
     if (regForm.confirmPassword !== regForm.password) errs.confirmPassword = 'Şifreler uyuşmuyor';
-    if (!regForm.roleId || Number.isNaN(Number(regForm.roleId))) errs.roleId = 'Rol seçmelisiniz';
     if (!regForm.terms) errs.terms = 'Koşulları kabul etmelisiniz';
     setRegErr(errs);
-    if (
-      errs.fullname ||
-      errs.email ||
-      errs.password ||
-      errs.confirmPassword ||
-      errs.roleId ||
-      errs.terms
-    )
-      return;
+    if (errs.fullname || errs.email || errs.password || errs.confirmPassword || errs.terms) return;
 
     const dto = {
       registerName: regForm.fullname,
@@ -267,36 +257,36 @@ function ProjectHeader() {
       registerRePassword: regForm.confirmPassword,
     };
 
-    const rolesId = Number(regForm.roleId); // 1:Admin, 2:Writer, 3:User
-
     try {
       await dispatch(
         registerWithImageThunk({
-          rolesId, // PATH paramı olarak roleId
+          rolesId: 1,
           values: dto,
           file: regFile,
           onProgress: (p) => setUploadPct(p),
         })
       ).unwrap();
 
-      // Register kapanınca Login aç (backdrop temiz)
+      // Register kapanınca Login aç
       const regEl = document.getElementById('registerId');
       if (regEl) {
         const regInst = Modal.getOrCreateInstance(regEl);
+        regEl.addEventListener(
+          'hidden.bs.modal',
+          () => {
+            cleanupBootstrapModalArtifacts();
+            showLoginModal();
+          },
+          { once: true }
+        );
         regInst.hide();
+      } else {
+        cleanupBootstrapModalArtifacts();
+        showLoginModal();
       }
-      cleanupBootstrapModalArtifacts();
-      showLoginModal();
 
       // Temizle
-      setRegForm({
-        fullname: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        roleId: '3',
-        terms: false,
-      });
+      setRegForm({ fullname: '', email: '', password: '', confirmPassword: '', terms: false });
       setRegFile(null);
       setRegPreview(null);
       setUploadPct(0);
@@ -307,13 +297,13 @@ function ProjectHeader() {
       const mapped = Object.fromEntries(
         Object.entries(fields).map(([k, v]) => [mapRegisterFieldName(k), v])
       );
+
       setRegErr((s) => ({
         ...s,
         fullname: mapped.fullname || s.fullname,
         email: mapped.email || s.email,
         password: mapped.password || s.password,
         confirmPassword: mapped.confirmPassword || s.confirmPassword,
-        roleId: mapped.roleId || s.roleId,
         terms: mapped.terms || s.terms,
         general: general || 'Kayıt başarısız',
       }));
@@ -343,7 +333,7 @@ function ProjectHeader() {
     if (fieldErrors) {
       for (const [k, v] of Object.entries(fieldErrors)) {
         const kk = mapRegisterFieldName(k);
-        if (['fullname', 'email', 'password', 'confirmPassword', 'roleId', 'terms'].includes(kk)) {
+        if (['fullname', 'email', 'password', 'confirmPassword', 'terms'].includes(kk)) {
           regMap[kk] = Array.isArray(v) ? v[0] : String(v);
         }
       }
@@ -353,7 +343,6 @@ function ProjectHeader() {
       email: regMap.email || s.email,
       password: regMap.password || s.password,
       confirmPassword: regMap.confirmPassword || s.confirmPassword,
-      roleId: regMap.roleId || s.roleId,
       terms: regMap.terms || s.terms,
       general: error || s.general,
     }));
@@ -363,9 +352,9 @@ function ProjectHeader() {
   const authLinks = (
     <>
       <li className="nav-item">
-        <Link id="adminLink" className="nav-link" to="/admin">
+        <a id="adminLink" className="nav-link" href="/admin/blog-category">
           <i className="fa fa-user-shield" /> Admin Paneli
-        </Link>
+        </a>
       </li>
       <li className="nav-item">
         <a
@@ -468,7 +457,7 @@ function ProjectHeader() {
           </div>
         </nav>
 
-        {/* REGISTER MODAL (resimli + roleId: 1/2/3) */}
+        {/* REGISTER MODAL (resimli) */}
         <div
           className="modal fade"
           id="registerId"
@@ -526,31 +515,6 @@ function ProjectHeader() {
                       placeholder="ornek@mail.com"
                     />
                     <div className="invalid-feedback">{regErr.email}</div>
-                  </div>
-
-                  {/* Rol seçimi (1=Admin, 2=Writer, 3=User) */}
-                  <div className="mb-3">
-                    <label htmlFor="roleId" className="form-label">
-                      Rol (ID)
-                    </label>
-                    <select
-                      id="roleId"
-                      name="roleId"
-                      className={`form-select ${regInvalid.roleId ? 'is-invalid' : ''}`}
-                      value={regForm.roleId}
-                      onChange={onRegChange}
-                    >
-                      {ROLE_OPTIONS.map((r) => (
-                        <option key={r.id} value={r.id}>
-                          {r.id}: {r.name}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="invalid-feedback">{regErr.roleId}</div>
-                    <div className="form-text">
-                      Seçiminiz backend’e <code>/create/{'{rolesId}'}</code> parametresi olarak
-                      gönderilir.
-                    </div>
                   </div>
 
                   {/* Fotoğraf (opsiyonel) */}
@@ -735,6 +699,207 @@ function ProjectHeader() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* NAVBAR SECOND */}
+        <nav
+          id="navbar_second"
+          className="navbar navbar-expand-md navbar-dark wow44 animate__animated animate__fadeInDown"
+          data-wow-delay="0.4s"
+        >
+          <div className="container">
+            <a className="navbar-brand" href="/">
+              <img id="logo_id" src={TrFlag} alt="Logo" />
+            </a>
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarMenu"
+              aria-controls="navbarMenu"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon" />
+            </button>
+            <div className="collapse navbar-collapse" id="navbarMenu">
+              <ul className="navbar-nav me-auto">
+                <li className="nav-item">
+                  <a className="nav-link active" href="/">
+                    <i className="fa-solid fa-house" /> Anasayfa
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#scroll_spy_works">
+                    <i className="fa-solid fa-briefcase" /> Çalışmalar
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#scroll_spy_success_rate">
+                    <i className="fa-solid fa-chart-column" /> Başarılar
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#scroll_spy_newspaper">
+                    <i className="fa-solid fa-newspaper" /> Haberler
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#scroll_spy_about">
+                    <i className="fa-solid fa-bullhorn" /> Hakkımızda
+                  </a>
+                </li>
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle"
+                    href="#scroll_spy_blog"
+                    id="dropdownId"
+                    data-bs-toggle="dropdown"
+                  >
+                    <i className="fa-solid fa-blog" /> Blog
+                  </a>
+                  <div className="dropdown-menu">
+                    <a className="dropdown-item" href="#scroll_spy_blog">
+                      Yazılım
+                    </a>
+                    <a className="dropdown-item" href="#scroll_spy_blog">
+                      Sağlık
+                    </a>
+                    <a className="dropdown-item" href="#scroll_spy_blog">
+                      Yaşam
+                    </a>
+                    <a className="dropdown-item" href="#scroll_spy_blog">
+                      Spor
+                    </a>
+                  </div>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#maps">
+                    <i className="fa-solid fa-map-location-dot" /> İletişim
+                  </a>
+                </li>
+              </ul>
+              {/* Sağ: Dark Mode + Arama */}
+              <div className="nav-actions">
+                <button id="dark_mode" className="dark-mode-btn">
+                  <i className="fa-solid fa-moon" />
+                </button>
+                <form className="search-form">
+                  <div className="search-container">
+                    <input
+                      id="search_id"
+                      type="text"
+                      className="form-control"
+                      placeholder="Site içi ara..."
+                    />
+                    <button className="search-button" type="submit">
+                      Ara
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        {/* HEADER */}
+        <header id="header_id">
+          <div className="header-overlay img-glare" />
+          <div className="container h-100">
+            <div className="row h-100">
+              <div className="col-12 text-center my-auto">
+                <h1
+                  className="display-3 text-uppercase shadow wow animate__zoomIn"
+                  data-wow-delay="0.6s"
+                >
+                  Full Stack Developer Eğitimine Hoşgeldiniz
+                </h1>
+                <h4 className="wow animate__zoomIn" data-wow-delay="0.8s">
+                  Frontend &amp; Backend &amp; DB &amp; Devops
+                </h4>
+                <div className="header-links mt-4">
+                  <a
+                    href="https://www.linkedin.com"
+                    target="_blank"
+                    className="header-link wow animate__fadeInUp"
+                    data-wow-delay="0.9s"
+                    rel="noreferrer"
+                  >
+                    <i className="fa-brands fa-linkedin" />
+                    <span />
+                  </a>
+                  <a
+                    href="https://www.youtube.com"
+                    target="_blank"
+                    className="header-link wow animate__fadeInUp"
+                    data-wow-delay="1s"
+                    rel="noreferrer"
+                  >
+                    <i className="fa-brands fa-youtube" />
+                    <span />
+                  </a>
+                  <a
+                    href="#blog"
+                    className="header-link wow animate__fadeInUp"
+                    data-wow-delay="1.1s"
+                  >
+                    <i className="fa-solid fa-blog" />
+                    <span />
+                  </a>
+                  <a
+                    href="https://github.com"
+                    target="_blank"
+                    className="header-link wow animate__fadeInUp"
+                    data-wow-delay="1.2s"
+                    rel="noreferrer"
+                  >
+                    <i className="fa-brands fa-github" />
+                    <span />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Sosyal Medya Sabit Bar */}
+        <div className="social-bar-fixed text-primary">
+          <a
+            href="https://linkedin.com/"
+            target="_blank"
+            className="social-link linkedin"
+            title="LinkedIn"
+            rel="noreferrer"
+          >
+            <i className="fab fa-linkedin-in" />
+          </a>
+          <a
+            href="https://github.com/"
+            target="_blank"
+            className="social-link github"
+            title="GitHub"
+            rel="noreferrer"
+          >
+            <i className="fab fa-github" />
+          </a>
+          <a
+            href="https://instagram.com/"
+            target="_blank"
+            className="social-link instagram"
+            title="Instagram"
+            rel="noreferrer"
+          >
+            <i className="fab fa-instagram" />
+          </a>
+          <a
+            href="mailto:info@aihexa.com"
+            target="_blank"
+            className="social-link mail"
+            title="Mail"
+            rel="noreferrer"
+          >
+            <i className="fa fa-envelope" />
+          </a>
         </div>
       </>
     </React.Fragment>
