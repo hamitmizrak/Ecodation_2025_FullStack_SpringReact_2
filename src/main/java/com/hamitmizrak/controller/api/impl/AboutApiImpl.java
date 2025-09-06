@@ -13,6 +13,7 @@ import com.hamitmizrak.utily.FrontEnd;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,9 @@ public class AboutApiImpl implements IAboutApi<AboutDto> {
     private final ImageService imageService;
     private final FileProps fileProps;
     private final ObjectMapper objectMapper; // String json => Java Objesi haline geliyor
+
+    @Value("${file.upload-dir}")
+    private String uploadDir; // ör: upload
 
     //////////////////////////////////////////////////////////////////////////////////////////
     // CREATE
@@ -182,6 +186,7 @@ public class AboutApiImpl implements IAboutApi<AboutDto> {
     public ResponseEntity<ApiResult<?>> objectApiDelete(@PathVariable(name = "id") Long id) {
         try {
             String deleted = iAboutServices.objectServiceDelete(id).toString();
+
             return ResponseEntity.ok(ApiResult.success(deleted));
         } catch (Exception ex) {
             return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/about/api/v1/delete"));

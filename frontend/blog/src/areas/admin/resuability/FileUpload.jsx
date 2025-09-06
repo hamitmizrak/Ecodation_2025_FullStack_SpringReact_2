@@ -12,6 +12,7 @@ import React, { useRef } from "react";
  * - maxSize: maksimum dosya boyutu MB (opsiyonel)
  * - className: ek className
  * - disabled: true/false
+ * - resolveImageUrl: (url:string) => string   // backend "/upload/..." için
  */
 export default function FileUpload({
                                        label,
@@ -22,6 +23,7 @@ export default function FileUpload({
                                        maxSize,
                                        className = "",
                                        disabled = false,
+                                       resolveImageUrl,  // Önemli: About.jsx'den resolveImageUrl gönderirsen burada otomatik tam url olur!
                                    }) {
     const fileRef = useRef();
 
@@ -40,11 +42,14 @@ export default function FileUpload({
         onChange(file);
     };
 
-    // Önizleme URL'i (dosya ise blob, string ise url)
+    // ---- Önizleme URL'i (dosya ise blob, string ise url, backend url ise resolve edilir)
     let previewUrl = "";
     if (value && preview) {
-        if (typeof value === "string") previewUrl = value;
-        else if (typeof value === "object" && value instanceof File) previewUrl = URL.createObjectURL(value);
+        if (typeof value === "string" && value.length > 0) {
+            previewUrl = typeof resolveImageUrl === "function" ? resolveImageUrl(value) : value;
+        } else if (typeof value === "object" && value instanceof File) {
+            previewUrl = URL.createObjectURL(value);
+        }
     }
 
     return (
@@ -64,7 +69,14 @@ export default function FileUpload({
                         <img
                             src={previewUrl}
                             alt="Önizleme"
-                            style={{ maxHeight: 180, maxWidth: "100%", objectFit: "contain", borderRadius: 8 }}
+                            style={{
+                                maxHeight: 180,
+                                maxWidth: "100%",
+                                objectFit: "contain",
+                                borderRadius: 8,
+                                background: "#fff",
+                                border: "1px solid #eee"
+                            }}
                         />
                     ) : (
                         <a href={previewUrl} target="_blank" rel="noopener noreferrer" className="d-block">
