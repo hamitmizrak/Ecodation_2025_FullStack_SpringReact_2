@@ -21,7 +21,7 @@ import java.util.List;
 
 // SERVICES
 @Service
-public abstract class AboutServicesImpl implements IAboutServices<AboutDto, AboutEntity> {
+public class AboutServicesImpl implements IAboutServices<AboutDto, AboutEntity> {
 
     // INJECTION (Lombok Constructor Field) => 3.YOL
     private final IAboutRepository iAboutRepository;
