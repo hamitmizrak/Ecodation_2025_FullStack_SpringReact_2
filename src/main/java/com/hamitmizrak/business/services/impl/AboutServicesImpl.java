@@ -1,6 +1,5 @@
 package com.hamitmizrak.business.services.impl;
 
-
 import com.hamitmizrak.bean.ModelMapperBean;
 import com.hamitmizrak.business.dto.AboutDto;
 import com.hamitmizrak.business.services.interfaces.IAboutServices;
