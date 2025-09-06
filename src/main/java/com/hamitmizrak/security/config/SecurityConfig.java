@@ -4,6 +4,7 @@ import com.hamitmizrak.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -55,7 +56,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(reg -> reg
                         // Serbest erişim (ROOT + H2 + Swagger)
                         .requestMatchers(
-                                new AntPathRequestMatcher("/"),
+                                new AntPathRequestMatcher("/**"),
                                 H2,
                                 new AntPathRequestMatcher("/swagger-ui/**"),
                                 new AntPathRequestMatcher("/swagger-ui.html"),
@@ -66,6 +67,13 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/auth/**"),
                                 new AntPathRequestMatcher("/register/**")
                         ).permitAll()
+                        .requestMatchers("/", "/favicon.ico", "/error", "/actuator/**").permitAll()
+
+                        // ABOUT uçları: (istersen GET'i de role bağlayabilirsin)
+                        .requestMatchers(HttpMethod.GET, "/about/api/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/about/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,  "/about/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/about/api/**").hasRole("ADMIN")
                         // Geri kalan her şey auth ister
                         .anyRequest().authenticated()
                 );

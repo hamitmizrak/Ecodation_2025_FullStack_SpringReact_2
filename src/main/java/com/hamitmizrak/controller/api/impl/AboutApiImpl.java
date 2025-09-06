@@ -39,7 +39,6 @@ public class AboutApiImpl implements IAboutApi<AboutDto> {
     private final FileProps fileProps;
     private final ObjectMapper objectMapper; // String json => Java Objesi haline geliyor
 
-
     //////////////////////////////////////////////////////////////////////////////////////////
     // CREATE
     // İster resimli ister resimsiz yani opsiyonel (Şimdiki resimsiz)
@@ -62,7 +61,6 @@ public class AboutApiImpl implements IAboutApi<AboutDto> {
      * CREATE (Multipart) — Opsiyonel dosya ile
      * POST http://localhost:4444/about/api/v1/create
      * Content-Type: multipart/form-data
-     *
      * form-data alanları:
      *  - dto  (Text)   -> geçerli JSON metni
      *  - file (File)   -> opsiyonel (görsel vb.)
@@ -87,7 +85,6 @@ public class AboutApiImpl implements IAboutApi<AboutDto> {
         AboutDto created = (AboutDto) iAboutServices.objectServiceCreate(aboutDto);
         return ResponseEntity.ok(ApiResult.success(created));
     }
-
 
     // LIST
     // http://localhost:4444/about/api/v1/list
@@ -172,14 +169,11 @@ public class AboutApiImpl implements IAboutApi<AboutDto> {
                         .toUriString();
                 updated.setFullImageUrl(full);
             }
-
             return ResponseEntity.ok(ApiResult.success(updated));
         } catch (Exception ex) {
             return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/about/api/v1.0.0/update"));
         }
     }
-
-
 
     // DELETE BY ID
     // http://localhost:4444/about/api/v1/delete/1

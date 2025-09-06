@@ -57,6 +57,14 @@ export const ENDPOINTS = {
     UPDATE: (id) => `/blog/api/v1.0.0/${id}`, // Blog güncelle (PUT)
     DELETE: (id) => `/blog/api/v1.0.0/${id}`, // Blog sil (DELETE)
   },
+
+  // Blog Kategori endpoint’leri (CRUD)
+  ABOUT: {
+    LIST: '/about/api/v1.0.0/list',
+    CREATE: '/about/api/v1.0.0/create',
+    UPDATE: (id) => `/about/api/v1.0.0/update/${id}`,
+    DELETE: (id) => `/about/api/v1.0.0/delete/${id}`,
+  },
 };
 
 // KULLANIM ÖRNEKLERİ:

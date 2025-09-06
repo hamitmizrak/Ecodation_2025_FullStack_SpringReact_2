@@ -93,6 +93,8 @@ npx create-react-app blog
 cd blog
 npm start
 
+npm i xlsx jspdf jspdf-autotable
+
 npm i axios react-router-dom zustand jwt-decode
 
 npm install axios --save
