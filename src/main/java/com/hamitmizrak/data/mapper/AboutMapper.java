@@ -14,11 +14,11 @@ public class AboutMapper {
         AboutDto aboutDto = new AboutDto();
 
         // Field
-        aboutDto.setAboutId(aboutDto.getAboutId());
-        aboutDto.setAboutName(aboutDto.getAboutName());
-        aboutDto.setVision(aboutDto.getVision());
-        aboutDto.setMission(aboutDto.getMission());
-        aboutDto.setImage(aboutDto.getImage());
+        aboutDto.setAboutId(aboutEntity.getAboutId());
+        aboutDto.setAboutName(aboutEntity.getAboutName());
+        aboutDto.setVision(aboutEntity.getVision());
+        aboutDto.setMission(aboutEntity.getMission());
+        aboutDto.setImage(aboutEntity.getImage());
 
         // DİKKAT: Composition (Blog(N)- BlogCategory(1))
         /*if (aboutEntity.getBlogCategoryBlogEntity() != null) {
