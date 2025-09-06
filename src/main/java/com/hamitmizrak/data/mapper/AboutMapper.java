@@ -18,7 +18,7 @@ public class AboutMapper {
         aboutDto.setAboutName(aboutEntity.getAboutName());
         aboutDto.setVision(aboutEntity.getVision());
         aboutDto.setMission(aboutEntity.getMission());
-        aboutDto.setImage(aboutEntity.getImage());
+        aboutDto.setImageUrl(aboutEntity.getImageUrl());
 
         // DİKKAT: Composition (Blog(N)- BlogCategory(1))
         /*if (aboutEntity.getBlogCategoryBlogEntity() != null) {
@@ -37,7 +37,7 @@ public class AboutMapper {
         blogEntity.setAboutName(aboutDto.getAboutName());
         blogEntity.setMission(aboutDto.getMission());
         blogEntity.setVision(aboutDto.getVision());
-        blogEntity.setImage(aboutDto.getImage());
+        blogEntity.setImageUrl(aboutDto.getImageUrl());
 
         // DİKKAT: Composition (Order(N)- Customer(1))
         /*if (aboutDto.getBlogCategoryDto() != null) {

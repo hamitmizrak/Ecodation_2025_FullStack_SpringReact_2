@@ -112,7 +112,7 @@ public class AboutServicesImpl implements IAboutServices<AboutDto, AboutEntity> 
            aboutEntity.setAboutName(aboutDto.getAboutName());
            aboutEntity.setMission(aboutDto.getMission());
            aboutEntity.setVision(aboutDto.getVision());
-           aboutEntity.setImage(aboutDto.getImage());
+           aboutEntity.setImageUrl(aboutDto.getImageUrl());
            iAboutRepository.save(aboutEntity);
            // Dönüştede ID ve Date Set et
        }

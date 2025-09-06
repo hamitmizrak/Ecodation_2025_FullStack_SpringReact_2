@@ -69,7 +69,8 @@ public class AboutEntity extends AuditingAwareBaseEntity implements Serializable
     private String mission;
 
     // IMAGE
-    private String image;
+    @Column(length = 512)
+    private String imageUrl;
 
    /*
    Javada olsun Database(Entity) olmasının

@@ -47,7 +47,9 @@ public class AboutDto  extends AuditingAwareBaseDto implements Serializable {
     // IMAGE
     //@NotEmpty(message = "{about.pictures.validation.constraints.NotNull.message}")
     @Builder.Default
-    private String image="resim.png";
+    private String imageUrl="resim.png";
+
+
 
 
     // DATE

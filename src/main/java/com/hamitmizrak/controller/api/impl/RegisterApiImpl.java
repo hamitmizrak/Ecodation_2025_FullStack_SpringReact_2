@@ -58,7 +58,7 @@ public class RegisterApiImpl implements IRegisterApi<RegisterDto> {
 
     /////////////////////////////////////////////////////////////
     // REGISTER CRUD
-
+    // İster resimli ister resimsiz yani opsiyonel
     // CREATE Register(Api) - Role
     // http://localhost:4444/register/api/v1.0.0/create/1
     @PostMapping("/create/{roles_id}")
