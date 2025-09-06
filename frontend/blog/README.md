@@ -93,6 +93,16 @@ npx create-react-app blog
 cd blog
 npm start
 
+// edit
+npm install lucide-react
+
+// icon
+npm install react-icons
+
+toast ekle
+npm i react-hot-toast
+
+pdf excel eklemek
 npm i xlsx jspdf jspdf-autotable
 
 npm i axios react-router-dom zustand jwt-decode
