@@ -55,7 +55,7 @@ public class AddressDto extends BaseDto implements Serializable {
     public static final Long serialVersionUID = 1L;
 
     // FIELD
-    private Long id;
+    //private Long id;
 
     // DOOR NUMBER
     @NotEmpty(message = "{address.door_number.validation.constraints.NotNull.message}")

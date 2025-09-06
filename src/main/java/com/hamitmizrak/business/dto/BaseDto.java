@@ -13,10 +13,7 @@ import java.util.Date;
 
 // Serializable:
 // abstract: BaseDto instance(örnek) yapılmasını istemiyorum
-abstract public class BaseDto extends AuditingAwareBaseDto implements Serializable {
-
-    // SERILESTIRME
-    public static final Long serialVersionUID = 1L;
+abstract public class BaseDto extends AuditingAwareBaseDto {
 
     // FIELD
     // ID
