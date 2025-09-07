@@ -46,7 +46,7 @@ public class AboutApiImpl implements IAboutApi<AboutDto> {
     //////////////////////////////////////////////////////////////////////////////////////////
     // CREATE
     // İster resimli ister resimsiz yani opsiyonel (Şimdiki resimsiz)
-    // http://localhost:4444/about/api/v1/create
+    // http://localhost:4444/about/api/v1.0.0/create
     @Override
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResult<?>> objectApiCreate(@Valid @RequestBody AboutDto aboutDto) {
@@ -54,16 +54,16 @@ public class AboutApiImpl implements IAboutApi<AboutDto> {
             AboutDto created = (AboutDto) iAboutServices.objectServiceCreate(aboutDto);
             return ResponseEntity.ok(ApiResult.success(created));
         } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/about/api/v1/create"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/about/api/v1.0.0/create"));
         }
     }
 
 
     // İster resimli ister resimsiz yani opsiyonel (Şimdiki resimsiz)
-    // http://localhost:4444/about/api/v1/create
+    // http://localhost:4444/about/api/v1.0.0/create
     /**
      * CREATE (Multipart) — Opsiyonel dosya ile
-     * POST http://localhost:4444/about/api/v1/create
+     * POST http://localhost:4444/about/api/v1.0.0/create
      * Content-Type: multipart/form-data
      * form-data alanları:
      *  - dto  (Text)   -> geçerli JSON metni
@@ -91,7 +91,7 @@ public class AboutApiImpl implements IAboutApi<AboutDto> {
     }
 
     // LIST
-    // http://localhost:4444/about/api/v1/list
+    // http://localhost:4444/about/api/v1.0.0/list
     @Override
     @GetMapping(value="/list")
     public ResponseEntity<ApiResult<List<AboutDto>>> objectApiList() {
@@ -99,28 +99,28 @@ public class AboutApiImpl implements IAboutApi<AboutDto> {
             List<AboutDto> list = iAboutServices.objectServiceList();
             return ResponseEntity.ok(ApiResult.success(list));
         } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/about/api/v1/list"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/about/api/v1.0.0/list"));
         }
     }
 
     // FIND
-    // http://localhost:4444/about/api/v1/find/1
+    // http://localhost:4444/about/api/v1.0.0/find/1
     @Override
     @GetMapping(value="/find/{id}")
     public ResponseEntity<ApiResult<?>> objectApiFindById(@PathVariable(name = "id") Long id) {
         try {
             if (id == null) {
-                return ResponseEntity.ok(ApiResult.notFound("Id değeri boş", "/about/api/v1/find"));
+                return ResponseEntity.ok(ApiResult.notFound("Id değeri boş", "/about/api/v1.0.0/find"));
             }
             AboutDto found = (AboutDto) iAboutServices.objectServiceFindById(id);
             return ResponseEntity.ok(ApiResult.success(found));
         } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/about/api/v1/find"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/about/api/v1.0.0/find"));
         }
     }
 
     // UPDATE
-    // http://localhost:4444/about/api/v1/update/1
+    // http://localhost:4444/about/api/v1.0.0/update/1
     @Override
     @PutMapping(value="/update/{id}")
     public ResponseEntity<ApiResult<?>> objectApiUpdate(@PathVariable(name = "id") Long id, @Valid @RequestBody AboutDto aboutDto) {
@@ -128,9 +128,10 @@ public class AboutApiImpl implements IAboutApi<AboutDto> {
             AboutDto updated = (AboutDto) iAboutServices.objectServiceUpdate(id, aboutDto);
             return ResponseEntity.ok(ApiResult.success(updated));
         } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/about/api/v1/update"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/about/api/v1.0.0/update"));
         }
     }
+
 
     // Image
     // http://localhost:4444/register/api/v1.0.0/update/1
@@ -180,7 +181,7 @@ public class AboutApiImpl implements IAboutApi<AboutDto> {
     }
 
     // DELETE BY ID
-    // http://localhost:4444/about/api/v1/delete/1
+    // http://localhost:4444/about/api/v1.0.0/delete/1
     @Override
     @DeleteMapping(value="/delete/{id}")
     public ResponseEntity<ApiResult<?>> objectApiDelete(@PathVariable(name = "id") Long id) {
@@ -189,7 +190,7 @@ public class AboutApiImpl implements IAboutApi<AboutDto> {
 
             return ResponseEntity.ok(ApiResult.success(deleted));
         } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/about/api/v1/delete"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/about/api/v1.0.0/delete"));
         }
     }
 

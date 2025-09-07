@@ -18,9 +18,9 @@ import ProjectMain from '../pages/ProjectMain';
 import Forbidden403 from '../pages/Forbidden403';
 
 // Route guard bileşenleri
-import ProtectedRoute from '../routes/ProtectedRoute';
-import WriterRoute from '../routes/WriterRoute';
-import AdminRoute from '../routes/AdminRoute';
+import ProtectedRoute from './ProtectedRoute';
+import WriterRoute from './WriterRoute';
+import AdminRoute from './AdminRoute';
 
 // Admin ve Writer sayfaları/layout'ları
 import AdminLayout from '../areas/admin/AdminLayout';

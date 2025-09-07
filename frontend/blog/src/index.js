@@ -21,7 +21,7 @@ import { store } from './app/store/store'; // Redux store (dizine göre yolunu k
 // BrowserRouter: HTML5 history API kullanır (modern tarayıcılar için)
 // HashRouter: URL hash (#) kullanır (eski tarayıcılar için, SEO için değil)
 import { BrowserRouter } from 'react-router-dom'; // Router context'i
-import Router from './app/router';
+import Router from './routes/router';
 /*
 import ReusableToast from "./areas/admin/resuability/ReusableToast"; // Ana router component’iniz (Routes tanımlarınız burada)
 */
