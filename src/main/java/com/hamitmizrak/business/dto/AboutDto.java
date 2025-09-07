@@ -50,8 +50,6 @@ public class AboutDto  extends AuditingAwareBaseDto implements Serializable {
     private String imageUrl="resim.png";
 
 
-
-
     // DATE
     @Builder.Default
     private Date systemCreatedDate=new Date(System.currentTimeMillis());

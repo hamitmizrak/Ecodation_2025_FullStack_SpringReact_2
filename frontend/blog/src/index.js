@@ -22,9 +22,9 @@ import { store } from './app/store/store'; // Redux store (dizine göre yolunu k
 // HashRouter: URL hash (#) kullanır (eski tarayıcılar için, SEO için değil)
 import { BrowserRouter } from 'react-router-dom'; // Router context'i
 import Router from './routes/router';
-/*
-import ReusableToast from "./areas/admin/resuability/ReusableToast"; // Ana router component’iniz (Routes tanımlarınız burada)
-*/
+// Toast ana index.js eklenmesi gerekiyor
+import ReusabilityToast from "./areas/admin/resuability/ReusabilityToast";// Ana router component’iniz (Routes tanımlarınız burada)
+
 
 // Root element (public/index.html’de id="root" olan div’e render eder)
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -35,7 +35,7 @@ root.render(
     {' '}
     {/* Redux context (store tüm alt komponentlere ulaşır) */}
     <BrowserRouter>
-        {/*<ReusableToast />*/}
+        <ReusabilityToast/>
         {' '}
       {/* Router context (url değişimini yönetir) */}
       <Router /> {/* Sizin ana Routes component’iniz */}

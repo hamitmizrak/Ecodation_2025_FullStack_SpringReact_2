@@ -45,7 +45,7 @@ export const ENDPOINTS = {
   // Blog Kategori endpoint’leri (CRUD)
   BLOG_CATEGORY: {
     LIST: '/blog/category/api/v1.0.0', // Kategori listesi (GET)
-    CREATE: '/blog/category/api/v1.0.0', // Kategori ekle (POST)
+    CREATE: '/blog/category/api/v1.0.0/create', // Kategori ekle (POST)
     UPDATE: (id) => `/blog/category/api/v1.0.0/${id}`, // Kategori güncelle (PUT)
     DELETE: (id) => `/blog/category/api/v1.0.0/${id}`, // Kategori sil (DELETE)
   },
@@ -53,18 +53,17 @@ export const ENDPOINTS = {
   // Blog yazıları endpoint’leri (CRUD)
   BLOG: {
     LIST: '/blog/api/v1.0.0', // Blog listesi (GET)
-    CREATE: '/blog/api/v1.0.0', // Blog ekle (POST)
+    CREATE: '/blog/api/v1.0.0/create', // Blog ekle (POST)
     UPDATE: (id) => `/blog/api/v1.0.0/${id}`, // Blog güncelle (PUT)
     DELETE: (id) => `/blog/api/v1.0.0/${id}`, // Blog sil (DELETE)
   },
 
-  // Blog Kategori endpoint’leri (CRUD)
   ABOUT: {
     LIST: '/about/api/v1.0.0/list',
     CREATE: '/about/api/v1.0.0/create',
     UPDATE: (id) => `/about/api/v1.0.0/update/${id}`,
     DELETE: (id) => `/about/api/v1.0.0/delete/${id}`,
-  },
+  }
 };
 
 // KULLANIM ÖRNEKLERİ:

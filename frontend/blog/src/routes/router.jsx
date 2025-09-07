@@ -26,7 +26,10 @@ import AdminRoute from './AdminRoute';
 import AdminLayout from '../areas/admin/AdminLayout';
 import AdminHome from '../areas/admin/AdminHome';
 import BlogApi from '../areas/writer/BlogApi'; // Writer için sayfa
-import BlogCategory from '../areas/admin/BlogCategory'; // Admin için sayfa
+import BlogCategory from '../areas/admin/BlogCategory';
+
+// About
+import About from "../areas/admin/About"; // Admin için sayfa
 
 
 /**
@@ -87,6 +90,9 @@ function Router() {
           {/* Blog kategorileri (sadece admin) */}
           <Route path="blog-category" element={<BlogCategory />} />
           {/* ...Başka admin-only route'lar buraya eklenebilir */}
+
+          {/*About*/}
+            <Route path="about" element={<About />} />
 
         </Route>
       </Route>
