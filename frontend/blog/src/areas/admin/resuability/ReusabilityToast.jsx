@@ -7,7 +7,7 @@ import {Toaster} from "react-hot-toast";
 export default function ResuabilityToast (
     {
         position="bottom-right",
-        duration="3000",
+        duration=3000,
         ...props
     }
 ) {
