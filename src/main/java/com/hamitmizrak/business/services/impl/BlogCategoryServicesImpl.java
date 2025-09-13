@@ -108,7 +108,9 @@ public class BlogCategoryServicesImpl implements IBlogCategoryServices<BlogCateg
     // LIST
     @Override
     public List<BlogCategoryDto> objectServiceList() {
+        // Database blogCategory listesini çağırsın
         Iterable<BlogCategoryEntity> entityIterable = iCategoryRepository.findAll();
+
         // Dto To entityb List
         List<BlogCategoryDto> categoryDtoList = new ArrayList<>();
         for (BlogCategoryEntity entity : entityIterable) {
@@ -146,7 +148,7 @@ public class BlogCategoryServicesImpl implements IBlogCategoryServices<BlogCateg
     @Override
     @Transactional // create, delete, update
     public BlogCategoryDto objectServiceUpdate(Long id, BlogCategoryDto categoryDto) {
-        // Önce Bul
+        // Önce Database'den id ile ilgili nesneyi Bul
         BlogCategoryDto categoryFindDto = objectServiceFindById(id);
         if (categoryFindDto != null) {
             BlogCategoryEntity categoryEntity = dtoToEntity(categoryFindDto);

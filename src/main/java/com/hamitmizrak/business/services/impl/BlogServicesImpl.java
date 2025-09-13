@@ -69,8 +69,13 @@ public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
     @Transactional // create, delete, update
     public BlogDto  objectServiceCreate(BlogDto blogDto) {
         if(blogDto!=null){
+            // dto <=> Entity
             BlogEntity blogEntity=dtoToEntity(blogDto);
+
+            // Entity'i database ekle
             iBlogRepository.save(blogEntity);
+
+            // database eklenen verinin ID ve DATE almak
             blogDto.setBlogId(blogEntity.getBlogId());
             blogDto.setSystemCreatedDate(blogEntity.getSystemCreatedDate());
         }else{
@@ -82,8 +87,9 @@ public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
     // LIST
     @Override
     public List<BlogDto> objectServiceList() {
+        // Database verileri al
         Iterable<BlogEntity> entityIterable=  iBlogRepository.findAll();
-        // Dto To entityb List
+        // Dto To entity List
         List<BlogDto> categoryDtoList=new ArrayList<>();
         for (BlogEntity entity:  entityIterable) {
             BlogDto blogDto=entityToDto(entity);
@@ -127,6 +133,7 @@ public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
            blogEntity.setTitle(blogDto.getTitle());
            blogEntity.setHeader(blogDto.getHeader());
            blogEntity.setContent(blogDto.getContent());
+           blogEntity.setImage(blogDto.getImage());
            iBlogRepository.save(blogEntity);
            // Dönüştede ID ve Date Set et
        }

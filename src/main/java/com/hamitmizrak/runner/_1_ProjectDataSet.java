@@ -135,12 +135,12 @@ public class _1_ProjectDataSet implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("Project Data set -1 ");
-        log.info("Project Data set -1 ");
+        //System.out.println("Project Data set -1 ");
+        //log.info("Project Data set -1 ");
         //addressSave();
         //saveCustomer();
         // Order Kaydet
-        OrderDto orderProductCustomerAddressSaved= orderSave();
-        System.out.println(orderProductCustomerAddressSaved);
+        //OrderDto orderProductCustomerAddressSaved= orderSave();
+        //System.out.println(orderProductCustomerAddressSaved);
     }
 }

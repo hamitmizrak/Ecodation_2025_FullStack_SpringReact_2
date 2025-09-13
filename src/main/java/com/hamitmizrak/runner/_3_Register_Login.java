@@ -106,7 +106,7 @@ public class _3_Register_Login implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         //log.info("Command Line Runner Bean-2");
-        System.out.println("Command Line Runner Bean-2");
+        //System.out.println("Command Line Runner Bean-2");
         roleAdd();
     }
 

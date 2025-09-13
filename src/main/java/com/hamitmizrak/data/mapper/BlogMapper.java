@@ -19,6 +19,7 @@ public class BlogMapper {
         blogDto.setHeader(blogEntity.getHeader());
         blogDto.setTitle(blogEntity.getTitle());
         blogDto.setContent(blogEntity.getContent());
+        blogDto.setImage(blogEntity.getImage());
 
         // DİKKAT: Composition (Blog(N)- BlogCategory(1))
         if (blogEntity.getBlogCategoryBlogEntity() != null) {
@@ -37,6 +38,7 @@ public class BlogMapper {
         blogEntity.setHeader(blogDto.getHeader());
         blogEntity.setTitle(blogDto.getTitle());
         blogEntity.setContent(blogDto.getContent());
+        blogEntity.setImage(blogDto.getImage());
 
         // DİKKAT: Composition (Order(N)- Customer(1))
         if (blogDto.getBlogCategoryDto() != null) {

@@ -4,7 +4,7 @@ package com.hamitmizrak.business.services;
 // E: Entity
 public interface IModelMapperService<D,E> {
 
-    // Model Mapper
+    // Model Mapper (Dto <=> Entity)
     public D entityToDto(E e);
     public E dtoToEntity(D d);
 }

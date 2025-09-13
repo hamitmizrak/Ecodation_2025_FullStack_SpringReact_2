@@ -40,10 +40,10 @@ public class AboutEntity extends AuditingAwareBaseEntity implements Serializable
             name = "about",
             nullable = false,
             unique = true,
-            //length = 500,
+            length = 1500,
             insertable = true,
             updatable = true,
-            columnDefinition = "varchar(255) default 'about için başlık girilmedi'")
+            columnDefinition = "varchar(1500) default 'about için başlık girilmedi'")
     private String aboutName;
 
     // Vizyon
@@ -51,10 +51,10 @@ public class AboutEntity extends AuditingAwareBaseEntity implements Serializable
             name = "vision",
             nullable = false,
             unique = true,
-            //length = 500,
+            length = 1500,
             insertable = true,
             updatable = true,
-            columnDefinition = "varchar(255) default 'vision için başlık girilmedi'")
+            columnDefinition = "varchar(1500) default 'vision için başlık girilmedi'")
     private String vision;
 
     // Misyon
@@ -62,10 +62,10 @@ public class AboutEntity extends AuditingAwareBaseEntity implements Serializable
             name = "mission",
             nullable = false,
             unique = true,
-            length = 500,
+            length = 1500,
             insertable = true,
             updatable = true,
-            columnDefinition = "varchar(255) default 'mission için başlık girilmedi'")
+            columnDefinition = "varchar(1500) default 'mission için başlık girilmedi'")
     private String mission;
 
     // IMAGE

@@ -40,15 +40,15 @@ public class BlogEntity extends AuditingAwareBaseEntity implements Serializable 
             name = "header",
             nullable = false,
             unique = true,
-            length = 500,
+            length = 1500,
             insertable = true,
             updatable = true,
-            columnDefinition = "varchar(255) default 'blog için başlık girilmedi'")
+            columnDefinition = "varchar(1500) default 'blog için başlık girilmedi'")
     private String header;
 
     // CONTENT
     @Lob
-    @Column(name = "content", columnDefinition = "varchar(255) default 'blog için içerik girilmedi'")
+    @Column(name = "content", columnDefinition = "varchar(1500) default 'blog için içerik girilmedi'")
     private String content;
 
     // TITLE
@@ -70,7 +70,7 @@ public class BlogEntity extends AuditingAwareBaseEntity implements Serializable 
 
     //  RELATION
     // Blog(N)  Category(1)
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
     @JoinColumn(name="category_id",nullable = false)
     private BlogCategoryEntity blogCategoryBlogEntity;
 

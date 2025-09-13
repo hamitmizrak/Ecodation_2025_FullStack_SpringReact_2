@@ -14,6 +14,7 @@ import java.util.List;
 //@Data
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -45,15 +46,8 @@ public class BlogCategoryEntity extends AuditingAwareBaseEntity implements Seria
     private Date systemCreatedDate;
 
     // Constructor (parametreli)
-    public BlogCategoryEntity(String categoryName) {
-        this.categoryName = categoryName;
-    }
 
     // Constructor (parametreli)
-    public BlogCategoryEntity(String categoryName, List<BlogEntity> relationBlogEntityList) {
-        this.categoryName = categoryName;
-        this.blogCategoryBlogEntityList = relationBlogEntityList;
-    }
 
     //////////////////////////////////////////////////////////////////////////////////////
     // COMPOSITION

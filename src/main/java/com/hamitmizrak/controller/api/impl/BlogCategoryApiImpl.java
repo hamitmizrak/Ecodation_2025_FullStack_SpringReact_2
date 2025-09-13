@@ -44,6 +44,7 @@ public class BlogCategoryApiImpl implements IBlogCategoryApi<BlogCategoryDto> {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // CREATE
+    // localhost:4444/blog/category/api/v1.0.0/create
     @Override
     @PostMapping("/create")
     public ResponseEntity<ApiResult<?>> objectApiCreate(@Valid @RequestBody BlogCategoryDto categoryDto) {
@@ -56,6 +57,7 @@ public class BlogCategoryApiImpl implements IBlogCategoryApi<BlogCategoryDto> {
     }
 
     // LIST
+    // localhost:4444/blog/category/api/v1.0.0/list
     @Override
     @GetMapping(value="/list")
     public ResponseEntity<ApiResult<List<BlogCategoryDto>>> objectApiList() {
@@ -68,6 +70,7 @@ public class BlogCategoryApiImpl implements IBlogCategoryApi<BlogCategoryDto> {
     }
 
     // FIND
+    // localhost:4444/blog/category/api/v1.0.0/find/1
     @Override
     @GetMapping(value="/find/{id}")
     public ResponseEntity<ApiResult<?>> objectApiFindById(@PathVariable(name = "id") Long id) {
@@ -83,6 +86,7 @@ public class BlogCategoryApiImpl implements IBlogCategoryApi<BlogCategoryDto> {
     }
 
     // UPDATE
+    // localhost:4444/blog/category/api/v1.0.0/update/1
     @Override
     @PutMapping(value="/update/{id}")
     public ResponseEntity<ApiResult<?>> objectApiUpdate(@PathVariable(name = "id") Long id, @Valid @RequestBody BlogCategoryDto categoryDto) {
@@ -95,6 +99,7 @@ public class BlogCategoryApiImpl implements IBlogCategoryApi<BlogCategoryDto> {
     }
 
     // DELETE BY ID
+    // localhost:4444/blog/category/api/v1.0.0/delete/1
     @Override
     @DeleteMapping(value="/delete/{id}")
     public ResponseEntity<ApiResult<?>> objectApiDelete(@PathVariable(name = "id") Long id) {
