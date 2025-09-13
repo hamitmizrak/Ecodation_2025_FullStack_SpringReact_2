@@ -44,18 +44,18 @@ export const ENDPOINTS = {
 
   // Blog Kategori endpoint’leri (CRUD)
   BLOG_CATEGORY: {
-    LIST: '/blog/category/api/v1.0.0', // Kategori listesi (GET)
+    LIST: '/blog/category/api/v1.0.0/list', // Kategori listesi (GET)
     CREATE: '/blog/category/api/v1.0.0/create', // Kategori ekle (POST)
-    UPDATE: (id) => `/blog/category/api/v1.0.0/${id}`, // Kategori güncelle (PUT)
-    DELETE: (id) => `/blog/category/api/v1.0.0/${id}`, // Kategori sil (DELETE)
+    UPDATE: (id) => `/blog/category/api/v1.0.0/update/${id}`, // Kategori güncelle (PUT)
+    DELETE: (id) => `/blog/category/api/v1.0.0/delete/${id}`, // Kategori sil (DELETE)
   },
 
   // Blog yazıları endpoint’leri (CRUD)
   BLOG: {
-    LIST: '/blog/api/v1.0.0', // Blog listesi (GET)
+    LIST: '/blog/api/v1.0.0/list', // Blog listesi (GET)
     CREATE: '/blog/api/v1.0.0/create', // Blog ekle (POST)
-    UPDATE: (id) => `/blog/api/v1.0.0/${id}`, // Blog güncelle (PUT)
-    DELETE: (id) => `/blog/api/v1.0.0/${id}`, // Blog sil (DELETE)
+    UPDATE: (id) => `/blog/api/v1.0.0/update/${id}`, // Blog güncelle (PUT)
+    DELETE: (id) => `/blog/api/v1.0.0/delete/${id}`, // Blog sil (DELETE)
   },
 
   ABOUT: {
@@ -63,7 +63,7 @@ export const ENDPOINTS = {
     CREATE: '/about/api/v1.0.0/create',
     UPDATE: (id) => `/about/api/v1.0.0/update/${id}`,
     DELETE: (id) => `/about/api/v1.0.0/delete/${id}`,
-  }
+  },
 };
 
 // KULLANIM ÖRNEKLERİ:

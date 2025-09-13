@@ -1,292 +1,602 @@
-// src/admin/BlogCategory.jsx
-import React, { useEffect, useMemo, useState } from 'react';
-import {
-  listBlogCategories,
-  createBlogCategory,
-  updateBlogCategory,
-  deleteBlogCategory,
-} from '../../features/blogCategory/blogCategoryService';
+// BlogCategory
 
-function pick(obj, ...keys) {
-  for (const k of keys) {
-    const v = obj?.[k];
-    if (v !== undefined && v !== null && v !== '') return v;
-  }
-  return undefined;
-}
-function normalizeBackendError(be) {
-  if (!be) return { general: 'İşlem başarısız', fields: {} };
-  const general =
-    pick(be, 'message', 'error', 'errorMessage', 'detail', 'description') ||
-    pick(be?.data, 'message', 'error') ||
-    pick(be?.result, 'message', 'error') ||
-    'İşlem başarısız';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import ResuabilityToast from './resuability/ReusabilityToast'; // yolu projene göre düzenle
+import { showSuccess, showError } from './resuability/toastHelper'; // yolu projene göre düzenle
+import { API_BASE, ENDPOINTS, IMAGE_BASE } from '../../config/api';
 
-  const fields = {};
-  const mapLike =
-    be?.fieldErrors && typeof be.fieldErrors === 'object' && !Array.isArray(be.fieldErrors)
-      ? be.fieldErrors
-      : be?.errors && typeof be.errors === 'object' && !Array.isArray(be.errors)
-      ? be.errors
-      : be?.data?.fieldErrors && typeof be.data.fieldErrors === 'object'
-      ? be.data.fieldErrors
-      : be?.result?.fieldErrors && typeof be.result.fieldErrors === 'object'
-      ? be.result.fieldErrors
-      : null;
-  if (mapLike) {
-    for (const [k, v] of Object.entries(mapLike)) {
-      if (v) fields[k] = Array.isArray(v) ? v[0] : String(v);
-    }
-  }
-  const arrayLike =
-    (Array.isArray(be?.fieldErrors) && be.fieldErrors) ||
-    (Array.isArray(be?.errors) && be.errors) ||
-    (Array.isArray(be?.validationErrors) && be.validationErrors) ||
-    (Array.isArray(be?.violations) && be.violations) ||
-    (Array.isArray(be?.data?.errors) && be.data.errors) ||
-    (Array.isArray(be?.result?.errors) && be.result.errors) ||
-    null;
-  if (arrayLike) {
-    arrayLike.forEach((it) => {
-      const key = it?.field || it?.name || it?.propertyPath || it?.path || it?.param || it?.code;
-      const msg =
-        it?.message || it?.defaultMessage || it?.errorMessage || it?.reason || it?.description;
-      if (key && msg) fields[key] = msg;
-    });
-  }
-  return { general, fields };
+// Görsel yolu çözücü
+// Yardımcılar
+const resolveImageUrl = (src) =>
+  !src
+    ? ''
+    : /^https?:\/\//i.test(src)
+    ? src
+    : `${IMAGE_BASE}${src.startsWith('/') ? src : '/' + src}`;
+
+// Tarih formatı
+const formatDate = (iso) =>
+  !iso ? '' : new Date(iso).toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' });
+
+// Tek Backdrop (global)
+function GlobalBackdrop({ show, onClose }) {
+  if (!show) return null;
+  return (
+    <div
+      className="modal-backdrop fade show"
+      style={{ zIndex: 1040 }}
+      onClick={onClose ?? undefined}
+    />
+  );
 }
 
 export default function BlogCategory() {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // Liste
+  const [blogCategories, setBlogCategories] = useState([]);
 
-  const empty = { name: '', description: '', visible: true };
-  const [form, setForm] = useState(empty);
-  const [editId, setEditId] = useState(null);
+  // Modal state’leri
+  const [showCreate, setShowCreate] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showView, setShowView] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
 
-  const [errs, setErrs] = useState({ name: '', description: '', visible: '', general: '' });
-  const invalid = useMemo(() => ({ name: !!errs.name, description: !!errs.description }), [errs]);
+  // Seçili kayıt ve form
+  const [selectedBlogCategory, setSelectedBlogCategory] = useState(null);
+  const [form, setForm] = useState({
+    categoryName: '',
+    imageFile: null,
+  });
 
-  const refresh = async () => {
-    setLoading(true);
+  // Hata & loading
+  const [formError, setFormError] = useState({});
+  const [spinner, setSpinner] = useState(false);
+  // Modal
+  const anyOpen = showCreate || showEdit || showView || showDelete;
+
+  // Body sınıfı (modal-open) yönetimi
+  useEffect(() => {
+    if (anyOpen) document.body.classList.add('modal-open');
+    else document.body.classList.remove('modal-open');
+    return () => document.body.classList.remove('modal-open');
+  }, [anyOpen]);
+
+  // ESC ile kapat
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key !== 'Escape') return;
+      if (showCreate) return closeCreateModal();
+      if (showEdit) return closeEditModal();
+      if (showView) return closeViewModal();
+      if (showDelete) return closeDeleteModal();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [showCreate, showEdit, showView, showDelete]);
+
+  // Listeyi çek
+  const fetchBlogCategories = async () => {
     try {
-      const res = await listBlogCategories();
-      const data = res?.data?.data || res?.data?.result || res?.data || [];
-      setItems(Array.isArray(data) ? data : data.content || []);
-    } catch (e) {
-      // no-op
-    } finally {
-      setLoading(false);
+      const res = await axios.get(`${API_BASE}${ENDPOINTS.BLOG_CATEGORY.LIST}`);
+      const data =
+        res?.data?.data ??
+        res?.data?.result ??
+        res?.data?.items ??
+        res?.data?.content ??
+        res?.data ??
+        [];
+      setBlogCategories(
+        Array.isArray(data) ? data : Array.isArray(data?.content) ? data.content : []
+      );
+    } catch {
+      showError('Blog Kategori listesi yüklenemedi');
     }
   };
-
   useEffect(() => {
-    refresh();
+    fetchBlogCategories();
   }, []);
 
-  const onChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm((s) => ({ ...s, [name]: type === 'checkbox' ? checked : value }));
-    setErrs((s) => ({ ...s, [name]: '', general: '' }));
-  };
-
-  const validate = () => {
-    const e = { name: '', description: '', general: '' };
-    if (!form.name) e.name = 'Kategori adı zorunlu';
-    return e;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const e0 = validate();
-    setErrs((s) => ({ ...s, ...e0 }));
-    if (e0.name || e0.description) return;
-
-    try {
-      if (editId) await updateBlogCategory(editId, form);
-      else await createBlogCategory(form);
-
-      setForm(empty);
-      setEditId(null);
-      setErrs({ name: '', description: '', visible: '', general: '' });
-      refresh();
-    } catch (ex) {
-      const be = ex?.response?.data;
-      const { general, fields } = normalizeBackendError(be);
-      setErrs((s) => ({
-        ...s,
-        name: fields.name || s.name,
-        description: fields.description || s.description,
-        visible: fields.visible || s.visible,
-        general: general || 'Kaydetme başarısız',
-      }));
+  // Form değişimi
+  const handleFormChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === 'imageFile') {
+      setForm((p) => ({ ...p, imageFile: files?.[0] ?? null }));
+    } else {
+      setForm((p) => ({ ...p, [name]: value }));
     }
+    setFormError((p) => ({ ...p, [name]: undefined }));
   };
 
-  const onEdit = (it) => {
+  // Modal yardımcıları
+  const resetForm = () => setForm({ categoryName: '', imageFile: null });
+
+  const closeAllModals = () => {
+    setShowCreate(false);
+    setShowEdit(false);
+    setShowView(false);
+    setShowDelete(false);
+  };
+
+  // Aç/Kapat
+  const openCreateModal = () => {
+    closeAllModals();
+    resetForm();
+    setFormError({});
+    setShowCreate(true);
+  };
+  const closeCreateModal = () => {
+    setShowCreate(false);
+    setFormError({});
+    resetForm();
+  };
+
+  // EDIT OPEN MODAL
+  const openEditModal = (blogCategory) => {
+    closeAllModals();
+    setSelectedBlogCategory(blogCategory);
     setForm({
-      name: it.name ?? it.categoryName ?? '',
-      description: it.description ?? it.categoryDescription ?? '',
-      visible: it.visible ?? it.status ?? true,
+      categoryName: blogCategory?.categoryName || '',
+      imageUrl: blogCategory?.imageUrl || '',
+      imageFile: null,
     });
-    setEditId(it.id ?? it.categoryId ?? null);
-    setErrs({ name: '', description: '', visible: '', general: '' });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setFormError({});
+    setShowEdit(true);
   };
 
-  const onDelete = async (id) => {
-    if (!window.confirm('Silmek istediğinize emin misiniz?')) return;
+  // EDIT CLOSE MODAL
+  const closeEditModal = () => {
+    setShowEdit(false);
+    setFormError({});
+    setSelectedblogCategory(null);
+  };
+
+  // VIEW OPEN MODAL
+  const openViewModal = (blogCategory) => {
+    closeAllModals();
+    setSelectedBlogCategory(blogCategory);
+    setShowView(true);
+  };
+
+  // VIEW CLOSE MODAL
+  const closeViewModal = () => {
+    setShowView(false);
+    setSelectedBlogCategory(null);
+  };
+
+  // DELETE OPEN MODAL
+  const openDeleteModal = (blogCategory) => {
+    closeAllModals();
+    setSelectedBlogCategory(blogCategory);
+    setShowDelete(true);
+  };
+
+  // DELETE CLOSE MODAL
+  const closeDeleteModal = () => {
+    setShowDelete(false);
+    setSelectedBlogCategory(null);
+  };
+
+  // CREATE
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    const err = {};
+    if (!form.categoryName?.trim()) err.categoryName = 'Blog Kategori Adı zorunlu';
+    setFormError(err);
+    if (Object.keys(err).length > 0) return;
+
+    // Spinner Aç
+    setSpinner(true);
     try {
-      await deleteBlogCategory(id);
-      refresh();
+      const dto = {
+        categoryName: form.categoryName.trim(),
+        imageUrl: form.imageUrl || undefined,
+      };
+
+      let op;
+      if (form.imageFile) {
+        const fd = new FormData();
+        fd.append('blogCatgory', new Blob([JSON.stringify(dto)], { type: 'application/json' }));
+        fd.append('file', form.imageFile);
+        op = axios.post(`${API_BASE}${ENDPOINTS.BLOG_CATEGORY.CREATE}`, fd, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+      } else {
+        op = axios.post(`${API_BASE}${ENDPOINTS.BLOG_CATEGORY.CREATE}`, dto);
+      }
+
+      await op;
+      showSuccess('Kayıt başarıyla eklendi');
+      closeCreateModal();
+      fetchBlogCategories();
     } catch (ex) {
-      alert(ex?.response?.data?.message || ex.message || 'Silme başarısız');
+      showError(ex?.response?.data?.message || 'Kayıt eklenemedi');
+      setFormError(ex?.response?.data?.validationErrors || {});
+    } finally {
+      setSpinner(false);
     }
   };
 
-  const onCancel = () => {
-    setForm(empty);
-    setEditId(null);
-    setErrs({ name: '', description: '', visible: '', general: '' });
+  // UPDATE
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    const err = {};
+    if (!form.categoryName?.trim()) err.categoryName = 'Blog Kategori Adı zorunlu';
+    setFormError(err);
+    if (Object.keys(err).length > 0) return;
+
+    setSpinner(true);
+    try {
+      const id = selectedBlogCategory?.categoryId ?? selectedBlogCategory?.id;
+      if (id == null) throw new Error('Güncellenecek kaydın ID bilgisi yok.');
+
+      const dto = {
+        categoryName: form.categoryName.trim(),
+        imageUrl: form.imageUrl || undefined,
+      };
+
+      let op;
+      if (form.imageFile) {
+        const fd = new FormData();
+        fd.append('blogCategories', new Blob([JSON.stringify(dto)], { type: 'application/json' }));
+        fd.append('file', form.imageFile);
+        op = axios.put(`${API_BASE}${ENDPOINTS.BLOG_CATEGORY.UPDATE(id)}`, fd, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+      } else {
+        op = axios.put(`${API_BASE}${ENDPOINTS.BLOG_CATEGORY.UPDATE(id)}`, dto);
+      }
+
+      await op;
+      showSuccess('Kayıt başarıyla güncellendi');
+      closeEditModal();
+      fetchBlogCategories();
+    } catch (ex) {
+      showError(ex?.response?.data?.message || ex?.message || 'Kayıt güncellenemedi');
+      setFormError(ex?.response?.data?.validationErrors || {});
+    } finally {
+      setSpinner(false);
+    }
   };
 
+  // DELETE
+  const handleDelete = async () => {
+    setSpinner(true);
+    try {
+      const id = selectedBlogCategory.categoryId ?? selectedBlogCategory?.id;
+      if (id == null) throw new Error('Silinecek kaydın ID bilgisi yok.');
+      await axios.delete(`${API_BASE}${ENDPOINTS.BLOG_CATEGORY.DELETE(id)}`);
+      showSuccess('Kayıt silindi!');
+      closeDeleteModal();
+      fetchBlogCategories();
+    } catch (ex) {
+      showError(ex?.response?.data?.message || ex?.message || 'Kayıt silinemedi!');
+    } finally {
+      setSpinner(false);
+    }
+  };
+
+  // render
   return (
-    <div>
-      <h5 className="mb-3">
-        <i className="fa fa-tags me-2" />
-        Blog Kategorileri
-      </h5>
+    <>
+      {/*Toast*/}
+      {/* <ResuabilityToast />*/}
 
-      <div className="row g-3">
-        <div className="col-12 col-xl-5">
-          <div className="card border-0 shadow-sm">
-            <div className="card-header fw-semibold">
-              {editId ? 'Kategoriyi Düzenle' : 'Yeni Kategori Ekle'}
-            </div>
-            <div className="card-body">
-              <form onSubmit={handleSubmit} noValidate>
-                <div className="mb-3">
-                  <label className="form-label">
-                    Ad <span className="text-danger">*</span>
-                  </label>
-                  <input
-                    name="name"
-                    className={`form-control ${invalid.name ? 'is-invalid' : ''}`}
-                    value={form.name}
-                    onChange={onChange}
-                    placeholder="Örn: Java, Frontend..."
-                  />
-                  <div className="invalid-feedback">{errs.name}</div>
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Açıklama</label>
-                  <textarea
-                    name="description"
-                    className={`form-control ${invalid.description ? 'is-invalid' : ''}`}
-                    value={form.description}
-                    onChange={onChange}
-                    placeholder="Kısa açıklama..."
-                    rows={3}
-                  />
-                  <div className="invalid-feedback">{errs.description}</div>
-                </div>
-                <div className="form-check mb-3">
-                  <input
-                    id="visible"
-                    type="checkbox"
-                    name="visible"
-                    className="form-check-input"
-                    checked={!!form.visible}
-                    onChange={onChange}
-                  />
-                  <label htmlFor="visible" className="form-check-label">
-                    Aktif
-                  </label>
-                </div>
-                {errs.general && <div className="text-danger small mb-2">{errs.general}</div>}
-                <div className="d-flex gap-2">
-                  <button className="btn btn-primary" type="submit">
-                    <i className="fa fa-save me-1" />
-                    {editId ? 'Güncelle' : 'Ekle'}
-                  </button>
-                  {editId && (
-                    <button type="button" className="btn btn-outline-secondary" onClick={onCancel}>
-                      İptal
+      <div className="container py-4">
+        <h2 className="text-center mb-4">Blog Kategori Listesi</h2>
+
+        <button className="btn btn-primary mb-3" onClick={openCreateModal}>
+          Yeni kayıt ekle
+        </button>
+
+        <div className="table-responsive">
+          <table className="table table-bordered table-striped align-middle">
+            <thead>
+              <tr>
+                <th style={{ width: 80 }}>ID</th>
+                <th>Kategori Adı</th>
+                <th style={{ width: 120 }}>Görsel</th>
+                <th style={{ width: 160 }}>Oluşturma</th>
+                <th style={{ width: 130 }}>İşlem</th>
+              </tr>
+            </thead>
+            <tbody>
+              {blogCategories.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="text-center text-muted">
+                    Kayıt bulunamadı.
+                  </td>
+                </tr>
+              )}
+              {blogCategories.map((row) => (
+                <tr key={row.categoryId || row.id}>
+                  <td>{row.categoryId || row.id}</td>
+                  <td>{row.categoryName}</td>
+                  <td>
+                    {row.imageUrl ? (
+                      <img
+                        src={resolveImageUrl(row.imageUrl)}
+                        alt="catgoryName"
+                        style={{
+                          maxWidth: 100,
+                          maxHeight: 70,
+                          objectFit: 'contain',
+                          borderRadius: 6,
+                          boxShadow: '0 1px 8px rgba(0,0,0,0.06)',
+                        }}
+                      />
+                    ) : (
+                      <span className="text-muted small">RESİM YOK</span>
+                    )}
+                  </td>
+                  <td>{formatDate(row.systemCreatedDate)}</td>
+                  <td>
+                    <div className="btn-group btn-group-sm">
+                      <button
+                        className="btn btn-outline-secondary"
+                        onClick={() => openViewModal(row)}
+                        title="Detay"
+                      >
+                        <i className="fa fa-eye" />
+                      </button>
+                      <button
+                        className="btn btn-outline-primary"
+                        onClick={() => openEditModal(row)}
+                        title="Düzenle"
+                      >
+                        <i className="fa fa-pen" />
+                      </button>
+                      <button
+                        className="btn btn-outline-danger"
+                        onClick={() => openDeleteModal(row)}
+                        title="Sil"
+                      >
+                        <i className="fa fa-trash" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* CREATE MODAL */}
+        {showCreate && (
+          <div
+            className="modal fade show d-block"
+            tabIndex={-1}
+            role="dialog"
+            style={{ zIndex: 1050 }}
+            onClick={closeCreateModal} // backdrop click
+          >
+            <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-content">
+                <form onSubmit={handleCreate} encType="multipart/form-data">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Yeni Kayıt Ekle</h5>
+                    <button type="button" className="btn-close" onClick={closeCreateModal}></button>
+                  </div>
+                  <div className="modal-body">
+                    <div className="mb-3">
+                      <label className="form-label">Kategori Adı</label>
+                      <input
+                        type="text"
+                        className={`form-control ${formError.categoryName ? 'is-invalid' : ''}`}
+                        name="categoryName"
+                        value={form.categoryName}
+                        onChange={handleFormChange}
+                        required
+                      />
+                      {formError.categoryName && (
+                        <div className="invalid-feedback">{formError.categoryName}</div>
+                      )}
+                    </div>
+
+                    <div className="mb-3">
+                      <label className="form-label">Görsel</label>
+                      <input
+                        type="file"
+                        className="form-control"
+                        name="imageFile"
+                        onChange={handleFormChange}
+                        accept="image/*"
+                      />
+                      {form.imageFile && (
+                        <img
+                          src={URL.createObjectURL(form.imageFile)}
+                          alt="Önizleme"
+                          className="mt-2 rounded"
+                          style={{ maxHeight: 80, maxWidth: 140 }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" onClick={closeCreateModal}>
+                      Kapat
                     </button>
-                  )}
-                </div>
-              </form>
+                    <button type="submit" className="btn btn-primary" disabled={spinner}>
+                      {spinner && <span className="spinner-border spinner-border-sm me-1"></span>}
+                      Kaydet
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Liste */}
-        <div className="col-12 col-xl-7">
-          <div className="card border-0 shadow-sm h-100">
-            <div className="card-header fw-semibold d-flex align-items-center justify-content-between">
-              <span>Mevcut Kategoriler</span>
-              <button
-                className="btn btn-sm btn-outline-secondary"
-                onClick={refresh}
-                disabled={loading}
-              >
-                <i className={`fa ${loading ? 'fa-spinner fa-spin' : 'fa-rotate'}`} /> Yenile
-              </button>
+        {/* EDIT MODAL */}
+        {showEdit && (
+          <div
+            className="modal fade show d-block"
+            tabIndex={-1}
+            role="dialog"
+            style={{ zIndex: 1050 }}
+            onClick={closeEditModal}
+          >
+            <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-content">
+                <form onSubmit={handleEdit} encType="multipart/form-data">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Kaydı Düzenle</h5>
+                    <button type="button" className="btn-close" onClick={closeEditModal}></button>
+                  </div>
+                  <div className="modal-body">
+                    <div className="mb-3">
+                      <label className="form-label">Blog Kategori</label>
+                      <input
+                        type="text"
+                        className={`form-control ${formError.categoryName ? 'is-invalid' : ''}`}
+                        name="categoryName"
+                        value={form.categoryName}
+                        onChange={handleFormChange}
+                        required
+                      />
+                      {formError.categoryName && (
+                        <div className="invalid-feedback">{formError.categoryName}</div>
+                      )}
+                    </div>
+                    <div className="mb-3">
+                      <label className="form-label">Görsel</label>
+                      <input
+                        type="file"
+                        className="form-control"
+                        name="imageFile"
+                        onChange={handleFormChange}
+                        accept="image/*"
+                      />
+                      {form.imageFile ? (
+                        <img
+                          src={URL.createObjectURL(form.imageFile)}
+                          alt="Önizleme"
+                          className="mt-2 rounded"
+                          style={{ maxHeight: 80, maxWidth: 140 }}
+                        />
+                      ) : (
+                        form.imageUrl && (
+                          <img
+                            src={resolveImageUrl(form.imageUrl)}
+                            alt="Önceki"
+                            className="mt-2 rounded"
+                            style={{ maxHeight: 80, maxWidth: 140 }}
+                          />
+                        )
+                      )}
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" onClick={closeEditModal}>
+                      Kapat
+                    </button>
+                    <button type="submit" className="btn btn-primary" disabled={spinner}>
+                      {spinner && <span className="spinner-border spinner-border-sm me-1"></span>}
+                      Kaydet
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
-            <div className="table-responsive">
-              <table className="table align-middle mb-0">
-                <thead className="table-light">
-                  <tr>
-                    <th>#</th>
-                    <th>Ad</th>
-                    <th>Açıklama</th>
-                    <th>Durum</th>
-                    <th className="text-end">İşlem</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map((it, idx) => (
-                    <tr key={it.id ?? it.categoryId ?? idx}>
-                      <td>{idx + 1}</td>
-                      <td>{it.name ?? it.categoryName}</td>
-                      <td className="text-muted">{it.description ?? it.categoryDescription}</td>
-                      <td>
-                        {it.visible ?? it.status ? (
-                          <span className="badge rounded-pill text-bg-success">Aktif</span>
-                        ) : (
-                          <span className="badge rounded-pill text-bg-secondary">Pasif</span>
-                        )}
-                      </td>
-                      <td className="text-end">
-                        <div className="btn-group btn-group-sm">
-                          <button className="btn btn-outline-primary" onClick={() => onEdit(it)}>
-                            <i className="fa fa-pen" />
-                          </button>
-                          <button
-                            className="btn btn-outline-danger"
-                            onClick={() => onDelete(it.id ?? it.categoryId)}
-                          >
-                            <i className="fa fa-trash" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                  {items.length === 0 && (
-                    <tr>
-                      <td colSpan="5" className="text-center text-muted py-4">
-                        Kategori yok.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-            {/* istersen footer'a sayfalama ekleriz */}
           </div>
-        </div>
+        )}
+
+        {/* VIEW MODAL */}
+        {showView && selectedBlogCategory && (
+          <div
+            className="modal fade show d-block"
+            tabIndex={-1}
+            role="dialog"
+            style={{ zIndex: 1050 }}
+            onClick={closeViewModal}
+          >
+            <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Kayıt Detay</h5>
+                  <button type="button" className="btn-close" onClick={closeViewModal}></button>
+                </div>
+                <div className="modal-body">
+                  <div>
+                    <strong>ID:</strong>{' '}
+                    {selectedBlogCategory.categoryId || selectedBlogCategory.id}
+                  </div>
+                  <div>
+                    <strong>Blog Kategori Adı:</strong> {selectedBlogCategory.categoryName}
+                  </div>
+                  <div>
+                    <strong>Görsel:</strong>
+                    <br />
+                    {selectedBlogCategory.imageUrl ? (
+                      <img
+                        src={resolveImageUrl(selectedBlogCategory.imageUrl)}
+                        alt="categoryName"
+                        style={{ maxHeight: 100, maxWidth: 200, borderRadius: 8 }}
+                      />
+                    ) : (
+                      <span className="text-muted small">RESİM YOK</span>
+                    )}
+                  </div>
+                  <div>
+                    <strong>Oluşturma:</strong> {formatDate(selectedBlogCategory.systemCreatedDate)}
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button className="btn btn-secondary" onClick={closeViewModal}>
+                    Kapat
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* DELETE MODAL */}
+        {showDelete && selectedBlogCategory && (
+          <div
+            className="modal fade show d-block"
+            tabIndex={-1}
+            role="dialog"
+            style={{ zIndex: 1050 }}
+            onClick={closeDeleteModal}
+          >
+            <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title text-danger">Silme Onayı</h5>
+                  <button type="button" className="btn-close" onClick={closeDeleteModal}></button>
+                </div>
+                <div className="modal-body">
+                  <div>
+                    <b>{selectedBlogCategory.categoryName}</b> başlıklı kaydı silmek istediğinize
+                    emin misiniz?
+                  </div>
+                  <div className="mt-2 text-muted">
+                    <strong>ID:</strong>{' '}
+                    {selectedBlogCategory.categoryId || selectedBlogCategory.id}
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button className="btn btn-secondary" onClick={closeDeleteModal}>
+                    Vazgeç
+                  </button>
+                  <button className="btn btn-danger" onClick={handleDelete} disabled={spinner}>
+                    {spinner && <span className="spinner-border spinner-border-sm me-1"></span>}
+                    Sil
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TEK BACKDROP */}
+        <GlobalBackdrop
+          show={anyOpen}
+          onClose={() => {
+            /* sadece görsel katman; kapatma wrapper’da */
+          }}
+        />
       </div>
-    </div>
+    </>
   );
 }

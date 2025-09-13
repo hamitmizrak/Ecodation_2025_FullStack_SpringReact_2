@@ -35,6 +35,17 @@ export default function AdminLayout() {
                 Blog Kategorileri
               </NavLink>
 
+
+              <NavLink
+                  to="/admin/blog"
+                  className={({ isActive }) =>
+                      'list-group-item list-group-item-action' + (isActive ? ' active' : '')
+                  }
+              >
+                <i className="fa fa-tags me-2" />
+                Blog
+              </NavLink>
+
               <NavLink
                 to="/admin/about"
                 className={({ isActive }) =>

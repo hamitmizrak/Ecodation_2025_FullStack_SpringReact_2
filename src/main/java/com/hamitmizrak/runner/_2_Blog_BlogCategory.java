@@ -46,7 +46,7 @@ public class _2_Blog_BlogCategory {
             // Tekil Kategory
             BlogCategoryEntity computerCategory=new BlogCategoryEntity();
             computerCategory.setCategoryName("Yazılım");
-            //iBlogCategoryRepository.save(computerCategory);
+            iBlogCategoryRepository.save(computerCategory);
 
             // Tekil Kategory
             BlogCategoryEntity healthCategory=new BlogCategoryEntity();
@@ -63,11 +63,11 @@ public class _2_Blog_BlogCategory {
 
             // Blog-1
             BlogEntity blogEntity1=new BlogEntity();
-            blogEntity1.setHeader("Header-1");
-            blogEntity1.setContent("Content-1");
+            blogEntity1.setHeader("Header-1 Header Header Header Header Header ");
+            blogEntity1.setContent("Content-1 Content Content Content Content ");
             blogEntity1.setTitle("Title-1");
             blogEntity1.setBlogCategoryBlogEntity((computerCategory));
-            //iBlogRepository.save(blogEntity1);
+            iBlogRepository.save(blogEntity1);
 
             // Blog-1
             BlogEntity blogEntity2=new BlogEntity();
