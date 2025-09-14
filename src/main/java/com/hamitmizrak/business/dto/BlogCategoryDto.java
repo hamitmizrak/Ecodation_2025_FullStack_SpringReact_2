@@ -33,10 +33,6 @@ public class BlogCategoryDto extends AuditingAwareBaseDto implements Serializabl
     // ID
     private Long categoryId;
 
-    // DATE
-    @Builder.Default
-    private Date systemCreatedDate=new Date(System.currentTimeMillis());
-
     // CATEGORY NAME
     // kendi Anonotation'ı yazdım.
     @UniqueBlogCategoryValidationName
@@ -44,10 +40,15 @@ public class BlogCategoryDto extends AuditingAwareBaseDto implements Serializabl
     @Size(min=3,message = "{blog.category.least.validation.constraints.NotNull.message}")
     private String categoryName;
 
+    // DATE
+    @Builder.Default
+    private Date systemCreatedDate=new Date(System.currentTimeMillis());
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // COMPOSITION
     // RELATION
     // BlogCategory(1) - Blog(N)
-    private List<BlogDto>  blogDtoList;
+    // Döngü önlemek için burada BlogDto listesi DOLDURMAYACAĞIZ.
+    //private List<BlogDto>  blogDtoList;
 
 } //end class

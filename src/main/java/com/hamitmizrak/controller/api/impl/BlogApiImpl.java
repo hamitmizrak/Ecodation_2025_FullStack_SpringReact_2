@@ -27,7 +27,6 @@ public abstract class BlogApiImpl implements IBlogApi<BlogDto> {
     // Injection
     private final IBlogServices iBlogServices;
 
-
     //////////////////////////////////////////////////////////////////////////////////////////
     // SPEED DATA
     @Override
@@ -45,22 +44,20 @@ public abstract class BlogApiImpl implements IBlogApi<BlogDto> {
 
     //////////////////////////////////////////////////////////////////////////////////////////
     ///
-    ///
 
     // CREATE
     // http://localhost:4444/blog/api/v1.0.0/create/1
     // Blog(N) - Category(1)
     @PostMapping("/create/{categoryId}")
     @Override
-    public ResponseEntity<ApiResult<?>> objectApiCreate(@Valid @RequestBody BlogDto blogDto, Long categoryId) {
+    public ResponseEntity<ApiResult<?>> create(
+            @PathVariable(name = "categoryId") Long categoryId,
+            @Valid @RequestBody BlogDto blogDto) {
         try {
-            BlogCategoryDto blogCategoryDto = new BlogCategoryDto();
-            blogCategoryDto.setCategoryId(categoryId);
-            blogDto.setBlogCategoryDto(blogCategoryDto);
-            BlogDto created = (BlogDto) iBlogServices.objectServiceCreate(blogDto);
-            return ResponseEntity.ok(ApiResult.success(created));
-        } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/api/v1.0.0/create"));
+            BlogDto saved = (BlogDto) iBlogServices.create(categoryId, blogDto);
+            return ResponseEntity.ok(ApiResult.success(saved));
+        }catch (Exception ex) {
+            return ResponseEntity.ok(ApiResult.error("serverError Create", ex.getMessage(), "/blog/api/v1.0.0/create"));
         }
     }
 
@@ -73,7 +70,7 @@ public abstract class BlogApiImpl implements IBlogApi<BlogDto> {
             List<BlogDto> list = iBlogServices.objectServiceList();
             return ResponseEntity.ok(ApiResult.success(list));
         } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/api/v1.0.0/list"));
+            return ResponseEntity.ok(ApiResult.error("serverError List", ex.getMessage(), "/blog/api/v1.0.0/list"));
         }
     }
 
@@ -89,28 +86,28 @@ public abstract class BlogApiImpl implements IBlogApi<BlogDto> {
             BlogDto found = (BlogDto) iBlogServices.objectServiceFindById(id);
             return ResponseEntity.ok(ApiResult.success(found));
         } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/api/v1.0.0/find"));
+            return ResponseEntity.ok(ApiResult.error("serverError Find", ex.getMessage(), "/blog/api/v1.0.0/find"));
         }
     }
+
 
     // UPDATE
     // http://localhost:4444/blog/api/v1.0.0/update/1/2
-
-
     @PutMapping(value = "/update/{id}/{categoryId}")
     @Override
-    public ResponseEntity<ApiResult<?>> objectApiUpdate(@PathVariable(name = "id") Long id, @Valid @RequestBody BlogDto blogDto, @PathVariable(name = "categoryId") Long categoryId) {
-        BlogCategoryDto blogCategoryDto = new BlogCategoryDto();
-        blogCategoryDto.setCategoryId(categoryId);
-        blogDto.setBlogCategoryDto(blogCategoryDto);
+    public ResponseEntity<ApiResult<?>> update(
+            @PathVariable(name = "id") Long id,
+            @PathVariable(name = "categoryId")  Long categoryId,
+            @Valid @RequestBody BlogDto dto) {
 
         try {
-            BlogDto updated = (BlogDto) iBlogServices.objectServiceUpdate(id, blogDto);
+            BlogDto updated = (BlogDto) iBlogServices.update(id, categoryId, dto);
             return ResponseEntity.ok(ApiResult.success(updated));
         } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/api/v1.0.0/update"));
+            return ResponseEntity.ok(ApiResult.error("serverError Update", ex.getMessage(), "/blog/api/v1.0.0/update"));
         }
     }
+
 
     // DELETE BY ID
     // http://localhost:4444/blog/api/v1.0.0/delete/1
@@ -121,7 +118,7 @@ public abstract class BlogApiImpl implements IBlogApi<BlogDto> {
             String deleted = iBlogServices.objectServiceDelete(id).toString();
             return ResponseEntity.ok(ApiResult.success(deleted));
         } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/api/v1.0.0/delete"));
+            return ResponseEntity.ok(ApiResult.error("serverError Delete", ex.getMessage(), "/blog/api/v1.0.0/delete"));
         }
     }
 

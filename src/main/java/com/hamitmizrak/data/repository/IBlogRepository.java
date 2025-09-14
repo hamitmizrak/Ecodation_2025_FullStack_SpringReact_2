@@ -11,9 +11,11 @@ import java.util.Optional;
 // JpaRepository<RegisterEntity,Long>
 // PagingAndSortingRepository<RegisterEntity,Long>
 @Repository
-public interface IBlogRepository extends JpaRepository<BlogEntity,Long> {
+public interface IBlogRepository  extends JpaRepository<BlogEntity, Long> {
 
     // Delivered Query (Kendi sorgumu yazdım)
     Optional<BlogEntity> findBlogEntityByHeader(String header);
+
+    // Gerekirse ek sorgular
 
 }

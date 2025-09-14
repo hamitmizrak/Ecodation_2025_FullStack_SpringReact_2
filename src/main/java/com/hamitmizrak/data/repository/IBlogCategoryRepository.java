@@ -1,7 +1,7 @@
 package com.hamitmizrak.data.repository;
 
 import com.hamitmizrak.data.entity.BlogCategoryEntity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -11,8 +11,9 @@ import java.util.Optional;
 // PagingAndSortingRepository<RegisterEntity,Long>
 
 @Repository
-public interface IBlogCategoryRepository extends CrudRepository<BlogCategoryEntity,Long> {
+public interface IBlogCategoryRepository extends JpaRepository<BlogCategoryEntity, Long> {
+    Optional<BlogCategoryEntity> findByCategoryNameIgnoreCase(String categoryName);
+    boolean existsByCategoryNameIgnoreCase(String categoryName);
 
-    // Delivered Query (Kendi sorgumu yazdım)
-    Optional<BlogCategoryEntity> findByCategoryName(String categoryName);
+    // Gerekirse ek sorgular
 }

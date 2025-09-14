@@ -10,40 +10,38 @@ import com.hamitmizrak.data.entity.BlogEntity;
 public class BlogMapper {
 
     // 1- BlogEntity'i BlogDto'a çevir
-    public static BlogDto BlogEntityToBlogDto(BlogEntity blogEntity) {
-        // Instance(BlogDto)
-        BlogDto blogDto = new BlogDto();
+    public static BlogDto BlogEntityToBlogDto(BlogEntity e) {
+        // Eğer Entity içinde birşey yoksa null dönder
+        if (e == null) return null;
 
-        // Field
-        blogDto.setBlogId(blogEntity.getBlogId());
-        blogDto.setHeader(blogEntity.getHeader());
-        blogDto.setTitle(blogEntity.getTitle());
-        blogDto.setContent(blogEntity.getContent());
-        blogDto.setImage(blogEntity.getImage());
-
-        // DİKKAT: Composition (Blog(N)- BlogCategory(1))
-        if (blogEntity.getBlogCategoryBlogEntity() != null) {
-            blogDto.setBlogCategoryDto(BlogCategoryMapper.BlogCategoryEntityToBlogCategoryDto(blogEntity.getBlogCategoryBlogEntity()));
-        }
-        return blogDto;
+        return BlogDto.builder()
+                .blogId(e.getBlogId())
+                .header(e.getHeader())
+                .title(e.getTitle())
+                .content(e.getContent())
+                .image(e.getImage())
+                .systemCreatedDate(e.getSystemCreatedDate())
+                // DİKKAT: Composition (Blog(N)- BlogCategory(1))
+                // Kategori yalnızca temel alanlar (id, name) doldurulur
+                .blogCategoryDto(BlogCategoryMapper. BlogCategoryEntityToBlogCategoryDto(e.getBlogCategoryBlogEntity())).build();
     }
 
     // 2- BlogDto'u BlogEntity'e  çevir
-    public static BlogEntity BlogDtoToBlogEntity(BlogDto blogDto) {
-        // Instance(BlogEntity)
-        BlogEntity blogEntity = new BlogEntity();
+    public static BlogEntity BlogDtoToBlogEntity(BlogDto d) {
+        // Eğer Entity içinde birşey yoksa null dönder
+        if (d == null) return null;
 
-        // Field
-        blogEntity.setBlogId(blogDto.getBlogId());
-        blogEntity.setHeader(blogDto.getHeader());
-        blogEntity.setTitle(blogDto.getTitle());
-        blogEntity.setContent(blogDto.getContent());
-        blogEntity.setImage(blogDto.getImage());
+        BlogEntity e = BlogEntity.builder()
+                .blogId(d.getBlogId())
+                .header(d.getHeader())
+                .title(d.getTitle())
+                .content(d.getContent())
+                .image(d.getImage())
+                .build();
 
-        // DİKKAT: Composition (Order(N)- Customer(1))
-        if (blogDto.getBlogCategoryDto() != null) {
-            blogEntity.setBlogCategoryBlogEntity(BlogCategoryMapper.BlogCategoryDtoToBlogCategoryEntity(blogDto.getBlogCategoryDto()));
+        if (d.getBlogCategoryDto() != null) {
+            e.setBlogCategoryBlogEntity(BlogCategoryMapper.BlogCategoryDtoToBlogCategoryEntity(d.getBlogCategoryDto()));
         }
-        return blogEntity;
+        return e;
     }
 }

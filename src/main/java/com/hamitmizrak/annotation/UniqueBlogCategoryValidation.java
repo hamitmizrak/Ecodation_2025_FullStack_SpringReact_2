@@ -17,7 +17,7 @@ public class UniqueBlogCategoryValidation implements ConstraintValidator<UniqueB
     // Database'de bu kategori isminden var mı ?
     @Override
     public boolean isValid(String categoryName, ConstraintValidatorContext constraintValidatorContext) {
-        Boolean isOtherCategoryName=iCategoryRepository.findByCategoryName(categoryName).isPresent();
+        Boolean isOtherCategoryName=iCategoryRepository.findByCategoryNameIgnoreCase(categoryName).isPresent();
         //Eğer database böyle bir category adı varsa bilgilendirme yapsın
         if(isOtherCategoryName){
             return false;

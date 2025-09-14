@@ -94,31 +94,17 @@ public class BlogCategoryServicesImpl implements IBlogCategoryServices<BlogCateg
     @Override
     @Transactional // create, delete, update
     public BlogCategoryDto objectServiceCreate(BlogCategoryDto blogCategoryDto) {
-        if (blogCategoryDto != null) {
-            BlogCategoryEntity categoryEntity = dtoToEntity(blogCategoryDto);
-            iCategoryRepository.save(categoryEntity);
-            blogCategoryDto.setCategoryId(categoryEntity.getCategoryId());
-            blogCategoryDto.setSystemCreatedDate(categoryEntity.getSystemCreatedDate());
-        } else {
-            throw new NullPointerException(" CategoryDto null veri");
+        if (iCategoryRepository.existsByCategoryNameIgnoreCase(blogCategoryDto.getCategoryName())) {
+            throw new HamitMizrakException("Bu kategori zaten kayıtlı: " + blogCategoryDto.getCategoryName());
         }
-        return blogCategoryDto;
+        BlogCategoryEntity saved = iCategoryRepository.save(BlogCategoryMapper.BlogCategoryDtoToBlogCategoryEntity(blogCategoryDto));
+        return BlogCategoryMapper.BlogCategoryEntityToBlogCategoryDto(saved);
     }
 
     // LIST
     @Override
     public List<BlogCategoryDto> objectServiceList() {
-        // Database blogCategory listesini çağırsın
-        Iterable<BlogCategoryEntity> entityIterable = iCategoryRepository.findAll();
-
-        // Dto To entityb List
-        List<BlogCategoryDto> categoryDtoList = new ArrayList<>();
-        for (BlogCategoryEntity entity : entityIterable) {
-            BlogCategoryDto categoryDto = entityToDto(entity);
-            categoryDtoList.add(categoryDto);
-        }
-        log.info("Liste Sayısı: " + categoryDtoList.size());
-        return categoryDtoList;
+        return iCategoryRepository.findAll().stream().map(BlogCategoryMapper::BlogCategoryEntityToBlogCategoryDto  ).toList();
     }
 
     // FIND
@@ -134,14 +120,9 @@ public class BlogCategoryServicesImpl implements IBlogCategoryServices<BlogCateg
         */
 
         // 2.YOL (FIND)
-        BlogCategoryEntity findCategoryEntity = null;
-        if (id != null) {
-            findCategoryEntity = iCategoryRepository.findById(id)
-                    .orElseThrow(() -> new _404_NotFoundException((id + " nolu id yoktur")));
-        } else if (id == null) {
-            throw new HamitMizrakException("İd null olarak geldi");
-        }
-        return entityToDto(findCategoryEntity);
+        BlogCategoryEntity e = iCategoryRepository.findById(id)
+                .orElseThrow(() -> new _404_NotFoundException(id + " id'li kategori bulunamadı"));
+        return BlogCategoryMapper.BlogCategoryEntityToBlogCategoryDto(e);
     }
 
     // UPDATE
@@ -149,14 +130,13 @@ public class BlogCategoryServicesImpl implements IBlogCategoryServices<BlogCateg
     @Transactional // create, delete, update
     public BlogCategoryDto objectServiceUpdate(Long id, BlogCategoryDto categoryDto) {
         // Önce Database'den id ile ilgili nesneyi Bul
-        BlogCategoryDto categoryFindDto = objectServiceFindById(id);
-        if (categoryFindDto != null) {
-            BlogCategoryEntity categoryEntity = dtoToEntity(categoryFindDto);
-            categoryEntity.setCategoryName(categoryDto.getCategoryName());
-            iCategoryRepository.save(categoryEntity);
-            // Dönüştede ID ve Date Set et
+        BlogCategoryEntity e = iCategoryRepository.findById(id)
+                .orElseThrow(() -> new _404_NotFoundException(id + " id'li kategori bulunamadı"));
+
+        if (categoryDto.getCategoryName() != null && !categoryDto.getCategoryName().isBlank()) {
+            e.setCategoryName(categoryDto.getCategoryName());
         }
-        return categoryDto;
+        return BlogCategoryMapper.BlogCategoryEntityToBlogCategoryDto(iCategoryRepository.save(e));
     }
 
     // DELETE
@@ -164,11 +144,10 @@ public class BlogCategoryServicesImpl implements IBlogCategoryServices<BlogCateg
     @Transactional // create, delete, update
     public BlogCategoryDto objectServiceDelete(Long id) {
         // Önce Bul
-        BlogCategoryDto categoryFindDto = objectServiceFindById(id);
-        if (categoryFindDto != null) {
-            iCategoryRepository.deleteById(id);
-            // Dönüştede ID ve Date Set et
+        if (!iCategoryRepository.existsById(id)) {
+            throw new _404_NotFoundException(id + " id'li kategori bulunamadı");
         }
-        return categoryFindDto;
+        iCategoryRepository.deleteById(id);
+        return null;
     }
 } //end class

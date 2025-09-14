@@ -11,28 +11,28 @@ import lombok.extern.log4j.Log4j2;
 public class BlogCategoryMapper {
 
     // 1- CustomerEntity'i CustomerDto'a çevir
-    public static BlogCategoryDto BlogCategoryEntityToBlogCategoryDto(BlogCategoryEntity blogCategoryEntity){
+    public static BlogCategoryDto BlogCategoryEntityToBlogCategoryDto(BlogCategoryEntity e){
+        // Eğer Entity içinde birşey yoksa null dönder
+        if (e == null) return null;
+
         // Instance (CustomerDto)
-        BlogCategoryDto blogCategoryDto= new BlogCategoryDto();
-
-        //ID,SYSTEM DATE
-        blogCategoryDto.setCategoryId(blogCategoryEntity.getCategoryId());
-        blogCategoryDto.setCategoryName(blogCategoryEntity.getCategoryName());
-
         // DİKKAT: Composition (Customer(1) -Order(N))
-        return blogCategoryDto;
+        return BlogCategoryDto.builder()
+                .categoryId(e.getCategoryId())
+                .categoryName(e.getCategoryName())
+                .systemCreatedDate(e.getSystemCreatedDate())
+                .build();
     }
 
     // 2- CustomerDto'u CustomerEntity'e  çevir
-    public static BlogCategoryEntity BlogCategoryDtoToBlogCategoryEntity(BlogCategoryDto blogCategoryDto){
-        // Instance (CustomerEntity)
-        BlogCategoryEntity blogCategoryEntity= new BlogCategoryEntity();
-
-        //ID,SYSTEM DATE
-        blogCategoryEntity.setCategoryId(blogCategoryDto.getCategoryId());
-        blogCategoryEntity.setCategoryName  (blogCategoryDto.getCategoryName());
+    public static BlogCategoryEntity BlogCategoryDtoToBlogCategoryEntity(BlogCategoryDto d){
+        // Eğer Dto içinde birşey yoksa null dönder
+        if (d == null) return null;
 
         // DİKKAT: Composition (Customer(1) -Order(N))
-        return blogCategoryEntity;
+        return BlogCategoryEntity.builder()
+                .categoryId(d.getCategoryId())
+                .categoryName(d.getCategoryName())
+                .build();
     } // end BlogCategoryDtoToBlogCategoryEntity
 } // end BlogCategoryMapper

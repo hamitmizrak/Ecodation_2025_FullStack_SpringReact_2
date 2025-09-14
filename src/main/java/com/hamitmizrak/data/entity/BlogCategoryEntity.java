@@ -22,7 +22,7 @@ import java.util.List;
 
 // ENTITY
 @Entity(name = "BlogCategories") // Sql JOIN için yazdım
-@Table(name = "blogCategory")
+@Table(name = "blog_categories")
 
 // Category(1) Blog(N)
 public class BlogCategoryEntity extends AuditingAwareBaseEntity implements Serializable {
@@ -45,15 +45,11 @@ public class BlogCategoryEntity extends AuditingAwareBaseEntity implements Seria
     @Temporal(TemporalType.TIMESTAMP)
     private Date systemCreatedDate;
 
-    // Constructor (parametreli)
-
-    // Constructor (parametreli)
-
     //////////////////////////////////////////////////////////////////////////////////////
     // COMPOSITION
     // RELATION
     // BlogCategory(1) - Blog(N)
-    @OneToMany(mappedBy = "blogCategoryBlogEntity",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "blogCategoryBlogEntity",fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
     List<BlogEntity> blogCategoryBlogEntityList;
 
 } //end class

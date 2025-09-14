@@ -1,11 +1,12 @@
 package com.hamitmizrak.business.services.impl;
 
-
 import com.hamitmizrak.bean.ModelMapperBean;
 import com.hamitmizrak.business.dto.BlogDto;
 import com.hamitmizrak.business.services.interfaces.IBlogServices;
+import com.hamitmizrak.data.entity.BlogCategoryEntity;
 import com.hamitmizrak.data.entity.BlogEntity;
 import com.hamitmizrak.data.mapper.BlogMapper;
+import com.hamitmizrak.data.repository.IBlogCategoryRepository;
 import com.hamitmizrak.data.repository.IBlogRepository;
 import com.hamitmizrak.exception.HamitMizrakException;
 import com.hamitmizrak.exception._404_NotFoundException;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // LOMBOK
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
 
     // INJECTION (Lombok Constructor Field) => 3.YOL
     private final IBlogRepository iBlogRepository;
+    private final IBlogCategoryRepository iBlogCategoryRepository;
     private final ModelMapperBean modelMapperBeanClass;
 
     //////////////////////////////////////////////////////////////////////////////
@@ -63,12 +66,12 @@ public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
         return BlogMapper.BlogDtoToBlogEntity(blogDto);
     }
 
+
     //////////////////////////////////////////////////////////////////////////////
-    // CREATE
+    // CREATE  (Blog)
     @Override
-    @Transactional // create, delete, update
     public BlogDto  objectServiceCreate(BlogDto blogDto) {
-        if(blogDto!=null){
+     /*   if(blogDto!=null){
             // dto <=> Entity
             BlogEntity blogEntity=dtoToEntity(blogDto);
 
@@ -80,13 +83,32 @@ public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
             blogDto.setSystemCreatedDate(blogEntity.getSystemCreatedDate());
         }else{
             throw  new NullPointerException("blogdto null veri");
-        }
+        }*/
         return blogDto;
+    }
+
+    // CREATE  (Blog+BlogCategory)
+    @Override
+    @Transactional // create, delete, update
+    public BlogDto create(Long categoryId, BlogDto dto) {
+        // 1- Öncelikle BlogCategory bul
+        BlogCategoryEntity categoryEntity =iBlogCategoryRepository.findById(categoryId)
+                .orElseThrow(()-> new _404_NotFoundException(categoryId + "- id'li kategori bulunamadi")
+        );
+
+        // 2- BlogEntity
+        // 1.YOL ==> BlogEntity blogEntity = BlogMapper.BlogDtoToBlogEntity(dto);
+        // 2.YOL
+        BlogEntity blogEntity =  dtoToEntity(dto);
+        blogEntity.setBlogCategoryBlogEntity(categoryEntity);
+        return entityToDto(iBlogRepository.save(blogEntity));
     }
 
     // LIST
     @Override
     public List<BlogDto> objectServiceList() {
+        // 1.YOL
+        /*
         // Database verileri al
         Iterable<BlogEntity> entityIterable=  iBlogRepository.findAll();
         // Dto To entity List
@@ -96,7 +118,14 @@ public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
             categoryDtoList.add(blogDto);
         }
         log.info("Liste Sayısı: "+categoryDtoList.size());
-        return categoryDtoList;
+          return categoryDtoList;
+        */
+
+        // 2.YOL
+        //return iBlogRepository.findAll().stream().map(BlogMapper::BlogEntityToBlogDto).collect(Collectors.toList());
+
+        // 3.YOL
+        return iBlogRepository.findAll().stream().map(BlogMapper::BlogEntityToBlogDto).toList();
     }
 
     // FIND
@@ -112,32 +141,63 @@ public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
         */
 
         // 2.YOL (FIND)
-        BlogEntity findBlogEntity=  null;
+       /* BlogEntity findBlogEntity=  null;
         if(id!=null){
             findBlogEntity=  iBlogRepository.findById(id)
                     .orElseThrow(()->new _404_NotFoundException((id+" nolu id yoktur")));
         }else if(id==null) {
             throw new HamitMizrakException("İd null olarak geldi");
         }
-        return entityToDto(findBlogEntity);
+         return entityToDto(findBlogEntity);
+        */
+
+        // 3.YOL
+       /* BlogEntity blogEntity = iBlogRepository.findById(id)
+                .orElseThrow(()-> new _404_NotFoundException(id + "- id'li kategori"));
+        return BlogMapper.BlogEntityToBlogDto(blogEntity);*/
+
+        // 4.YOL
+        /*
+        BlogEntity blogEntity = iBlogRepository.findById(id)
+                .orElseThrow(()-> new _404_NotFoundException(id + "- id'li kategori"));
+        return entityToDto(blogEntity);
+        */
+
+        // 5.YOL
+        return entityToDto(iBlogRepository.findById(id)
+                .orElseThrow(()-> new _404_NotFoundException(id + "- id'li kategori")));
     }
 
     // UPDATE
     @Override
-    @Transactional // create, delete, update
     public BlogDto objectServiceUpdate(Long id, BlogDto blogDto) {
-        // Önce Bul
-        BlogDto blogFindDto= objectServiceFindById(id);
-       if(blogFindDto!=null){
-           BlogEntity blogEntity=dtoToEntity(blogFindDto);
-           blogEntity.setTitle(blogDto.getTitle());
-           blogEntity.setHeader(blogDto.getHeader());
-           blogEntity.setContent(blogDto.getContent());
-           blogEntity.setImage(blogDto.getImage());
-           iBlogRepository.save(blogEntity);
-           // Dönüştede ID ve Date Set et
-       }
+
         return blogDto;
+    }
+
+    @Override
+    @Transactional // create, delete, update
+    public BlogDto update(Long id, Long categoryId, BlogDto dto) {
+        // 1- BlogEntity bul
+        BlogEntity blogEntity = iBlogRepository.findById(id)
+                .orElseThrow(() -> new _404_NotFoundException(id + "- id'li kategori"));
+
+        // 2- Set
+        if(dto.getHeader()!=null && !dto.getHeader().isBlank()) blogEntity.setHeader(dto.getHeader());
+        if(dto.getTitle()!=null && !dto.getTitle().isBlank()) blogEntity.setTitle(dto.getTitle());
+        if(dto.getContent()!=null && !dto.getContent().isBlank()) blogEntity.setContent(dto.getContent());
+        if(dto.getImage()!=null && !dto.getImage().isBlank()) blogEntity.setImage(dto.getImage());
+
+        // 3-
+        if (categoryId !=null){
+            BlogCategoryEntity blogCategoryEntity =iBlogCategoryRepository.findById(categoryId)
+                    .orElseThrow(()-> new _404_NotFoundException(categoryId + "- id'li kategori"));
+            // BlogEntity içine şimdi bulduğumuz BlogCategoryEntity yazdım
+            blogEntity.setBlogCategoryBlogEntity(blogCategoryEntity);
+        }
+        // 1.YOL
+        //return BlogMapper.BlogEntityToBlogDto(iBlogRepository.save(blogEntity));
+        return entityToDto (iBlogRepository.save(blogEntity));
     }
 
     // DELETE
@@ -145,12 +205,20 @@ public class BlogServicesImpl implements IBlogServices<BlogDto, BlogEntity> {
     @Transactional // create, delete, update
     public BlogDto objectServiceDelete(Long id) {
         // Önce Bul
-        BlogDto categoryFindDto= objectServiceFindById(id);
+        // 1.YOL
+       /* BlogDto categoryFindDto= objectServiceFindById(id);
         if(categoryFindDto!=null){
             iBlogRepository.deleteById(id);
             // Dönüştede ID ve Date Set et
         }
-        return categoryFindDto;
+        return categoryFindDto;*/
+
+        //2.YOL
+        if(!iBlogRepository.existsById(id)) {
+            throw new _404_NotFoundException(id + "- id'li kategori");
+        }
+        iBlogRepository.deleteById(id);
+        return objectServiceFindById(id);
     }
 
 } //end class

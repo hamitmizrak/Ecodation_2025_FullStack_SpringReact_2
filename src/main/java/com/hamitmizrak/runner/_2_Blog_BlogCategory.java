@@ -67,7 +67,7 @@ public class _2_Blog_BlogCategory {
             blogEntity1.setContent("Content-1 Content Content Content Content ");
             blogEntity1.setTitle("Title-1");
             blogEntity1.setBlogCategoryBlogEntity((computerCategory));
-            iBlogRepository.save(blogEntity1);
+            //iBlogRepository.save(blogEntity1);
 
             // Blog-1
             BlogEntity blogEntity2=new BlogEntity();

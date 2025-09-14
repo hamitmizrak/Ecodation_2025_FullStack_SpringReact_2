@@ -31,10 +31,6 @@ public class BlogDto extends AuditingAwareBaseDto implements Serializable {
     // ID
     private Long blogId;
 
-    // DATE
-    @Builder.Default
-    private Date systemCreatedDate=new Date(System.currentTimeMillis());
-
     // HEADER
     @NotEmpty(message ="{blog.header.validation.constraints.NotNull.message}")
     @Size(min=10,message = "{blog.header.least.validation.constraints.NotNull.message}")
@@ -55,6 +51,10 @@ public class BlogDto extends AuditingAwareBaseDto implements Serializable {
     @NotEmpty(message = "{blog.title.validation.constraints.NotNull.message}")
     @Builder.Default
     private String image="resim.png";
+
+    // DATE
+    @Builder.Default
+    private Date systemCreatedDate=new Date(System.currentTimeMillis());
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // COMPOSITION

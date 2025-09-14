@@ -20,13 +20,11 @@ public interface IBlogApi<D> extends ICrudApi<D> {
     // SPEED DATA
     public ResponseEntity<List<D>> blogApiSpeedData(Long key);
 
+    // Relation
     // CREATE
-    // http://localhost:4444/blog/api/v1/create
-    // Blog(N) - Category(1)
-    ResponseEntity<ApiResult<?>> objectApiCreate(BlogDto blogDto, Long categoryId);
+    public ResponseEntity<ApiResult<?>> create(Long categoryId, BlogDto dto);
 
     // UPDATE
-    // http://localhost:4444/blog/api/v1/update/1/2
-    ResponseEntity<ApiResult<?>> objectApiUpdate( Long id,BlogDto blogDto,Long categoryId);
+    public ResponseEntity<ApiResult<?>> update(Long id, Long categoryId, BlogDto dto);
 
 }

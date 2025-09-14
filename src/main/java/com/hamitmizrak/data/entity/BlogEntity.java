@@ -20,8 +20,7 @@ import java.util.Date;
 
 // ENTITY
 @Entity(name = "Blogs") // Sql JOIN için yazdım
-@Table(name = "blog")
-
+@Table
 // Blog(N)  Category(1)
 public class BlogEntity extends AuditingAwareBaseEntity implements Serializable {
 
@@ -36,6 +35,7 @@ public class BlogEntity extends AuditingAwareBaseEntity implements Serializable 
 
 
     // HEADER
+    @Lob
     @Column(
             name = "header",
             nullable = false,
