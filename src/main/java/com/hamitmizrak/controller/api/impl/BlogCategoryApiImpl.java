@@ -8,107 +8,88 @@ import com.hamitmizrak.utily.FrontEnd;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// LOMBOK
 @RequiredArgsConstructor
 @Log4j2
-
-// API
 @RestController
-@CrossOrigin(origins = FrontEnd.REACT_URL)
 @RequestMapping("/blog/category/api/v1.0.0")
+@CrossOrigin(origins = FrontEnd.REACT_URL)
 public class BlogCategoryApiImpl implements IBlogCategoryApi<BlogCategoryDto> {
 
-    // Injection
-    private final IBlogCategoryServices iCategoryServices;
+    private final IBlogCategoryServices<BlogCategoryDto, ?> iCategoryServices;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    // SPEED DATA (Değişmeden kaldı)
-    @Override
-    @GetMapping(value="/speed/{id}")
-    public ResponseEntity<String> categoryApiSpeedData(@PathVariable(name = "id") Integer data) {
-        return ResponseEntity.ok(iCategoryServices.categorySpeedData(data));
-    }
-
-    // ALL DELETE (Değişmeden kaldı)
-    @Override
-    @DeleteMapping(value="/delete/all")
-    public ResponseEntity<String> categoryApiAllDelete() {
-        return ResponseEntity.ok(iCategoryServices.categoryDeleteAll());
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
     // CREATE
-    // localhost:4444/blog/category/api/v1.0.0/create
-    @Override
     @PostMapping("/create")
-    public ResponseEntity<ApiResult<?>> objectApiCreate(@Valid @RequestBody BlogCategoryDto categoryDto) {
+    @Override
+    public ResponseEntity<ApiResult<?>> objectApiCreate(@Valid @RequestBody BlogCategoryDto d) {
         try {
-            BlogCategoryDto created = (BlogCategoryDto) iCategoryServices.objectServiceCreate(categoryDto);
-            return ResponseEntity.ok(ApiResult.success(created));
+            return ResponseEntity.ok(ApiResult.success(iCategoryServices.objectServiceCreate(d)));
         } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/category/api/v1/create"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/category/api/v1.0.0/create"));
         }
     }
 
     // LIST
-    // localhost:4444/blog/category/api/v1.0.0/list
+    @GetMapping("/list")
     @Override
-    @GetMapping(value="/list")
     public ResponseEntity<ApiResult<List<BlogCategoryDto>>> objectApiList() {
         try {
-            List<BlogCategoryDto> list = iCategoryServices.objectServiceList();
-            return ResponseEntity.ok(ApiResult.success(list));
+            List<BlogCategoryDto> data = iCategoryServices.objectServiceList();
+            return ResponseEntity.ok(ApiResult.success(data));
         } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/category/api/v1/list"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/category/api/v1.0.0/list"));
         }
     }
 
     // FIND
-    // localhost:4444/blog/category/api/v1.0.0/find/1
+    @GetMapping("/find/{id}")
     @Override
-    @GetMapping(value="/find/{id}")
-    public ResponseEntity<ApiResult<?>> objectApiFindById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<ApiResult<?>> objectApiFindById(@PathVariable Long id) {
         try {
-            if (id == null) {
-                return ResponseEntity.ok(ApiResult.notFound("Id değeri boş", "/blog/category/api/v1/find"));
-            }
-            BlogCategoryDto found = (BlogCategoryDto) iCategoryServices.objectServiceFindById(id);
-            return ResponseEntity.ok(ApiResult.success(found));
+            return ResponseEntity.ok(ApiResult.success(iCategoryServices.objectServiceFindById(id)));
         } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/category/api/v1/find"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/category/api/v1.0.0/find/"+id));
         }
     }
 
     // UPDATE
-    // localhost:4444/blog/category/api/v1.0.0/update/1
+    @PutMapping("/update/{id}")
     @Override
-    @PutMapping(value="/update/{id}")
-    public ResponseEntity<ApiResult<?>> objectApiUpdate(@PathVariable(name = "id") Long id, @Valid @RequestBody BlogCategoryDto categoryDto) {
+    public ResponseEntity<ApiResult<?>> objectApiUpdate(@PathVariable Long id,
+                                                        @Valid @RequestBody BlogCategoryDto d) {
         try {
-            BlogCategoryDto updated = (BlogCategoryDto) iCategoryServices.objectServiceUpdate(id, categoryDto);
-            return ResponseEntity.ok(ApiResult.success(updated));
+            return ResponseEntity.ok(ApiResult.success(iCategoryServices.objectServiceUpdate(id, d)));
         } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/category/api/v1/update"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/category/api/v1.0.0/update/"+id));
         }
     }
 
-    // DELETE BY ID
-    // localhost:4444/blog/category/api/v1.0.0/delete/1
+    // DELETE
+    @DeleteMapping("/delete/{id}")
     @Override
-    @DeleteMapping(value="/delete/{id}")
-    public ResponseEntity<ApiResult<?>> objectApiDelete(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<ApiResult<?>> objectApiDelete(@PathVariable Long id) {
         try {
-            String deleted = iCategoryServices.objectServiceDelete(id).toString();
-            return ResponseEntity.ok(ApiResult.success(deleted));
+            return ResponseEntity.ok(ApiResult.success(iCategoryServices.objectServiceDelete(id)));
         } catch (Exception ex) {
-            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/category/api/v1/delete"));
+            return ResponseEntity.ok(ApiResult.error("serverError", ex.getMessage(), "/blog/category/api/v1.0.0/delete/"+id));
         }
     }
 
-} // end BlogCategoryApiImpl
+    // SPEED DATA  (React tarafında kullanmasan da faydalı)
+    @PostMapping("/speed-data/{count}")
+    @Override
+    public ResponseEntity<String> categoryApiSpeedData(@PathVariable("count") Integer count) {
+        return ResponseEntity.ok(iCategoryServices.categorySpeedData(count == null ? 0 : count));
+    }
+
+    // ALL DELETE
+    @DeleteMapping("/all-delete")
+    @Override
+    public ResponseEntity<String> categoryApiAllDelete() {
+        return ResponseEntity.ok(iCategoryServices.categoryDeleteAll());
+    }
+}

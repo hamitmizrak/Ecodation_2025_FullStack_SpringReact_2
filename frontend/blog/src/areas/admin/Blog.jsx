@@ -1,15 +1,14 @@
-// Blog.jsx (Final)
-// Backend sözleşmesi ile tam uyumlu (create/{categoryId}, update/{id}/{categoryId})
-// Blog alanları: blogId, header, title, content, image (string), systemCreatedDate
-// Kategori seçimi için dropdown (BlogCategory listesi)
-// Filtreleme + sıralama + sayfalama
+// Blog.jsx — FINAL (octet-stream hatası çözülmüş sürüm)
+// Özellikler: Arama | Sıralama | Sayfalama | Modal (ESC/backdrop) | Dosya önizleme/silme | Toast bildirimleri
+// ÖNEMLİ: Multipart gönderimde header set ETME — tarayıcı boundary'i eklesin.
+//         @RequestPart("blog") için JSON'u Blob ile 'application/json' tipinde gönder.
 
 import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { API_BASE, ENDPOINTS, IMAGE_BASE } from '../../config/api';
-import { showSuccess, showError } from './resuability/toastHelper'; // varsa kullan; yoksa console.log
+import { showSuccess, showError } from './resuability/toastHelper';
 
-// ---- Helpers ----
+// ---------- Helpers ----------
 const extractData = (res) => {
   const d = res?.data;
   return d?.data ?? d?.result ?? d?.items ?? d?.content ?? d ?? [];
@@ -36,8 +35,9 @@ function GlobalBackdrop({ show, onClose }) {
   );
 }
 
+// ---------- Main Component ----------
 export default function Blog() {
-  // ---- State ----
+  // Data
   const [items, setItems] = useState([]);
   const [cats, setCats] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -48,28 +48,31 @@ export default function Blog() {
   const [showView, setShowView] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
 
+  // Selection + Form
   const [selected, setSelected] = useState(null);
-
-  // Form
   const [form, setForm] = useState({
     header: '',
     title: '',
     content: '',
-    image: '',
+    image: '', // text URL (opsiyonel)
     categoryId: '', // dropdown
   });
   const [formError, setFormError] = useState({});
 
-  // Filter + Sort + Pagination
+  // File state (multipart)
+  const [file, setFile] = useState(null);
+  const [filePreview, setFilePreview] = useState(''); // object URL
+
+  // UX: filter/sort/page
   const [query, setQuery] = useState('');
-  const [sortKey, setSortKey] = useState('blogId'); // blogId | header | title | categoryName | systemCreatedDate
+  const [sortKey, setSortKey] = useState('blogId'); // blogId|header|title|categoryName|systemCreatedDate
   const [sortDir, setSortDir] = useState('asc');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
   const anyOpen = showCreate || showEdit || showView || showDelete;
 
-  // ---- Effects ----
+  // ---------- Effects ----------
   useEffect(() => {
     if (anyOpen) document.body.classList.add('modal-open');
     else document.body.classList.remove('modal-open');
@@ -87,6 +90,11 @@ export default function Blog() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [showCreate, showEdit, showView, showDelete]);
+
+  useEffect(() => {
+    fetchBlogs();
+    fetchCategories();
+  }, []);
 
   const fetchBlogs = async () => {
     setLoading(true);
@@ -113,12 +121,7 @@ export default function Blog() {
     }
   };
 
-  useEffect(() => {
-    fetchBlogs();
-    fetchCategories();
-  }, []);
-
-  // ---- Search / Sort / Paginate ----
+  // ---------- Derived (filter/sort/page) ----------
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return items;
@@ -168,22 +171,37 @@ export default function Blog() {
     return sorted.slice(start, start + pageSize);
   }, [sorted, currentPage, pageSize]);
 
-  // ---- Form Helpers ----
+  // ---------- Form Helpers ----------
   const resetForm = () => {
-    setForm({
-      header: '',
-      title: '',
-      content: '',
-      image: '',
-      categoryId: '',
-    });
+    setForm({ header: '', title: '', content: '', image: '', categoryId: '' });
     setFormError({});
+    setFile(null);
+    if (filePreview) {
+      URL.revokeObjectURL(filePreview);
+      setFilePreview('');
+    }
   };
 
   const onChange = (e) => {
     const { name, value } = e.target;
     setForm((p) => ({ ...p, [name]: value }));
     setFormError((p) => ({ ...p, [name]: undefined }));
+  };
+
+  const onFileChange = (e) => {
+    const f = e.target.files?.[0];
+    if (!f) return clearFile();
+    setFile(f);
+    if (filePreview) URL.revokeObjectURL(filePreview);
+    setFilePreview(URL.createObjectURL(f));
+  };
+
+  const clearFile = () => {
+    setFile(null);
+    if (filePreview) URL.revokeObjectURL(filePreview);
+    setFilePreview('');
+    const input = document.getElementById('blog-image-file');
+    if (input) input.value = '';
   };
 
   const openCreate = () => {
@@ -199,6 +217,7 @@ export default function Blog() {
   const openEdit = (row) => {
     closeAll();
     setSelected(row);
+    resetForm();
     setForm({
       header: row?.header || '',
       title: row?.title || '',
@@ -206,7 +225,6 @@ export default function Blog() {
       image: row?.image || '',
       categoryId: row?.blogCategoryDto?.categoryId ?? row?.blogCategoryDto?.id ?? '',
     });
-    setFormError({});
     setShowEdit(true);
   };
   const closeEdit = () => {
@@ -242,7 +260,7 @@ export default function Blog() {
     setShowDelete(false);
   };
 
-  // ---- CRUD ----
+  // ---------- Validate ----------
   const validateBlog = () => {
     const err = {};
     if (!form.header?.trim()) err.header = 'Header zorunlu';
@@ -252,6 +270,25 @@ export default function Blog() {
     return err;
   };
 
+  // ---------- Build Payloads ----------
+  const jsonBody = () => ({
+    header: form.header.trim(),
+    title: form.title.trim(),
+    content: form.content.trim(),
+    image: form.image?.trim() || 'resim.png',
+    blogCategoryDto: { categoryId: Number(form.categoryId) },
+  });
+
+  // blog parçasını application/json olarak ekle (kritik!)
+  const buildMultipart = () => {
+    const fd = new FormData();
+    const blob = new Blob([JSON.stringify(jsonBody())], { type: 'application/json' });
+    fd.append('blog', blob);
+    if (file) fd.append('file', file); // tip otomatik belirlenir (image/*)
+    return fd;
+  };
+
+  // ---------- CRUD ----------
   const submitCreate = async (e) => {
     e.preventDefault();
     const err = validateBlog();
@@ -259,18 +296,19 @@ export default function Blog() {
     if (Object.keys(err).length) return;
 
     try {
-      const payload = {
-        header: form.header.trim(),
-        title: form.title.trim(),
-        content: form.content.trim(),
-        image: form.image?.trim() || 'resim.png',
-      };
-      await axios.post(`${API_BASE}${ENDPOINTS.BLOG.CREATE(form.categoryId)}`, payload);
+      if (file) {
+        // MULTIPART: header set ETME — tarayıcı boundary ekler
+        await axios.post(`${API_BASE}${ENDPOINTS.BLOG.CREATE}`, buildMultipart());
+      } else {
+        // JSON
+        await axios.post(`${API_BASE}${ENDPOINTS.BLOG.CREATE}`, jsonBody());
+      }
       showSuccess?.('Blog eklendi.') ?? console.log('Blog eklendi.');
       closeCreate();
       fetchBlogs();
     } catch (ex) {
-      showError?.(ex?.response?.data?.message || 'Blog eklenemedi.') ?? console.error(ex);
+      const msg = ex?.response?.data?.message || ex?.message || 'Blog eklenemedi.';
+      showError?.(msg) ?? console.error(ex);
       setFormError(ex?.response?.data?.validationErrors || {});
     }
   };
@@ -284,18 +322,21 @@ export default function Blog() {
     try {
       const id = selected?.blogId ?? selected?.id;
       if (id == null) throw new Error('Blog ID yok.');
-      const payload = {
-        header: form.header.trim(),
-        title: form.title.trim(),
-        content: form.content.trim(),
-        image: form.image?.trim() || 'resim.png',
-      };
-      await axios.put(`${API_BASE}${ENDPOINTS.BLOG.UPDATE(id, form.categoryId)}`, payload);
+
+      if (file) {
+        // MULTIPART: header set ETME — tarayıcı boundary ekler
+        await axios.put(`${API_BASE}${ENDPOINTS.BLOG.UPDATE(id)}`, buildMultipart());
+      } else {
+        // JSON
+        await axios.put(`${API_BASE}${ENDPOINTS.BLOG.UPDATE(id)}`, jsonBody());
+      }
+
       showSuccess?.('Blog güncellendi.') ?? console.log('Blog güncellendi.');
       closeEdit();
       fetchBlogs();
     } catch (ex) {
-      showError?.(ex?.response?.data?.message || 'Blog güncellenemedi.') ?? console.error(ex);
+      const msg = ex?.response?.data?.message || ex?.message || 'Blog güncellenemedi.';
+      showError?.(msg) ?? console.error(ex);
       setFormError(ex?.response?.data?.validationErrors || {});
     }
   };
@@ -309,11 +350,12 @@ export default function Blog() {
       closeDelete();
       fetchBlogs();
     } catch (ex) {
-      showError?.(ex?.response?.data?.message || 'Silinemedi.') ?? console.error(ex);
+      const msg = ex?.response?.data?.message || ex?.message || 'Silinemedi.';
+      showError?.(msg) ?? console.error(ex);
     }
   };
 
-  // ---- Render ----
+  // ---------- UI ----------
   const SortBtn = ({ k, children }) => (
     <button
       type="button"
@@ -367,6 +409,9 @@ export default function Blog() {
                   Başlık <SortBtn k="title" />
                 </th>
                 <th>
+                  İçerik <SortBtn k="content" />
+                </th>
+                <th>
                   Kategori <SortBtn k="categoryName" />
                 </th>
                 <th style={{ width: 140 }}>Görsel</th>
@@ -399,6 +444,9 @@ export default function Blog() {
                     </td>
                     <td className="text-truncate" style={{ maxWidth: 260 }} title={row.title}>
                       {row.title}
+                    </td>
+                    <td className="text-truncate" style={{ maxWidth: 260 }} title={row.content}>
+                      {row.content}
                     </td>
                     <td>{row.blogCategoryDto?.categoryName ?? '-'}</td>
                     <td>
@@ -549,6 +597,8 @@ export default function Blog() {
                           <div className="invalid-feedback">{formError.content}</div>
                         )}
                       </div>
+
+                      {/* Görsel alanı */}
                       <div className="col-md-6">
                         <label className="form-label">Görsel (URL / Yol)</label>
                         <input
@@ -556,10 +606,39 @@ export default function Blog() {
                           className="form-control"
                           value={form.image}
                           onChange={onChange}
-                          placeholder="ör. /uploads/ai.png veya https://..."
+                          placeholder="ör. /upload/blog/ai.png veya https://..."
                         />
+                        <div className="form-text">Dosya seçersen bu alan isteğe bağlıdır.</div>
                       </div>
                       <div className="col-md-6">
+                        <label className="form-label">Görsel Yükle (Dosya)</label>
+                        <input
+                          id="blog-image-file"
+                          type="file"
+                          accept="image/*"
+                          className="form-control"
+                          onChange={onFileChange}
+                        />
+                        {filePreview && (
+                          <div className="mt-2 d-flex align-items-center gap-2">
+                            <img
+                              src={filePreview}
+                              alt="preview"
+                              style={{ maxHeight: 64, borderRadius: 6 }}
+                            />
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-secondary"
+                              onClick={clearFile}
+                            >
+                              Dosyayı Kaldır
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Kategori */}
+                      <div className="col-12">
                         <label className="form-label">Kategori</label>
                         <select
                           name="categoryId"
@@ -581,6 +660,7 @@ export default function Blog() {
                       </div>
                     </div>
                   </div>
+
                   <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" onClick={closeCreate}>
                       Kapat
@@ -653,6 +733,8 @@ export default function Blog() {
                           <div className="invalid-feedback">{formError.content}</div>
                         )}
                       </div>
+
+                      {/* Görsel alanı */}
                       <div className="col-md-6">
                         <label className="form-label">Görsel (URL / Yol)</label>
                         <input
@@ -660,10 +742,39 @@ export default function Blog() {
                           className="form-control"
                           value={form.image}
                           onChange={onChange}
-                          placeholder="ör. /uploads/ai.png veya https://..."
+                          placeholder="ör. /upload/blog/ai.png veya https://..."
                         />
+                        <div className="form-text">Dosya seçersen bu alan isteğe bağlıdır.</div>
                       </div>
                       <div className="col-md-6">
+                        <label className="form-label">Görsel Yükle (Dosya)</label>
+                        <input
+                          id="blog-image-file"
+                          type="file"
+                          accept="image/*"
+                          className="form-control"
+                          onChange={onFileChange}
+                        />
+                        {filePreview && (
+                          <div className="mt-2 d-flex align-items-center gap-2">
+                            <img
+                              src={filePreview}
+                              alt="preview"
+                              style={{ maxHeight: 64, borderRadius: 6 }}
+                            />
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-secondary"
+                              onClick={clearFile}
+                            >
+                              Dosyayı Kaldır
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Kategori */}
+                      <div className="col-12">
                         <label className="form-label">Kategori</label>
                         <select
                           name="categoryId"
@@ -685,6 +796,7 @@ export default function Blog() {
                       </div>
                     </div>
                   </div>
+
                   <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" onClick={closeEdit}>
                       Kapat

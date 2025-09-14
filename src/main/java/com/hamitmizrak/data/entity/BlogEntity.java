@@ -6,72 +6,40 @@ import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.io.Serializable;
 import java.util.Date;
 
-// LOMBOK
-//@Data
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor @Builder
 @Log4j2
+@Entity
+@Table(name = "blogs")
+public class BlogEntity extends AuditingAwareBaseEntity {
 
-// ENTITY
-@Entity(name = "BlogDatas") // Sql JOIN için yazdım
-@Table(name = "blogDatas")
-// Blog(N)  Category(1)
-public class BlogEntity extends AuditingAwareBaseEntity implements Serializable {
-
-    // SERILEŞTIRME
-    public static final Long serialVersionUID = 1L;
-
-    // ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="blog_id",unique = true,nullable = false,insertable = true,updatable = false)
     private Long blogId;
 
-
-    // HEADER
-    @Lob
-    @Column(
-            name = "header",
-            nullable = false,
-            unique = true,
-            length = 1500,
-            insertable = true,
-            updatable = true,
-            columnDefinition = "varchar(1500) default 'blog için başlık girilmedi'")
+    @Column(nullable = false, length = 150)
     private String header;
 
-    // CONTENT
-    @Lob
-    @Column(name = "content", columnDefinition = "varchar(1500) default 'blog için içerik girilmedi'")
-    private String content;
-
-    // TITLE
+    @Column(nullable = false, length = 200)
     private String title;
 
-    // IMAGE
+    @Lob
+    @Column(nullable = false)
+    private String content;
+
+    /** About ile paralel tutmak için isim 'image' (imageUrl değil). Relative URL: /upload/blog/... */
+    @Column(nullable = false, length = 300)
     private String image;
 
-   /*
-   Javada olsun Database(Entity) olmasının
-   @Transient
-    private Object specialData;
-    */
-
-    // DATE
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date systemCreatedDate;
 
-    //  RELATION
-    // Blog(N)  Category(1)
-    @ManyToOne(fetch = FetchType.EAGER,optional = false)
-    @JoinColumn(name="category_id",nullable = false)
+    // Blog(N)  - BlogCategory(1)
+    // Projendeki isimlendirme ile uyumlu alan adı:
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "category_id", nullable = false)
     private BlogCategoryEntity blogCategoryBlogEntity;
-
-} //end class
+}

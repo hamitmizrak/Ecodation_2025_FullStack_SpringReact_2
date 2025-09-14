@@ -18,13 +18,5 @@ public interface IBlogApi<D> extends ICrudApi<D> {
     public ResponseEntity<String> blogApiAllDelete();
 
     // SPEED DATA
-    public ResponseEntity<List<D>> blogApiSpeedData(Long key);
-
-    // Relation
-    // CREATE
-    public ResponseEntity<ApiResult<?>> create(Long categoryId, BlogDto dto);
-
-    // UPDATE
-    public ResponseEntity<ApiResult<?>> update(Long id, Long categoryId, BlogDto dto);
-
+    public ResponseEntity<String> blogApiSpeedData(Long key);
 }

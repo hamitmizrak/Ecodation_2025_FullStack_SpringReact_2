@@ -42,6 +42,7 @@ export const ENDPOINTS = {
     LIST: '/roles/api/v1.0.0', // Sadece örnek, kendi path’iniz farklı olabilir
   },
 
+
   // Blog Kategori endpoint’leri (CRUD)
   BLOG_CATEGORY: {
     LIST: '/blog/category/api/v1.0.0/list', // Kategori listesi (GET)
@@ -51,13 +52,15 @@ export const ENDPOINTS = {
     DELETE: (id) => `/blog/category/api/v1.0.0/delete/${id}`, // Kategori sil (DELETE)
   },
 
-  // Blog yazıları endpoint’leri (CRUD)
+  // Blog — Backend sözleşmesi (JSON *veya* multipart) ile uyumlu:
+  //  POST /blog/api/v1.0.0/create
+  //  PUT  /blog/api/v1.0.0/update/{id}
   BLOG: {
-    LIST: '/blog/api/v1.0.0/list', // Blog listesi (GET)
-    CREATE: (categoryId) => `blog/api/v1.0.0/create/${categoryId}`, // Blog ekle (POST)
-    FIND: (id) => `blog/api/v1.0.0/find/${id}`, // Blog Bul (FIND)
-    UPDATE: (id, categoryId) => `/blog/api/v1.0.0/update/${id}/${categoryId}`, // Blog güncelle (PUT)
-    DELETE: (id) => `/blog/api/v1.0.0/delete/${id}`, // Blog sil (DELETE)
+    LIST:   '/blog/api/v1.0.0/list',
+    CREATE: '/blog/api/v1.0.0/create',               // <<< düz string (path’te categoryId yok)
+    FIND:   (id) => `/blog/api/v1.0.0/find/${id}`,
+    UPDATE: (id) => `/blog/api/v1.0.0/update/${id}`,  // <<< düz id (path’te categoryId yok)
+    DELETE: (id) => `/blog/api/v1.0.0/delete/${id}`,
   },
 
   ABOUT: {

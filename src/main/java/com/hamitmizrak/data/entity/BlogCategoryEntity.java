@@ -6,50 +6,30 @@ import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-// LOMBOK
-//@Data
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor @Builder
 @Log4j2
-
-// ENTITY
-@Entity(name = "BlogCategories") // Sql JOIN için yazdım
+@Entity
 @Table(name = "blog_categories")
+public class BlogCategoryEntity extends AuditingAwareBaseEntity {
 
-// Category(1) Blog(N)
-public class BlogCategoryEntity extends AuditingAwareBaseEntity implements Serializable {
-
-    // SERILEŞTIRME
-    public static final Long serialVersionUID = 1L;
-
-    // ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="category_id",unique = true,nullable = false,insertable = true,updatable = false)
     private Long categoryId;
 
-    // CATEGORY NAME
-    @Column(name = "category_name")
+    @Column(nullable = false, unique = true, length = 150)
     private String categoryName;
 
-    // DATE
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date systemCreatedDate;
 
-    //////////////////////////////////////////////////////////////////////////////////////
-    // COMPOSITION
-    // RELATION
     // BlogCategory(1) - Blog(N)
-    @OneToMany(mappedBy = "blogCategoryBlogEntity",fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BlogEntity> blogCategoryBlogEntityList;
-
-} //end class
+    // BlogEntity içindeki alan adı "blogCategoryBlogEntity" olduğu için mappedBy aynı tutuldu
+    @OneToMany(mappedBy = "blogCategoryBlogEntity", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = false)
+    private List<com.hamitmizrak.data.entity.BlogEntity> blogCategoryBlogEntityList;
+}
