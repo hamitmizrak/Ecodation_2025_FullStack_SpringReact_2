@@ -50,6 +50,6 @@ public class BlogCategoryEntity extends AuditingAwareBaseEntity implements Seria
     // RELATION
     // BlogCategory(1) - Blog(N)
     @OneToMany(mappedBy = "blogCategoryBlogEntity",fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
-    List<BlogEntity> blogCategoryBlogEntityList;
+    private List<BlogEntity> blogCategoryBlogEntityList;
 
 } //end class

@@ -4,7 +4,7 @@
 # docker-compose --version
 # docker-compose up
 # docker-compose up -d
-# docker-compose -f docker-compose-my.yml up
+# docker-compose -f docker-compose-backend.yml up
 # docker-compose down
 # docker-compose restart
 # docker-compose ps

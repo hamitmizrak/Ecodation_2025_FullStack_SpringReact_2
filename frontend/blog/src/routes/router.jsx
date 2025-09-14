@@ -29,7 +29,8 @@ import BlogApi from '../areas/writer/BlogApi'; // Writer için sayfa
 import BlogCategory from '../areas/admin/BlogCategory';
 
 // About
-import About from '../areas/admin/About'; // Admin için sayfa
+import About from '../areas/admin/About';
+import Blog from "../areas/admin/Blog"; // Admin için sayfa
 
 /**
  * PublicLayout
@@ -89,7 +90,7 @@ function Router() {
 
           {/* Blog kategorileri (sadece admin) */}
           <Route path="blog-category" element={<BlogCategory />} />
-          <Route path="blog" element={<BlogCategory />} />
+          <Route path="blog" element={<Blog />} />
 
           {/* ...Başka admin-only route'lar buraya eklenebilir */}
 

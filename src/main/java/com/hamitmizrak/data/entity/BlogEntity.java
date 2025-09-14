@@ -19,8 +19,8 @@ import java.util.Date;
 @Log4j2
 
 // ENTITY
-@Entity(name = "Blogs") // Sql JOIN için yazdım
-@Table
+@Entity(name = "BlogDatas") // Sql JOIN için yazdım
+@Table(name = "blogDatas")
 // Blog(N)  Category(1)
 public class BlogEntity extends AuditingAwareBaseEntity implements Serializable {
 

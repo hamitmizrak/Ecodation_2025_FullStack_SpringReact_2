@@ -64,4 +64,3 @@ public class BlogDto extends AuditingAwareBaseDto implements Serializable {
 
 } //end class
 
-

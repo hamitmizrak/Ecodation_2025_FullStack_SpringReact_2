@@ -1,6 +1,5 @@
 package com.hamitmizrak.controller.api.impl;
 
-import com.hamitmizrak.business.dto.BlogCategoryDto;
 import com.hamitmizrak.business.dto.BlogDto;
 import com.hamitmizrak.business.services.interfaces.IBlogServices;
 import com.hamitmizrak.controller.api.interfaces.IBlogApi;

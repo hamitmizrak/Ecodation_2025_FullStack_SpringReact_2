@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
 // LOMBOK
-// LOMBOK
 @RequiredArgsConstructor
 @Log4j2
 @Configuration
@@ -51,15 +50,15 @@ public class _2_Blog_BlogCategory {
             // Tekil Kategory
             BlogCategoryEntity healthCategory=new BlogCategoryEntity();
             healthCategory.setCategoryName("Sağlık");
-            //iBlogCategoryRepository.save(healthCategory);
+            iBlogCategoryRepository.save(healthCategory);
 
             BlogCategoryEntity lifeCategory=new BlogCategoryEntity();
             lifeCategory.setCategoryName("Yaşam");
-            //iBlogCategoryRepository.save(lifeCategory);
+            iBlogCategoryRepository.save(lifeCategory);
 
             BlogCategoryEntity gymCategory=new BlogCategoryEntity();
             gymCategory.setCategoryName("Spor");
-            //iBlogCategoryRepository.save(gymCategory);
+            iBlogCategoryRepository.save(gymCategory);
 
             // Blog-1
             BlogEntity blogEntity1=new BlogEntity();
@@ -67,7 +66,7 @@ public class _2_Blog_BlogCategory {
             blogEntity1.setContent("Content-1 Content Content Content Content ");
             blogEntity1.setTitle("Title-1");
             blogEntity1.setBlogCategoryBlogEntity((computerCategory));
-            //iBlogRepository.save(blogEntity1);
+            iBlogRepository.save(blogEntity1);
 
             // Blog-1
             BlogEntity blogEntity2=new BlogEntity();
@@ -75,7 +74,7 @@ public class _2_Blog_BlogCategory {
             blogEntity2.setContent("Content-2");
             blogEntity2.setTitle("Title-2");
             blogEntity2.setBlogCategoryBlogEntity(computerCategory);
-            //iBlogRepository.save(blogEntity2);
+            iBlogRepository.save(blogEntity2);
 
 
             // Blog-2
@@ -84,7 +83,7 @@ public class _2_Blog_BlogCategory {
             blogEntity3.setContent("Content-3");
             blogEntity3.setTitle("Title-3");
             blogEntity3.setBlogCategoryBlogEntity(gymCategory);
-            //iBlogRepository.save(blogEntity3);
+            iBlogRepository.save(blogEntity3);
         };
     } //end CommandLineRunner
 

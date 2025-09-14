@@ -46,6 +46,7 @@ export const ENDPOINTS = {
   BLOG_CATEGORY: {
     LIST: '/blog/category/api/v1.0.0/list', // Kategori listesi (GET)
     CREATE: '/blog/category/api/v1.0.0/create', // Kategori ekle (POST)
+    FIND: (id) => `/blog/category/api/v1.0.0/find/${id}`, // Kategori Bul (GET)
     UPDATE: (id) => `/blog/category/api/v1.0.0/update/${id}`, // Kategori güncelle (PUT)
     DELETE: (id) => `/blog/category/api/v1.0.0/delete/${id}`, // Kategori sil (DELETE)
   },
@@ -53,8 +54,9 @@ export const ENDPOINTS = {
   // Blog yazıları endpoint’leri (CRUD)
   BLOG: {
     LIST: '/blog/api/v1.0.0/list', // Blog listesi (GET)
-    CREATE: '/blog/api/v1.0.0/create', // Blog ekle (POST)
-    UPDATE: (id) => `/blog/api/v1.0.0/update/${id}`, // Blog güncelle (PUT)
+    CREATE: (categoryId) => `blog/api/v1.0.0/create/${categoryId}`, // Blog ekle (POST)
+    FIND: (id) => `blog/api/v1.0.0/find/${id}`, // Blog Bul (FIND)
+    UPDATE: (id, categoryId) => `/blog/api/v1.0.0/update/${id}/${categoryId}`, // Blog güncelle (PUT)
     DELETE: (id) => `/blog/api/v1.0.0/delete/${id}`, // Blog sil (DELETE)
   },
 
