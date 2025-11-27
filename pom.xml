@@ -45,9 +45,9 @@
 
     <!-- Versiyon Kontrol Sistemi Bilgisi (SCM) -->
     <scm>
-        <connection>scm:git:https://github.com/HamitMizrak/Ecodation_FullStack_SpringReact_1.git</connection>
-        <developerConnection>scm:git:ssh://github.com/HamitMizrak/Ecodation_FullStack_SpringReact_1.git</developerConnection>
-        <url>https://github.com/HamitMizrak/Ecodation_FullStack_SpringReact_1</url>
+        <connection>scm:git:https://github.com/</connection>
+        <developerConnection>scm:git:ssh://github.com/</developerConnection>
+        <url>https://github.com/HamitMizrak/</url>
         <tag>main</tag>
     </scm>
 

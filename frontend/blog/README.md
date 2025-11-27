@@ -15,7 +15,7 @@
 
 Spring Boot And React JS
 
-- git clone https://github.com/hamitmizrak/Ecodation_2025_FullStack_SpringReact_2.git
+- git clone https://github.com/hamitmizrak/Techcareer_2025_11_24_ReactJs_Blog
 
 ---
 
