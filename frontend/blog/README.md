@@ -88,7 +88,7 @@ Font Family: Fira Code
 
 ## REACTJS INSTALL
 
-``sh
+```sh
 npx create-react-app blog
 cd blog
 npm start
@@ -112,7 +112,15 @@ npm install react-router-dom --save
 npm install i18next --save
 npm install react-i18next --save
 
-````
+```
+
+## REACTJS INSTALL
+
+```sh
+npm i nodemon --save-dev
+veya
+npm i nodemon -D
+---
 
 ## Npm Komutları
 ```sh
