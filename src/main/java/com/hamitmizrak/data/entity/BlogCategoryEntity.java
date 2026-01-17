@@ -31,5 +31,5 @@ public class BlogCategoryEntity extends AuditingAwareBaseEntity {
     // BlogEntity içindeki alan adı "blogCategoryBlogEntity" olduğu için mappedBy aynı tutuldu
     @OneToMany(mappedBy = "blogCategoryBlogEntity", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = false)
-    private List<com.hamitmizrak.data.entity.BlogEntity> blogCategoryBlogEntityList;
+    private List<BlogEntity> blogCategoryBlogEntityList;
 }
